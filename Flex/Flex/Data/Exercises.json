@@ -1,0 +1,35 @@
+[
+  {
+    "name": "Ab Wheel",
+    "bodyPart": "Core"
+  },
+  {
+    "name": "Arnold Press (Dumbbell)",
+    "bodyPart": "Shoulders"
+  },
+  {
+    "name": "Around the World",
+    "bodyPart": "Chest"
+  },
+  {
+    "name": "Back Extension",
+    "bodyPart": "Back"
+  },
+  {
+    "name": "Back Extension (Machine)",
+    "bodyPart": "Back"
+  },
+  {
+    "name": "Ball Slams",
+    "bodyPart": "Full Body"
+  },
+  {
+    "name": "Battle Ropes",
+    "bodyPart": "Cardio"
+  },
+  {
+    "name": "Bench Dip",
+    "bodyPart": "Arms"
+  }
+]
+
