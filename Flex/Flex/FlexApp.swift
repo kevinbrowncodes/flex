@@ -1,51 +1,141 @@
 import SwiftUI
 import SwiftData
+import os
 
 @main
 struct FlexKeyApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Exercise.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var themeManager: ThemeManager
+    @State private var authManager: AuthenticationManager
+    @State private var preferencesManager: PreferencesManager
+    @State private var syncMonitor: CloudKitSyncMonitor
 
-        do {
-            let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
-            
-            // Check if we need to prepopulate
-            let context = container.mainContext
-            
-            if try context.fetchCount(FetchDescriptor<Exercise>()) == 0 {
-                // First launch - load all exercises from JSON
-                for exercise in Exercise.loadFromBundle() {
-                    context.insert(exercise)
-                }
-                try context.save()
-            } else {
-                // Check for new exercises not in database
-                let existingExercises = try context.fetch(FetchDescriptor<Exercise>())
-                let existingNames = Set(existingExercises.map { $0.name })
-                let newExercises = Exercise.loadFromBundle().filter { !existingNames.contains($0.name) }
-                
-                if !newExercises.isEmpty {
-                    for exercise in newExercises {
-                        context.insert(exercise)
-                    }
-                    try context.save()
-                    print("Added \(newExercises.count) new exercise(s) from JSON")
-                }
+    private let modelContainer: ModelContainer
+    private let isDemo: Bool
+
+    private static let logger = Logger(subsystem: "kevinbrowncodes.Flex", category: "App")
+
+    static let schema = Schema([
+        Exercise.self,
+        Workout.self,
+        WorkoutExercise.self,
+        ExerciseSet.self,
+        WorkoutTemplate.self,
+        TemplateFolder.self,
+        TemplateExercise.self,
+        TemplateSet.self
+    ])
+
+    init() {
+        let auth = AuthenticationManager()
+        let preferences = PreferencesManager()
+        let theme: ThemeManager
+        let sync: CloudKitSyncMonitor
+        let container: ModelContainer
+        var demoActive = false
+
+        #if DEBUG
+        if let demo = DemoMode.current {
+            do {
+                container = try demo.makeModelContainer(schema: Self.schema)
+            } catch {
+                fatalError("Could not create demo ModelContainer: \(error)")
             }
-            
+            demo.apply(auth: auth, preferences: preferences)
+            theme = ThemeManager(initialTheme: demo.theme, persists: false)
+            sync = CloudKitSyncMonitor(simulatedStatus: .synced)
+            demoActive = true
+        } else {
+            container = Self.makeModelContainer()
+            theme = ThemeManager()
+            sync = CloudKitSyncMonitor()
+        }
+        #else
+        container = Self.makeModelContainer()
+        theme = ThemeManager()
+        sync = CloudKitSyncMonitor()
+        #endif
+
+        modelContainer = container
+        isDemo = demoActive
+        _themeManager = State(initialValue: theme)
+        _authManager = State(initialValue: auth)
+        _preferencesManager = State(initialValue: preferences)
+        _syncMonitor = State(initialValue: sync)
+
+        if !demoActive {
+            Self.synchronizeExerciseLibrary(in: container)
+        }
+    }
+
+    /// CloudKit-backed store when available, otherwise a local store; in-memory for Xcode previews.
+    private static func makeModelContainer() -> ModelContainer {
+        let isPreview = ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
+        if isPreview {
+            let previewConfig = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+            do {
+                return try ModelContainer(for: schema, configurations: [previewConfig])
+            } catch {
+                fatalError("Could not create preview ModelContainer: \(error)")
+            }
+        }
+
+        let cloudConfig = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false, cloudKitDatabase: .automatic)
+        do {
+            let container = try ModelContainer(for: schema, configurations: [cloudConfig])
+            logger.info("CloudKit-backed store ready")
             return container
+        } catch {
+            logger.error("CloudKit store unavailable, falling back to local storage: \(error.localizedDescription)")
+        }
+
+        let localConfig = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false, cloudKitDatabase: .none)
+        do {
+            return try ModelContainer(for: schema, configurations: [localConfig])
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
-    }()
-    
+    }
+
+    private static func synchronizeExerciseLibrary(in container: ModelContainer) {
+        do {
+            let result = try ExerciseLibrary.synchronize(context: container.mainContext)
+            if result.inserted > 0 || result.duplicatesMerged > 0 {
+                logger.info("Exercise library synchronized: inserted \(result.inserted), merged \(result.duplicatesMerged) duplicates")
+            }
+        } catch {
+            logger.error("Exercise library synchronization failed: \(error.localizedDescription)")
+        }
+    }
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            Group {
+                if authManager.isAuthenticated && preferencesManager.hasSeenWelcome {
+                    ContentView()
+                } else {
+                    WelcomeView()
+                }
+            }
+            .preferredColorScheme(themeManager.colorScheme)
         }
-        .modelContainer(sharedModelContainer)
+        .modelContainer(modelContainer)
+        .environment(themeManager)
+        .environment(authManager)
+        .environment(preferencesManager)
+        .environment(syncMonitor)
+        .onChange(of: scenePhase) { _, newPhase in
+            // CloudKit can deliver a second copy of the seeded library from another device while
+            // the app is in the background; merge whenever we come back to the foreground.
+            guard newPhase == .active, !isDemo else { return }
+            do {
+                let merged = try ExerciseLibrary.mergeDuplicates(context: modelContainer.mainContext)
+                if merged > 0 {
+                    Self.logger.info("Merged \(merged) duplicate exercises after foreground")
+                }
+            } catch {
+                Self.logger.error("Duplicate merge failed: \(error.localizedDescription)")
+            }
+        }
     }
 }

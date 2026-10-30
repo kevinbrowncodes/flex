@@ -1,0 +1,146 @@
+{
+  "app": "Flex",
+  "devices": [
+    "iphone-6.9",
+    "ipad-13"
+  ],
+  "output": "out",
+  "theme": {
+    "background": {
+      "colors": [
+        "#101114",
+        "#1C1D22"
+      ],
+      "angle": 160,
+      "glow": "#0A84FF40"
+    },
+    "caption": {
+      "color": "#FFFFFF",
+      "accent": "#5AA9FF",
+      "subColor": "#FFFFFFB8",
+      "font": "system",
+      "weight": "bold",
+      "align": "center",
+      "maxLines": 2,
+      "band": "uniform"
+    },
+    "frame": {
+      "color": "#0A0A0C",
+      "highlight": "#FFFFFF33",
+      "shadow": true,
+      "scaleByDevice": {
+        "ipad-13": 0.7
+      }
+    }
+  },
+  "shots": [
+    {
+      "id": "active-workout",
+      "layout": "caption-top",
+      "caption": "Log every set\n**in seconds**",
+      "subcaption": "Custom keypad, last lift right beside it",
+      "captionOverrides": {
+        "ipad-13": "Log every set **in seconds**"
+      },
+      "source": {
+        "iphone-6.9": "raw/iphone/02-active-workout.png",
+        "ipad-13": "raw/ipad/02-active-workout.png"
+      },
+      "subcaptionOverrides": {
+        "ipad-13": "A custom keypad built for the gym floor"
+      }
+    },
+    {
+      "id": "plate-calculator",
+      "layout": "callout",
+      "caption": "Know what to\n**load on the bar**",
+      "subcaption": "Plate calculator for every barbell lift",
+      "captionOverrides": {
+        "ipad-13": "Know what to **load on the bar**"
+      },
+      "source": {
+        "iphone-6.9": "raw/iphone/03-plate-calculator.png",
+        "ipad-13": "raw/ipad/03-plate-calculator.png"
+      },
+      "zoom": {
+        "iphone-6.9": {
+          "x": 0,
+          "y": 0.585,
+          "w": 1,
+          "h": 0.37
+        },
+        "ipad-13": {
+          "x": 0.22,
+          "y": 0.482,
+          "w": 0.56,
+          "h": 0.253
+        }
+      }
+    },
+    {
+      "id": "templates",
+      "layout": "caption-top",
+      "caption": "Routines ready\n**in one tap**",
+      "subcaption": "Templates and folders for every split",
+      "captionOverrides": {
+        "ipad-13": "Routines ready **in one tap**"
+      },
+      "source": {
+        "iphone-6.9": "raw/iphone/01-templates.png",
+        "ipad-13": "raw/ipad/01-templates.png"
+      }
+    },
+    {
+      "id": "history",
+      "layout": "caption-top",
+      "caption": "Every workout,\n**every PR**",
+      "subcaption": "Volume, duration and records at a glance",
+      "captionOverrides": {
+        "ipad-13": "Every workout, **every PR**"
+      },
+      "source": {
+        "iphone-6.9": "raw/iphone/04-history.png",
+        "ipad-13": "raw/ipad/04-history.png"
+      }
+    },
+    {
+      "id": "profile",
+      "layout": "caption-top",
+      "caption": "Hit your\n**weekly goal**",
+      "subcaption": "Dashboard charts your consistency",
+      "captionOverrides": {
+        "ipad-13": "Hit your **weekly goal**"
+      },
+      "source": {
+        "iphone-6.9": "raw/iphone/05-profile.png",
+        "ipad-13": "raw/ipad/05-profile.png"
+      }
+    },
+    {
+      "id": "summary",
+      "layout": "caption-top",
+      "caption": "Finish strong,\n**share it**",
+      "subcaption": "A summary you can send to your crew",
+      "captionOverrides": {
+        "ipad-13": "Finish strong, **share it**"
+      },
+      "source": {
+        "iphone-6.9": "raw/iphone/06-summary.png",
+        "ipad-13": "raw/ipad/06-summary.png"
+      }
+    },
+    {
+      "id": "exercises",
+      "layout": "caption-top",
+      "caption": "Hundreds of exercises,\n**plus your own**",
+      "subcaption": "Search by body part or create custom moves",
+      "captionOverrides": {
+        "ipad-13": "Hundreds of exercises,\n**plus your own**"
+      },
+      "source": {
+        "iphone-6.9": "raw/iphone/08-exercises.png",
+        "ipad-13": "raw/ipad/08-exercises.png"
+      }
+    }
+  ]
+}

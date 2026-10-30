@@ -6,37 +6,76 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		8B1255D72F2158220079B7F2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B1255D12F2158220079B7F2 /* Assets.xcassets */; };
-		8B1255D82F2158220079B7F2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1255D22F2158220079B7F2 /* ContentView.swift */; };
-		8B1255DF2F2158220079B7F2 /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1255C82F2158220079B7F2 /* PreviewData.swift */; };
-		8B1255E72F2158220079B7F2 /* FlexApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1255D32F2158220079B7F2 /* FlexApp.swift */; };
-		8B5198DE2F215E82000A7D2F /* Exercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5198DD2F215E82000A7D2F /* Exercise.swift */; };
-		8B5198E42F215E8E000A7D2F /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5198E22F215E8E000A7D2F /* ProfileView.swift */; };
-		8B5198E52F215E8E000A7D2F /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5198E12F215E8E000A7D2F /* HistoryView.swift */; };
-		8B5198E62F215E8E000A7D2F /* ExerciseDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5198DF2F215E8E000A7D2F /* ExerciseDetailView.swift */; };
-		8B5198E72F215E8E000A7D2F /* ExerciseListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5198E02F215E8E000A7D2F /* ExerciseListView.swift */; };
-		8B5198E82F215E8E000A7D2F /* WorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5198E32F215E8E000A7D2F /* WorkoutView.swift */; };
-		8B5198EA2F215EBE000A7D2F /* Exercises.json in Resources */ = {isa = PBXBuildFile; fileRef = 8B5198E92F215EBE000A7D2F /* Exercises.json */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
 		8B1255892F2157CB0079B7F2 /* Flex.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Flex.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		8B1255C82F2158220079B7F2 /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
-		8B1255D12F2158220079B7F2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		8B1255D22F2158220079B7F2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		8B1255D32F2158220079B7F2 /* FlexApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlexApp.swift; sourceTree = "<group>"; };
-		8B5198DD2F215E82000A7D2F /* Exercise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exercise.swift; sourceTree = "<group>"; };
-		8B5198DF2F215E8E000A7D2F /* ExerciseDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseDetailView.swift; sourceTree = "<group>"; };
-		8B5198E02F215E8E000A7D2F /* ExerciseListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseListView.swift; sourceTree = "<group>"; };
-		8B5198E12F215E8E000A7D2F /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
-		8B5198E22F215E8E000A7D2F /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
-		8B5198E32F215E8E000A7D2F /* WorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutView.swift; sourceTree = "<group>"; };
-		8B5198E92F215EBE000A7D2F /* Exercises.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Exercises.json; sourceTree = "<group>"; };
+		F1E00001000000000000A020 /* FlexTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlexTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1E00001000000000000A021 /* FlexUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlexUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXContainerItemProxy section */
+		F1E00001000000000000A040 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8B1255812F2157CB0079B7F2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8B1255882F2157CB0079B7F2;
+			remoteInfo = Flex;
+		};
+		F1E00001000000000000A041 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8B1255812F2157CB0079B7F2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8B1255882F2157CB0079B7F2;
+			remoteInfo = Flex;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		F1E00001000000000000A001 /* Exceptions for "Flex" folder in "Flex" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 8B1255882F2157CB0079B7F2 /* Flex */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		8B1255D42F2158220079B7F2 /* Flex */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				F1E00001000000000000A001 /* Exceptions for "Flex" folder in "Flex" target */,
+			);
+			path = Flex;
+			sourceTree = "<group>";
+		};
+		F1E00001000000000000A002 /* FlexTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = FlexTests;
+			sourceTree = "<group>";
+		};
+		F1E00001000000000000A003 /* FlexUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = FlexUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		8B1255862F2157CB0079B7F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1E00001000000000000A032 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1E00001000000000000A033 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -50,6 +89,8 @@
 			isa = PBXGroup;
 			children = (
 				8B1255D42F2158220079B7F2 /* Flex */,
+				F1E00001000000000000A002 /* FlexTests */,
+				F1E00001000000000000A003 /* FlexUITests */,
 				8B12558A2F2157CB0079B7F2 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -58,58 +99,10 @@
 			isa = PBXGroup;
 			children = (
 				8B1255892F2157CB0079B7F2 /* Flex.app */,
+				F1E00001000000000000A020 /* FlexTests.xctest */,
+				F1E00001000000000000A021 /* FlexUITests.xctest */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		8B1255BE2F2158220079B7F2 /* Data */ = {
-			isa = PBXGroup;
-			children = (
-				8B5198E92F215EBE000A7D2F /* Exercises.json */,
-			);
-			path = Data;
-			sourceTree = "<group>";
-		};
-		8B1255C42F2158220079B7F2 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				8B1255D22F2158220079B7F2 /* ContentView.swift */,
-				8B5198DF2F215E8E000A7D2F /* ExerciseDetailView.swift */,
-				8B5198E02F215E8E000A7D2F /* ExerciseListView.swift */,
-				8B5198E12F215E8E000A7D2F /* HistoryView.swift */,
-				8B5198E22F215E8E000A7D2F /* ProfileView.swift */,
-				8B5198E32F215E8E000A7D2F /* WorkoutView.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		8B1255C72F2158220079B7F2 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				8B5198DD2F215E82000A7D2F /* Exercise.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		8B1255C92F2158220079B7F2 /* Support */ = {
-			isa = PBXGroup;
-			children = (
-				8B1255C82F2158220079B7F2 /* PreviewData.swift */,
-			);
-			path = Support;
-			sourceTree = "<group>";
-		};
-		8B1255D42F2158220079B7F2 /* Flex */ = {
-			isa = PBXGroup;
-			children = (
-				8B1255D32F2158220079B7F2 /* FlexApp.swift */,
-				8B1255C72F2158220079B7F2 /* Models */,
-				8B1255C42F2158220079B7F2 /* Views */,
-				8B1255C92F2158220079B7F2 /* Support */,
-				8B1255BE2F2158220079B7F2 /* Data */,
-				8B1255D12F2158220079B7F2 /* Assets.xcassets */,
-			);
-			path = Flex;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -127,12 +120,59 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				8B1255D42F2158220079B7F2 /* Flex */,
+			);
 			name = Flex;
 			packageProductDependencies = (
 			);
 			productName = Flex;
 			productReference = 8B1255892F2157CB0079B7F2 /* Flex.app */;
 			productType = "com.apple.product-type.application";
+		};
+		F1E00001000000000000A010 /* FlexTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1E00001000000000000A070 /* Build configuration list for PBXNativeTarget "FlexTests" */;
+			buildPhases = (
+				F1E00001000000000000A030 /* Sources */,
+				F1E00001000000000000A032 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F1E00001000000000000A050 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				F1E00001000000000000A002 /* FlexTests */,
+			);
+			name = FlexTests;
+			packageProductDependencies = (
+			);
+			productName = FlexTests;
+			productReference = F1E00001000000000000A020 /* FlexTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		F1E00001000000000000A011 /* FlexUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1E00001000000000000A071 /* Build configuration list for PBXNativeTarget "FlexUITests" */;
+			buildPhases = (
+				F1E00001000000000000A031 /* Sources */,
+				F1E00001000000000000A033 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F1E00001000000000000A051 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				F1E00001000000000000A003 /* FlexUITests */,
+			);
+			name = FlexUITests;
+			packageProductDependencies = (
+			);
+			productName = FlexUITests;
+			productReference = F1E00001000000000000A021 /* FlexUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -146,6 +186,14 @@
 				TargetAttributes = {
 					8B1255882F2157CB0079B7F2 = {
 						CreatedOnToolsVersion = 26.2;
+					};
+					F1E00001000000000000A010 = {
+						CreatedOnToolsVersion = 26.6;
+						TestTargetID = 8B1255882F2157CB0079B7F2;
+					};
+					F1E00001000000000000A011 = {
+						CreatedOnToolsVersion = 26.6;
+						TestTargetID = 8B1255882F2157CB0079B7F2;
 					};
 				};
 			};
@@ -164,6 +212,8 @@
 			projectRoot = "";
 			targets = (
 				8B1255882F2157CB0079B7F2 /* Flex */,
+				F1E00001000000000000A010 /* FlexTests */,
+				F1E00001000000000000A011 /* FlexUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -173,8 +223,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8B1255D72F2158220079B7F2 /* Assets.xcassets in Resources */,
-				8B5198EA2F215EBE000A7D2F /* Exercises.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -185,19 +233,37 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8B1255D82F2158220079B7F2 /* ContentView.swift in Sources */,
-				8B5198DE2F215E82000A7D2F /* Exercise.swift in Sources */,
-				8B1255DF2F2158220079B7F2 /* PreviewData.swift in Sources */,
-				8B1255E72F2158220079B7F2 /* FlexApp.swift in Sources */,
-				8B5198E42F215E8E000A7D2F /* ProfileView.swift in Sources */,
-				8B5198E52F215E8E000A7D2F /* HistoryView.swift in Sources */,
-				8B5198E62F215E8E000A7D2F /* ExerciseDetailView.swift in Sources */,
-				8B5198E72F215E8E000A7D2F /* ExerciseListView.swift in Sources */,
-				8B5198E82F215E8E000A7D2F /* WorkoutView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1E00001000000000000A030 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1E00001000000000000A031 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F1E00001000000000000A050 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8B1255882F2157CB0079B7F2 /* Flex */;
+			targetProxy = F1E00001000000000000A040 /* PBXContainerItemProxy */;
+		};
+		F1E00001000000000000A051 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8B1255882F2157CB0079B7F2 /* Flex */;
+			targetProxy = F1E00001000000000000A041 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		8B1255922F2157CC0079B7F2 /* Debug */ = {
@@ -253,7 +319,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -311,7 +377,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -326,13 +392,20 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Flex/Flex.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 793YF22DGM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Flex/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Flex;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 FlexKey LLC";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UIBackgroundModes = "remote-notification";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -340,7 +413,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = kevinbrowncodes.Flex;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -358,13 +431,20 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Flex/Flex.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 793YF22DGM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Flex/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Flex;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 FlexKey LLC";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UIBackgroundModes = "remote-notification";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -372,13 +452,95 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = kevinbrowncodes.Flex;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F1E00001000000000000A060 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				PRODUCT_BUNDLE_IDENTIFIER = kevinbrowncodes.FlexTests;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Flex.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Flex";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 9;
+				DEVELOPMENT_TEAM = 793YF22DGM;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0.3;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F1E00001000000000000A061 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				PRODUCT_BUNDLE_IDENTIFIER = kevinbrowncodes.FlexTests;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Flex.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Flex";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 9;
+				DEVELOPMENT_TEAM = 793YF22DGM;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0.3;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F1E00001000000000000A062 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = kevinbrowncodes.FlexUITests;
+				TEST_TARGET_NAME = Flex;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 9;
+				DEVELOPMENT_TEAM = 793YF22DGM;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0.3;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F1E00001000000000000A063 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = kevinbrowncodes.FlexUITests;
+				TEST_TARGET_NAME = Flex;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 9;
+				DEVELOPMENT_TEAM = 793YF22DGM;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0.3;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -402,6 +564,24 @@
 			buildConfigurations = (
 				8B1255952F2157CC0079B7F2 /* Debug */,
 				8B1255962F2157CC0079B7F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F1E00001000000000000A070 /* Build configuration list for PBXNativeTarget "FlexTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1E00001000000000000A060 /* Debug */,
+				F1E00001000000000000A061 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F1E00001000000000000A071 /* Build configuration list for PBXNativeTarget "FlexUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1E00001000000000000A062 /* Debug */,
+				F1E00001000000000000A063 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
