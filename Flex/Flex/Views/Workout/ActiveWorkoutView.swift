@@ -152,13 +152,15 @@ struct ActiveWorkoutView: View {
                     }
                 }
             }
-            .confirmationDialog("Finish Workout?", isPresented: $isConfirmingFinish, titleVisibility: .visible) {
+            // Alerts, not confirmation dialogs: iOS 26 anchors a dialog to its source on iPhone and drops
+            // the cancel button, so "Keep Going" vanished (BUG_001).
+            .alert("Finish Workout?", isPresented: $isConfirmingFinish) {
                 Button("Finish Workout") { finishWorkout() }
                 Button("Keep Going", role: .cancel) {}
             } message: {
                 Text(finishMessage)
             }
-            .confirmationDialog("Discard Workout?", isPresented: $isConfirmingDiscard, titleVisibility: .visible) {
+            .alert("Discard Workout?", isPresented: $isConfirmingDiscard) {
                 Button("Discard Workout", role: .destructive) { discardWorkout() }
                 Button("Keep Going", role: .cancel) {}
             } message: {

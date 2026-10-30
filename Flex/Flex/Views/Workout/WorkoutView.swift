@@ -153,10 +153,11 @@ struct WorkoutView: View {
                     renamingFolder = nil
                 }
             }
-            .confirmationDialog(
+            // Alerts, not confirmation dialogs: iOS 26 anchors a dialog to its source on iPhone and drops
+            // the cancel button, so Cancel vanished (BUG_001).
+            .alert(
                 "Delete Template?",
                 isPresented: $isConfirmingTemplateDelete,
-                titleVisibility: .visible,
                 presenting: templateToDelete
             ) { template in
                 Button("Delete \"\(template.name)\"", role: .destructive) {
@@ -166,10 +167,9 @@ struct WorkoutView: View {
             } message: { _ in
                 Text("This cannot be undone.")
             }
-            .confirmationDialog(
+            .alert(
                 "Delete Folder?",
                 isPresented: $isConfirmingFolderDelete,
-                titleVisibility: .visible,
                 presenting: folderToDelete
             ) { folder in
                 Button("Delete \"\(folder.name)\"", role: .destructive) {
