@@ -42,10 +42,12 @@ A modern workout tracking app built with SwiftUI and SwiftData.
 
 ## Building & testing
 
-- Open `Flex/Flex.xcodeproj`, scheme **Flex**. The project uses Xcode folder-synchronized
-  groups: any file dropped into `Flex/Flex`, `Flex/FlexTests` or `Flex/FlexUITests` is
-  compiled automatically.
-- Deployment target: iOS 18.0.
+- Open `Flex/Flex.xcodeproj`, scheme **Flex** (iPhone and iPad) or **FlexWatch** (Apple Watch).
+  The project uses Xcode folder-synchronized groups: any file dropped into `Flex/Flex`,
+  `Flex/FlexShared` (compiled into both apps), `Flex/FlexWatch`, or one of the four test folders
+  (`FlexTests`, `FlexUITests`, `FlexWatchTests`, `FlexWatchUITests`) is compiled automatically.
+- Deployment targets: iOS 18.0, watchOS 11.0. The watch app is embedded in the iOS app and runs
+  on its own (`kevinbrowncodes.Flex.watchkitapp`).
 - **Unit tests** (`FlexTests`, Swift Testing): models, PR/volume math, plate math,
   formatting, the exercise-library sync/merge logic.
 - **UI tests** (`FlexUITests`, XCUITest): end-to-end workout flows and the App Store
@@ -57,6 +59,8 @@ xcodebuild test -project Flex/Flex.xcodeproj -scheme Flex \
   -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:FlexTests
 xcodebuild test -project Flex/Flex.xcodeproj -scheme Flex \
   -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -only-testing:FlexUITests/WorkoutFlowUITests
+xcodebuild test -project Flex/Flex.xcodeproj -scheme FlexWatch \
+  -destination 'platform=watchOS Simulator,name=Apple Watch Series 11 (46mm)'
 ```
 
 ## Hooks and gates
@@ -77,7 +81,8 @@ Run one by hand with `sh scripts/gates/<name>.sh`. How we work (tickets, gates, 
 |---|---|
 | `tickets-shape.sh` | Every ticket under `docs/` has its kind's file name, heading and sections; owner-only steps cite a chore |
 | `commit-subjects.sh` | The commit-msg hook judges sample subjects as CLAUDE.md says |
-| `tests.sh` | `FlexTests` and `FlexUITests/WorkoutFlowUITests` pass on the iPhone 17 Pro simulator |
+| `tests.sh` | `FlexTests` and `FlexUITests/WorkoutFlowUITests` pass on the iPhone 17 Pro simulator; `FlexWatchTests` and `FlexWatchUITests` pass on the Apple Watch Series 11 (46mm) simulator |
+| `shared-is-portable.sh` | Every file under `Flex/FlexShared` imports only Foundation or Observation, so it compiles into the phone and the watch alike |
 
 ## Releasing
 

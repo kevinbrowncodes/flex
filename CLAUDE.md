@@ -81,8 +81,9 @@ on trial, rules are gates.
   same story and the story names it.
 - Gates today: `tickets-shape.sh` (ticket shapes, the owner-chore rule), `commit-subjects.sh`
   (the commit-msg hook against sample subjects), `tests.sh` (`FlexTests` and
-  `WorkoutFlowUITests` on the iPhone 17 Pro simulator). Each watch story in EPIC_001 adds its
-  own.
+  `WorkoutFlowUITests` on the iPhone 17 Pro simulator, `FlexWatchTests` and `FlexWatchUITests`
+  on an Apple Watch simulator), `shared-is-portable.sh` (`Flex/FlexShared` imports only
+  Foundation and Observation, STORY_004). Each watch story in EPIC_001 adds its own.
 - Run a gate by hand with `sh scripts/gates/<name>.sh`. `git push --no-verify` is for
   emergencies only, with the justification in the commit message.
 
@@ -101,6 +102,17 @@ on trial, rules are gates.
   the owner can perceive" before touching either; the second kind is usually right and the code
   is wrong.
 - Always end with a clear summary: what changed, what commands ran, what the outcome was.
+
+## Phone, watch and the shared folder
+
+- `Flex/Flex` is the iPhone and iPad app, `Flex/FlexWatch` the watch app, `Flex/FlexShared` the
+  value types both compile (the live workout, formatting, the demo-launch parser). The phone is
+  the only device that touches SwiftData and CloudKit (EPIC_001); the watch holds values and what
+  the phone sends it. `shared-is-portable.sh` holds the first half of that; STORY_005's gate holds
+  the second.
+- The watch app runs independently of the phone (`WKRunsIndependentlyOfCompanionApp`), carries
+  the iOS app's version and build numbers, and is embedded by the Flex target, so one install
+  puts Flex on the watch. Watch tests run through the shared `FlexWatch` scheme.
 
 ## SwiftData and CloudKit
 

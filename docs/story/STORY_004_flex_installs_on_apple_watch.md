@@ -1,6 +1,6 @@
 # STORY_004 — Flex installs on Apple Watch
 
-**Status:** Approved by the owner 2026-10-30 (with the epic, "proceed to completion"); not started, waits on STORY_003. [EPIC_001](../epic/EPIC_001_flex_on_apple_watch.md) row 4.
+**Status:** Approved by the owner 2026-10-30 (with the epic, "proceed to completion"); built by Fable the same day. [EPIC_001](../epic/EPIC_001_flex_on_apple_watch.md) row 4.
 
 As Kevin, I want Flex to come with a watch app that installs beside it, builds the shared workout
 code, and runs under the same demo hook and gates as the phone, so that every later watch story
@@ -24,27 +24,27 @@ The whole watch app in this story, until STORY_005 sends it something to show:
 
 ## Acceptance Criteria
 
-- [ ] `Flex/Flex.xcodeproj` gains three targets written by hand on the pattern of Wristwide's
+- [x] `Flex/Flex.xcodeproj` gains three targets written by hand on the pattern of Wristwide's
       project: `FlexWatch` (watchOS app, bundle `kevinbrowncodes.Flex.watchkitapp`, companion
       `kevinbrowncodes.Flex`, runs independently of the companion, watchOS 11.0, device family
       4, display name Flex, version and build numbers matching the iOS app), `FlexWatchTests`
       (unit, hosted by FlexWatch) and `FlexWatchUITests` (UI, targeting FlexWatch). The iOS app
       embeds the watch app through an "Embed Watch Content" phase into
       `$(CONTENTS_FOLDER_PATH)/Watch`, so one install puts Flex on the watch.
-- [ ] `Flex/FlexWatch`, `Flex/FlexWatchTests` and `Flex/FlexWatchUITests` are
+- [x] `Flex/FlexWatch`, `Flex/FlexWatchTests` and `Flex/FlexWatchUITests` are
       folder-synchronized groups; `Flex/FlexShared` is compiled into `FlexWatch` as it is into
       `Flex`. A shared `FlexWatch` scheme builds and tests the watch targets from the command
       line.
-- [ ] The watch app (`FlexWatchApp`, `WatchRootView`) shows the Flex icon and "Open Flex on your
+- [x] The watch app (`FlexWatchApp`, `WatchRootView`) shows the Flex icon and "Open Flex on your
       iPhone to get started" until a snapshot arrives (STORY_005). Its icon is the existing
       1024-pixel Flex icon in a watchOS single-size app icon set.
-- [ ] `WatchDemoMode` reads `FLEX_DEMO` (and later `FLEX_DEMO_RESUME`) on the watch the way
+- [x] `WatchDemoMode` reads `FLEX_DEMO` (and later `FLEX_DEMO_RESUME`) on the watch the way
       `DemoMode` does on the phone, compiled out of Release, so watch UI tests and screenshots
       launch into known state without a phone.
-- [ ] `scripts/gates/shared-is-portable.sh` fails any file under `Flex/FlexShared` that imports
+- [x] `scripts/gates/shared-is-portable.sh` fails any file under `Flex/FlexShared` that imports
       anything but Foundation or Observation (no UIKit, SwiftUI, WatchKit, SwiftData, CloudKit,
       HealthKit), with the rule and the fix in its message.
-- [ ] `scripts/gates/tests.sh` also runs `FlexWatchTests` and `FlexWatchUITests` on an Apple Watch
+- [x] `scripts/gates/tests.sh` also runs `FlexWatchTests` and `FlexWatchUITests` on an Apple Watch
       simulator, naming red tests the same way; `README.md` lists the watch simulator and the
       commands.
 
@@ -52,7 +52,8 @@ The whole watch app in this story, until STORY_005 sends it something to show:
 
 - **Unit, `FlexWatchTests/WatchSmokeTests.swift`:** the shared `LiveWorkout` applies an edit on
   watchOS (proves `FlexShared` builds and runs in the watch module); `WatchDemoMode` reads its
-  environment.
+  environment. (Built: the parsing moved into `FlexShared/DemoLaunch.swift` so the phone's
+  `DemoMode` and the watch's `WatchDemoMode` read `FLEX_DEMO` and `FLEX_DEMO_RESUME` the same way.)
 - **UI, `FlexWatchUITests/WatchRootUITests.swift`:** launching with `FLEX_DEMO=empty` shows
   "Open Flex on your iPhone to get started".
 - **Unit (shell):** `shared-is-portable.sh` carries a planted file importing SwiftData that it

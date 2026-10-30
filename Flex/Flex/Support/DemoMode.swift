@@ -9,10 +9,7 @@ import SwiftData
 /// - `FLEX_THEME=Light|Dark|System`, `FLEX_TAB=profile|history|exercises|workout`, `FLEX_USER_NAME=…`,
 ///   `FLEX_DEMO_WORKOUT_OFFSET=-2460` (seconds; makes a new workout look like it started 41 minutes ago).
 struct DemoMode: Sendable {
-    enum Dataset: Sendable {
-        case sample
-        case empty
-    }
+    typealias Dataset = DemoLaunch.Dataset
 
     let dataset: Dataset
     let theme: String?
@@ -27,15 +24,15 @@ struct DemoMode: Sendable {
     static let current = DemoMode(environment: ProcessInfo.processInfo.environment)
 
     init?(environment: [String: String]) {
-        guard let value = environment["FLEX_DEMO"]?.lowercased(), !value.isEmpty, value != "0" else {
+        guard let dataset = DemoLaunch.dataset(in: environment) else {
             return nil
         }
-        dataset = value == "empty" ? .empty : .sample
+        self.dataset = dataset
         theme = environment["FLEX_THEME"]
         initialTab = environment["FLEX_TAB"]?.lowercased()
         userName = environment["FLEX_USER_NAME"] ?? "Alex"
         workoutStartOffset = environment["FLEX_DEMO_WORKOUT_OFFSET"].flatMap(TimeInterval.init) ?? 0
-        resumesLiveWorkout = ["1", "true", "yes"].contains(environment["FLEX_DEMO_RESUME"]?.lowercased() ?? "")
+        resumesLiveWorkout = DemoLaunch.resumesLiveWorkout(in: environment)
     }
 
     @MainActor
