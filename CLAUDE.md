@@ -83,7 +83,9 @@ on trial, rules are gates.
   (the commit-msg hook against sample subjects), `tests.sh` (`FlexTests` and
   `WorkoutFlowUITests` on the iPhone 17 Pro simulator, `FlexWatchTests` and `FlexWatchUITests`
   on an Apple Watch simulator), `shared-is-portable.sh` (`Flex/FlexShared` imports only
-  Foundation and Observation, STORY_004). Each watch story in EPIC_001 adds its own.
+  Foundation and Observation, STORY_004), `watch-no-swiftdata.sh` (`Flex/FlexWatch` never
+  imports SwiftData or CloudKit or names a ModelContainer or ModelContext, STORY_005). Each
+  watch story in EPIC_001 adds its own.
 - Run a gate by hand with `sh scripts/gates/<name>.sh`. `git push --no-verify` is for
   emergencies only, with the justification in the commit message.
 
@@ -108,8 +110,10 @@ on trial, rules are gates.
 - `Flex/Flex` is the iPhone and iPad app, `Flex/FlexWatch` the watch app, `Flex/FlexShared` the
   value types both compile (the live workout, formatting, the demo-launch parser). The phone is
   the only device that touches SwiftData and CloudKit (EPIC_001); the watch holds values and what
-  the phone sends it. `shared-is-portable.sh` holds the first half of that; STORY_005's gate holds
-  the second.
+  the phone sends it. `shared-is-portable.sh` holds the first half of that;
+  `watch-no-swiftdata.sh` the second. What the watch needs goes into `WatchSnapshot`
+  (`Flex/FlexShared`), built on the phone by `WatchSnapshotBuilder` and sent by `PhoneWatchLink`
+  over WatchConnectivity whenever a SwiftData save or a preference changes it.
 - The watch app runs independently of the phone (`WKRunsIndependentlyOfCompanionApp`), carries
   the iOS app's version and build numbers, and is embedded by the Flex target, so one install
   puts Flex on the watch. Watch tests run through the shared `FlexWatch` scheme.
@@ -124,3 +128,8 @@ on trial, rules are gates.
 - A model change is a CloudKit schema change: deploy the development schema to Production in
   CloudKit Console before the release ships, or devices on the old schema stop syncing. Say so in
   the story that changes a model.
+- A `ModelContext` must not outlive its `ModelContainer`. A test helper that returns
+  `container.mainContext` and lets the container go out of scope leaves a context whose next
+  fetch traps inside SwiftData with no message (EXC_BREAKPOINT, three SwiftData frames, nothing
+  in the crash report). Return or hold the container; take the context from it where it is used
+  (STORY_005, 2026-10-30, a bisection of four identical crashes).

@@ -83,6 +83,7 @@ Run one by hand with `sh scripts/gates/<name>.sh`. How we work (tickets, gates, 
 | `commit-subjects.sh` | The commit-msg hook judges sample subjects as CLAUDE.md says |
 | `tests.sh` | `FlexTests` and `FlexUITests/WorkoutFlowUITests` pass on the iPhone 17 Pro simulator; `FlexWatchTests` and `FlexWatchUITests` pass on the Apple Watch Series 11 (46mm) simulator |
 | `shared-is-portable.sh` | Every file under `Flex/FlexShared` imports only Foundation or Observation, so it compiles into the phone and the watch alike |
+| `watch-no-swiftdata.sh` | Nothing under `Flex/FlexWatch` imports SwiftData or CloudKit or names a ModelContainer or ModelContext: the phone is the only writer |
 
 ## Releasing
 

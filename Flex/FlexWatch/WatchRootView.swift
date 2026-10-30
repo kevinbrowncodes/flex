@@ -1,12 +1,25 @@
 import SwiftUI
 
-/// The watch app's first screen. Until the phone has sent a snapshot (STORY_005) there is nothing
-/// to start, so it says how to get one (STORY_004).
+/// The watch app's first screen: the home once the phone has sent a snapshot (STORY_005), and
+/// until then how to get one (STORY_004).
 struct WatchRootView: View {
+    @Environment(WatchState.self) private var state
+
     var body: some View {
         NavigationStack {
-            WaitingForPhoneView()
-                .navigationTitle("Flex")
+            Group {
+                if let snapshot = state.snapshot {
+                    WatchHomeView(snapshot: snapshot)
+                } else {
+                    WaitingForPhoneView()
+                        .navigationTitle("Flex")
+                }
+            }
+            .navigationDestination(for: UUID.self) { id in
+                if let template = state.snapshot?.template(withID: id) {
+                    WatchTemplateView(template: template)
+                }
+            }
         }
     }
 }
@@ -43,6 +56,14 @@ struct WaitingForPhoneView: View {
     }
 }
 
-#Preview {
+#Preview("Waiting") {
     WatchRootView()
+        .environment(WatchState(store: nil))
 }
+
+#if DEBUG
+#Preview("With a snapshot") {
+    WatchRootView()
+        .environment(WatchState(store: nil, initial: .sample))
+}
+#endif

@@ -10,6 +10,8 @@ struct FlexKeyApp: App {
     @State private var preferencesManager: PreferencesManager
     @State private var syncMonitor: CloudKitSyncMonitor
     @State private var liveWorkoutSession: LiveWorkoutSession
+    /// Sends the watch its snapshot; nil in demo launches and previews (STORY_005).
+    @State private var watchLink: PhoneWatchLink?
 
     private let modelContainer: ModelContainer
     private let isDemo: Bool
@@ -34,6 +36,7 @@ struct FlexKeyApp: App {
         let sync: CloudKitSyncMonitor
         let container: ModelContainer
         let live: LiveWorkoutSession
+        var link: PhoneWatchLink?
         var demoActive = false
 
         #if DEBUG
@@ -53,12 +56,14 @@ struct FlexKeyApp: App {
             theme = ThemeManager()
             sync = CloudKitSyncMonitor()
             live = LiveWorkoutSession(store: .default())
+            link = Self.makeWatchLink(container: container, preferences: preferences)
         }
         #else
         container = Self.makeModelContainer()
         theme = ThemeManager()
         sync = CloudKitSyncMonitor()
         live = LiveWorkoutSession(store: .default())
+        link = Self.makeWatchLink(container: container, preferences: preferences)
         #endif
 
         modelContainer = container
@@ -68,6 +73,7 @@ struct FlexKeyApp: App {
         _preferencesManager = State(initialValue: preferences)
         _syncMonitor = State(initialValue: sync)
         _liveWorkoutSession = State(initialValue: live)
+        _watchLink = State(initialValue: link)
 
         if !demoActive {
             Self.synchronizeExerciseLibrary(in: container)
@@ -103,6 +109,22 @@ struct FlexKeyApp: App {
         }
     }
 
+    /// The WatchConnectivity sender, building each snapshot from the live store and preferences.
+    /// Not in Xcode previews, which have no session to talk to.
+    private static func makeWatchLink(container: ModelContainer, preferences: PreferencesManager) -> PhoneWatchLink? {
+        guard ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" else { return nil }
+        let link = PhoneWatchLink {
+            try WatchSnapshotBuilder.make(
+                context: container.mainContext,
+                weeklyTarget: preferences.workoutTarget,
+                restSeconds: preferences.restSeconds,
+                userName: preferences.userName
+            )
+        }
+        link.activate()
+        return link
+    }
+
     private static func synchronizeExerciseLibrary(in container: ModelContainer) {
         do {
             let result = try ExerciseLibrary.synchronize(context: container.mainContext)
@@ -135,6 +157,7 @@ struct FlexKeyApp: App {
             // CloudKit can deliver a second copy of the seeded library from another device while
             // the app is in the background; merge whenever we come back to the foreground.
             guard newPhase == .active, !isDemo else { return }
+            watchLink?.scheduleSend()
             do {
                 let merged = try ExerciseLibrary.mergeDuplicates(context: modelContainer.mainContext)
                 if merged > 0 {

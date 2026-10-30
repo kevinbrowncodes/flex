@@ -20,7 +20,9 @@ run_tests() { # label, scheme, destination, only-testing flags...
     echo "FlexWatchUITests (CLAUDE.md, How features are built, item 6)."
     echo "Fix: run 'sh scripts/gates/tests.sh' and fix the failures above. A run that fails before"
     echo "any test starts (\"Simulator device failed to launch\", \"Busy\") is the simulator, not the"
-    echo "code: 'xcrun simctl shutdown all' and run again. Full log: $log"
+    echo "code: 'xcrun simctl shutdown all' and run again; if it still refuses, erase the device"
+    echo "('xcrun simctl list devices | grep \"iPhone 17 Pro\"', then 'xcrun simctl erase <udid>')."
+    echo "Full log: $log"
     return 1
   fi
   rm -f "$log"

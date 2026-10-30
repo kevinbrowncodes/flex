@@ -9,6 +9,9 @@ import Foundation
 
 @Observable
 class PreferencesManager {
+    /// Posted after any preference is set here, so the watch snapshot can follow (STORY_005).
+    static let didChange = Notification.Name("PreferencesManager.didChange")
+
     private let store = NSUbiquitousKeyValueStore.default
     private let userDefaults = UserDefaults.standard
     private var useICloud: Bool = true
@@ -96,6 +99,11 @@ class PreferencesManager {
     @objc private func handleiCloudStoreChange(_ notification: Notification) {
         // Sync happened - reload values from storage
         loadFromStorage()
+        changed()
+    }
+
+    private func changed() {
+        NotificationCenter.default.post(name: Self.didChange, object: self)
     }
     
     private func migrateFromUserDefaults() {
@@ -148,8 +156,9 @@ class PreferencesManager {
         } else {
             userDefaults.set(value, forKey: Keys.userName)
         }
+        changed()
     }
-    
+
     func setWorkoutTarget(_ value: Int) {
         workoutTarget = value
         if useICloud {
@@ -158,8 +167,9 @@ class PreferencesManager {
         } else {
             userDefaults.set(value, forKey: Keys.workoutTarget)
         }
+        changed()
     }
-    
+
     func setDailyTarget(_ value: Int) {
         dailyTarget = value
         if useICloud {
@@ -168,8 +178,9 @@ class PreferencesManager {
         } else {
             userDefaults.set(value, forKey: Keys.dailyTarget)
         }
+        changed()
     }
-    
+
     func setRestSeconds(_ value: TimeInterval) {
         restSeconds = max(0, value)
         if useICloud {
@@ -178,6 +189,7 @@ class PreferencesManager {
         } else {
             userDefaults.set(Int64(restSeconds), forKey: Keys.restSeconds)
         }
+        changed()
     }
 
     // Method to update hasSeenWelcome and persist to UserDefaults

@@ -27,17 +27,21 @@ enum LiveWorkoutBridge {
 
     /// A live exercise for a library exercise, carrying its most recent earlier performance.
     static func liveExercise(for exercise: Exercise, sets: [LiveSet] = [LiveSet()], before date: Date) -> LiveExercise {
-        let previous = exercise.mostRecentWorkoutExercise(before: date)?.orderedSets.map { set in
-            LiveSet(reps: set.reps, weight: set.weight, time: set.time, distance: set.distance, isCompleted: set.isCompleted)
-        } ?? []
-        return LiveExercise(
+        LiveExercise(
             name: exercise.name,
             bodyPart: exercise.bodyPart,
             category: exercise.category,
             barType: exercise.barType,
             sets: sets,
-            previousSets: previous
+            previousSets: previousSets(of: exercise, before: date)
         )
+    }
+
+    /// The sets of the most recent saved performance of an exercise before `date`, as values.
+    static func previousSets(of exercise: Exercise, before date: Date) -> [LiveSet] {
+        exercise.mostRecentWorkoutExercise(before: date)?.orderedSets.map { set in
+            LiveSet(reps: set.reps, weight: set.weight, time: set.time, distance: set.distance, isCompleted: set.isCompleted)
+        } ?? []
     }
 
     /// Saves a finished workout as a `Workout` with the live workout's id. Exercises are matched

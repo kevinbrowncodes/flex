@@ -18,20 +18,9 @@ struct LiveWorkoutStore {
         return LiveWorkoutStore(url: support.appendingPathComponent("live-workout.json"))
     }
 
-    // Dates stay as Foundation keeps them (seconds since 2001, a Double), so a workout decodes to
-    // exactly the value that was saved; shifting the epoch for the file would round the last bits.
-    static let encoder: JSONEncoder = {
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .deferredToDate
-        encoder.outputFormatting = [.sortedKeys]
-        return encoder
-    }()
-
-    static let decoder: JSONDecoder = {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .deferredToDate
-        return decoder
-    }()
+    /// The app-wide JSON shape (`FlexJSON`), kept here by name for the callers that had it.
+    static var encoder: JSONEncoder { FlexJSON.encoder }
+    static var decoder: JSONDecoder { FlexJSON.decoder }
 
     /// The saved workout, or nil when there is none or the file will not decode (then it is removed).
     func load() -> LiveWorkout? {
