@@ -176,6 +176,10 @@ final class WorkoutFlowUITests: FlexUITestCase {
         nameField.typeText(" Pause")
         XCTAssertTrue(app.buttons["save-exercise"].isEnabled)
         tap(app.buttons["save-exercise"])
+        // The new row can sit below the fold of a lazy list; search brings it into view (CHORE_001).
+        let search = app.textFields["exercise-search"]
+        tap(search)
+        search.typeText("Pause")
         waitFor(app.staticTexts["Bench Press (Barbell) Pause"].firstMatch)
     }
 
