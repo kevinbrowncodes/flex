@@ -114,9 +114,9 @@ struct WorkoutModelTests {
 
     @Test("Default workout titles follow the time of day")
     func defaultTitles() {
-        #expect(ActiveWorkoutView.defaultTitle(for: TestSupport.date(2026, 9, 5, hour: 7)) == "Morning Workout")
-        #expect(ActiveWorkoutView.defaultTitle(for: TestSupport.date(2026, 9, 5, hour: 13)) == "Afternoon Workout")
-        #expect(ActiveWorkoutView.defaultTitle(for: TestSupport.date(2026, 9, 5, hour: 20)) == "Evening Workout")
+        #expect(LiveWorkout.defaultTitle(for: TestSupport.date(2026, 9, 5, hour: 7)) == "Morning Workout")
+        #expect(LiveWorkout.defaultTitle(for: TestSupport.date(2026, 9, 5, hour: 13)) == "Afternoon Workout")
+        #expect(LiveWorkout.defaultTitle(for: TestSupport.date(2026, 9, 5, hour: 20)) == "Evening Workout")
     }
 
     @Test("Template sort orders")

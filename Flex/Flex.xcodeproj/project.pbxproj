@@ -58,6 +58,11 @@
 			path = FlexUITests;
 			sourceTree = "<group>";
 		};
+		F1E00001000000000000A004 /* FlexShared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = FlexShared;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				8B1255D42F2158220079B7F2 /* Flex */,
+				F1E00001000000000000A004 /* FlexShared */,
 				F1E00001000000000000A002 /* FlexTests */,
 				F1E00001000000000000A003 /* FlexUITests */,
 				8B12558A2F2157CB0079B7F2 /* Products */,
@@ -122,6 +128,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				8B1255D42F2158220079B7F2 /* Flex */,
+				F1E00001000000000000A004 /* FlexShared */,
 			);
 			name = Flex;
 			packageProductDependencies = (

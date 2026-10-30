@@ -91,6 +91,35 @@ final class WorkoutFlowUITests: FlexUITestCase {
         XCTAssertTrue(card.staticTexts["255 lb × 6"].exists)
     }
 
+    func testWorkoutInProgressSurvivesRelaunch() {
+        launch()
+        startPushDayWorkout()
+
+        tap(app.buttons["weight-Bench Press (Barbell)-1"])
+        tap(app.buttons["Delete"])
+        tap(app.buttons["Delete"])
+        tap(app.buttons["Delete"])
+        tap(app.buttons["numberpad-2"])
+        tap(app.buttons["numberpad-0"])
+        tap(app.buttons["numberpad-5"])
+        tap(app.buttons["numberpad-done"])
+        tap(app.buttons["complete-Bench Press (Barbell)-1"])
+        XCTAssertEqual(app.buttons["weight-Bench Press (Barbell)-1"].value as? String, "205")
+
+        // iOS kills Flex mid-workout…
+        app.terminate()
+        // …and on the next launch, landing on Profile, the workout is back on top with every set.
+        launch(tab: "profile", extra: ["FLEX_DEMO_RESUME": "1"])
+        waitFor(app.buttons["finish-workout"], timeout: 15)
+        XCTAssertTrue(app.staticTexts["Heavy Push"].exists)
+        XCTAssertEqual(app.buttons["weight-Bench Press (Barbell)-1"].value as? String, "205")
+        XCTAssertEqual(app.buttons["complete-Bench Press (Barbell)-1"].label, "Completed")
+
+        tap(app.buttons["cancel-workout"])
+        tap(app.buttons["Discard Workout"])
+        waitFor(app.buttons["start-empty-workout"])
+    }
+
     func testCancelWithLoggedSetsAsksForConfirmation() {
         launch()
         startPushDayWorkout()

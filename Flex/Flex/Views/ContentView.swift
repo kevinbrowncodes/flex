@@ -9,9 +9,18 @@ enum AppTab: String, CaseIterable {
 }
 
 struct ContentView: View {
+    @Environment(LiveWorkoutSession.self) private var session
     @State private var selectedTab: AppTab = ContentView.initialTab
 
     var body: some View {
+        tabs
+            // A workout Flex was closed in the middle of comes back on the Workout tab (STORY_002).
+            .onAppear {
+                if session.isActive { selectedTab = .workout }
+            }
+    }
+
+    private var tabs: some View {
         TabView(selection: $selectedTab) {
             Tab("Profile", systemImage: "person.fill", value: .profile) {
                 ProfileView()
@@ -48,4 +57,5 @@ struct ContentView: View {
         .environment(PreferencesManager())
         .environment(AuthenticationManager())
         .environment(CloudKitSyncMonitor(simulatedStatus: .synced))
+        .environment(LiveWorkoutSession(store: nil, resume: false))
 }

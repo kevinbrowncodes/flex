@@ -24,6 +24,7 @@ enum TemplateSortOrder: String, CaseIterable {
 
 struct WorkoutView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(LiveWorkoutSession.self) private var session
     @Query private var templates: [WorkoutTemplate]
     @Query(sort: \TemplateFolder.name) private var folders: [TemplateFolder]
     @AppStorage("templateSortOrder") private var sortOrderRawValue = TemplateSortOrder.name.rawValue
@@ -31,7 +32,6 @@ struct WorkoutView: View {
     @State private var showingWorkout = false
     @State private var showingNewTemplate = false
     @State private var showingNewFolder = false
-    @State private var workoutTemplate: WorkoutTemplate?
     @State private var previewingTemplate: WorkoutTemplate?
     @State private var editingTemplate: WorkoutTemplate?
     @State private var folderForNewTemplate: TemplateFolder?
@@ -61,7 +61,7 @@ struct WorkoutView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
-                    Button(action: { showingWorkout = true }) {
+                    Button(action: { startWorkout(from: nil) }) {
                         Text("Start Workout")
                             .font(.headline)
                             .foregroundStyle(.white)
@@ -97,8 +97,9 @@ struct WorkoutView: View {
             .sheet(isPresented: $showingWorkout) {
                 ActiveWorkoutView()
             }
-            .sheet(item: $workoutTemplate) { template in
-                ActiveWorkoutView(template: template)
+            // A workout saved mid-session (Flex was closed) comes straight back on top (STORY_002).
+            .onAppear {
+                if session.isActive { showingWorkout = true }
             }
             .sheet(isPresented: $showingNewTemplate) {
                 CreateTemplateView()
@@ -113,7 +114,7 @@ struct WorkoutView: View {
                         previewingTemplate = nil
                         // Let the preview sheet finish dismissing before presenting the workout.
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            workoutTemplate = template
+                            startWorkout(from: template)
                         }
                     },
                     onEdit: {
@@ -183,6 +184,18 @@ struct WorkoutView: View {
                      : "The \(count) template\(count == 1 ? "" : "s") inside will be deleted too. This cannot be undone.")
             }
         }
+    }
+
+    // MARK: - Starting
+
+    /// Starts a live workout (empty, or from a template) and shows it (STORY_002).
+    private func startWorkout(from template: WorkoutTemplate?) {
+        var start = Date()
+        #if DEBUG
+        start = start.addingTimeInterval(DemoMode.current?.workoutStartOffset ?? 0)
+        #endif
+        session.start(LiveWorkoutBridge.start(from: template, at: start))
+        showingWorkout = true
     }
 
     // MARK: - Sections
@@ -337,4 +350,5 @@ struct WorkoutView: View {
 #Preview {
     WorkoutView()
         .modelContainer(PreviewData.shared.modelContainer)
+        .environment(LiveWorkoutSession(store: nil, resume: false))
 }

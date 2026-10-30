@@ -761,4 +761,12 @@ class PreviewData {
             }
         }
     }
+
+    /// A session in the middle of the sample "Heavy Push" workout, for previews of the active workout screens.
+    static func liveWorkoutSession() -> LiveWorkoutSession {
+        let session = LiveWorkoutSession(store: nil, resume: false)
+        let templates = (try? shared.context.fetch(FetchDescriptor<WorkoutTemplate>())) ?? []
+        session.start(LiveWorkoutBridge.start(from: templates.first { $0.name == "Heavy Push" }))
+        return session
+    }
 }

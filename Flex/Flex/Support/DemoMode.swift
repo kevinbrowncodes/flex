@@ -20,6 +20,9 @@ struct DemoMode: Sendable {
     let userName: String
     /// Seconds added to a new workout's start time (negative = "started a while ago"), for screenshots.
     let workoutStartOffset: TimeInterval
+    /// `FLEX_DEMO_RESUME=1` keeps a live workout saved by an earlier launch; otherwise a demo launch
+    /// starts clean so UI tests never inherit each other's workouts (STORY_002).
+    let resumesLiveWorkout: Bool
 
     static let current = DemoMode(environment: ProcessInfo.processInfo.environment)
 
@@ -32,6 +35,7 @@ struct DemoMode: Sendable {
         initialTab = environment["FLEX_TAB"]?.lowercased()
         userName = environment["FLEX_USER_NAME"] ?? "Alex"
         workoutStartOffset = environment["FLEX_DEMO_WORKOUT_OFFSET"].flatMap(TimeInterval.init) ?? 0
+        resumesLiveWorkout = ["1", "true", "yes"].contains(environment["FLEX_DEMO_RESUME"]?.lowercased() ?? "")
     }
 
     @MainActor

@@ -92,7 +92,8 @@ enum ExerciseLibrary {
         return best
     }
 
+    /// The key duplicates are merged on; the same key a live workout names its exercises by.
     static func normalized(_ name: String) -> String {
-        name.trimmingCharacters(in: .whitespacesAndNewlines)
+        ExerciseName.normalized(name)
     }
 }

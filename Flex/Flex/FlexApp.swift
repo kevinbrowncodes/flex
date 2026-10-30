@@ -9,6 +9,7 @@ struct FlexKeyApp: App {
     @State private var authManager: AuthenticationManager
     @State private var preferencesManager: PreferencesManager
     @State private var syncMonitor: CloudKitSyncMonitor
+    @State private var liveWorkoutSession: LiveWorkoutSession
 
     private let modelContainer: ModelContainer
     private let isDemo: Bool
@@ -32,6 +33,7 @@ struct FlexKeyApp: App {
         let theme: ThemeManager
         let sync: CloudKitSyncMonitor
         let container: ModelContainer
+        let live: LiveWorkoutSession
         var demoActive = false
 
         #if DEBUG
@@ -44,16 +46,19 @@ struct FlexKeyApp: App {
             demo.apply(auth: auth, preferences: preferences)
             theme = ThemeManager(initialTheme: demo.theme, persists: false)
             sync = CloudKitSyncMonitor(simulatedStatus: .synced)
+            live = LiveWorkoutSession(store: .default(), resume: demo.resumesLiveWorkout)
             demoActive = true
         } else {
             container = Self.makeModelContainer()
             theme = ThemeManager()
             sync = CloudKitSyncMonitor()
+            live = LiveWorkoutSession(store: .default())
         }
         #else
         container = Self.makeModelContainer()
         theme = ThemeManager()
         sync = CloudKitSyncMonitor()
+        live = LiveWorkoutSession(store: .default())
         #endif
 
         modelContainer = container
@@ -62,6 +67,7 @@ struct FlexKeyApp: App {
         _authManager = State(initialValue: auth)
         _preferencesManager = State(initialValue: preferences)
         _syncMonitor = State(initialValue: sync)
+        _liveWorkoutSession = State(initialValue: live)
 
         if !demoActive {
             Self.synchronizeExerciseLibrary(in: container)
@@ -124,6 +130,7 @@ struct FlexKeyApp: App {
         .environment(authManager)
         .environment(preferencesManager)
         .environment(syncMonitor)
+        .environment(liveWorkoutSession)
         .onChange(of: scenePhase) { _, newPhase in
             // CloudKit can deliver a second copy of the seeded library from another device while
             // the app is in the background; merge whenever we come back to the foreground.
