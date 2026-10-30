@@ -6,11 +6,11 @@ import SwiftData
 /// SwiftData; a watch only ever holds `LiveWorkout` values (EPIC_001, STORY_002).
 @MainActor
 enum LiveWorkoutBridge {
-    /// A live workout from a template (or an empty one), with the template's sets and each
-    /// exercise's most recent earlier performance for the "Previous" column.
-    static func start(from template: WorkoutTemplate?, at start: Date = Date()) -> LiveWorkout {
+    /// A live workout from a template (or an empty one), with the template's sets, each exercise's
+    /// most recent earlier performance for the "Previous" column, and the rest default from Settings.
+    static func start(from template: WorkoutTemplate?, at start: Date = Date(), restSeconds: TimeInterval = RestTimer.defaultSeconds) -> LiveWorkout {
         guard let template else {
-            return LiveWorkout(startedAt: start)
+            return LiveWorkout(startedAt: start, restSeconds: restSeconds)
         }
         let exercises = template.templateExercisesArray
             .sorted { $0.order < $1.order }
@@ -22,7 +22,7 @@ enum LiveWorkoutBridge {
                     : templateSets.map { LiveSet(reps: $0.reps, weight: $0.weight) }
                 return liveExercise(for: exercise, sets: sets, before: start)
             }
-        return LiveWorkout(title: template.name, startedAt: start, templateName: template.name, exercises: exercises)
+        return LiveWorkout(title: template.name, startedAt: start, templateName: template.name, exercises: exercises, restSeconds: restSeconds)
     }
 
     /// A live exercise for a library exercise, carrying its most recent earlier performance.

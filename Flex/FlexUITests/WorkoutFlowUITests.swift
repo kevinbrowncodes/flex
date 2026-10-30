@@ -120,6 +120,36 @@ final class WorkoutFlowUITests: FlexUITestCase {
         waitFor(app.buttons["start-empty-workout"])
     }
 
+    func testTickingASetStartsRestYouCanSkip() {
+        launch()
+        startPushDayWorkout()
+
+        tap(app.buttons["complete-Bench Press (Barbell)-1"])
+        let timer = app.staticTexts["rest-timer"]
+        waitFor(timer)
+        let first = seconds(in: timer.label)
+        XCTAssertGreaterThan(first, 60, "the default rest is 1:30 and the card appeared within seconds")
+        XCTAssertLessThanOrEqual(first, 90)
+
+        tap(app.buttons["rest-plus"])
+        XCTAssertGreaterThan(seconds(in: timer.label), first)
+
+        tap(app.buttons["rest-skip"])
+        XCTAssertFalse(timer.waitForExistence(timeout: 2))
+
+        // Unticking the set that started the rest also ends it.
+        tap(app.buttons["complete-Bench Press (Barbell)-2"])
+        waitFor(timer)
+        tap(app.buttons["complete-Bench Press (Barbell)-2"])
+        XCTAssertFalse(timer.waitForExistence(timeout: 2))
+    }
+
+    /// "1:24" → 84.
+    private func seconds(in label: String) -> Int {
+        let parts = label.split(separator: ":").compactMap { Int($0) }
+        return parts.count == 2 ? parts[0] * 60 + parts[1] : -1
+    }
+
     func testCancelWithLoggedSetsAsksForConfirmation() {
         launch()
         startPushDayWorkout()

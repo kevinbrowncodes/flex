@@ -22,6 +22,8 @@ struct ActiveWorkoutView: View {
     @State private var saveError: String?
     /// The last workout shown, kept so the screen stays put under the summary after the session ends.
     @State private var lastShown: LiveWorkout?
+    /// Bumped when a rest reaches zero, for the success haptic (STORY_003).
+    @State private var restsFinished = 0
 
     private var workout: LiveWorkout? {
         session.workout ?? lastShown
@@ -96,6 +98,17 @@ struct ActiveWorkoutView: View {
             .onChange(of: session.workout) { _, newValue in
                 if let newValue { lastShown = newValue }
             }
+            // One success tap when the running rest reaches zero. A rest that ended while the app
+            // was away gets no tap; it just is not shown.
+            .task(id: session.workout?.rest?.endsAt) {
+                guard let endsAt = session.workout?.rest?.endsAt else { return }
+                let delay = endsAt.timeIntervalSinceNow
+                guard delay > 0 else { return }
+                try? await Task.sleep(for: .seconds(delay))
+                guard !Task.isCancelled, session.workout?.rest?.endsAt == endsAt else { return }
+                restsFinished += 1
+            }
+            .sensoryFeedback(.success, trigger: restsFinished)
         }
         .interactiveDismissDisabled()
     }
@@ -212,8 +225,48 @@ struct ActiveWorkoutView: View {
                 }
             }
             .font(.body)
+
+            if let rest = workout.rest {
+                TimelineView(.periodic(from: rest.startedAt, by: 1)) { context in
+                    if let remaining = rest.remaining(at: context.date) {
+                        restCard(remaining)
+                    }
+                }
+            }
         }
         .padding()
+    }
+
+    /// The rest countdown with its nudges, shown while a rest is running (STORY_003).
+    private func restCard(_ remaining: TimeInterval) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: "hourglass")
+                .foregroundStyle(.orange)
+            Text("Rest")
+                .font(.subheadline)
+                .fontWeight(.semibold)
+            Text(Formatting.timer(remaining.rounded(.up)))
+                .font(.title3)
+                .fontWeight(.semibold)
+                .monospacedDigit()
+                .accessibilityIdentifier("rest-timer")
+
+            Spacer()
+
+            Button("−15s") { session.apply(.adjustRest(by: -15)) }
+                .accessibilityIdentifier("rest-minus")
+            Button("+15s") { session.apply(.adjustRest(by: 15)) }
+                .accessibilityIdentifier("rest-plus")
+            Button("Skip") { session.apply(.skipRest) }
+                .accessibilityIdentifier("rest-skip")
+        }
+        .buttonStyle(.bordered)
+        .controlSize(.small)
+        .padding(12)
+        .background(Color.orange.opacity(0.12))
+        .cornerRadius(12)
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("rest-card")
     }
 
     private var finishMessage: String {

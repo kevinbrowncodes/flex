@@ -25,6 +25,7 @@ enum TemplateSortOrder: String, CaseIterable {
 struct WorkoutView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(LiveWorkoutSession.self) private var session
+    @Environment(PreferencesManager.self) private var preferences
     @Query private var templates: [WorkoutTemplate]
     @Query(sort: \TemplateFolder.name) private var folders: [TemplateFolder]
     @AppStorage("templateSortOrder") private var sortOrderRawValue = TemplateSortOrder.name.rawValue
@@ -194,7 +195,7 @@ struct WorkoutView: View {
         #if DEBUG
         start = start.addingTimeInterval(DemoMode.current?.workoutStartOffset ?? 0)
         #endif
-        session.start(LiveWorkoutBridge.start(from: template, at: start))
+        session.start(LiveWorkoutBridge.start(from: template, at: start, restSeconds: preferences.restSeconds))
         showingWorkout = true
     }
 
@@ -351,4 +352,5 @@ struct WorkoutView: View {
     WorkoutView()
         .modelContainer(PreviewData.shared.modelContainer)
         .environment(LiveWorkoutSession(store: nil, resume: false))
+        .environment(PreferencesManager())
 }

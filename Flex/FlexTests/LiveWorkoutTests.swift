@@ -161,6 +161,8 @@ struct LiveWorkoutTests {
         #expect(workout.exercises[0].previousSets.isEmpty)
         #expect(workout.exercises[0].sets[0].reps == 10)
         #expect(!workout.exercises[0].sets[0].isCompleted)
+        #expect(workout.restSeconds == 0)
+        #expect(workout.rest == nil)
     }
 
     @Test("Edits themselves round-trip through JSON")
@@ -175,10 +177,123 @@ struct LiveWorkoutTests {
             .setWeight(setID: set.id, weight: nil),
             .setReps(setID: set.id, reps: 3),
             .setTime(setID: set.id, time: "0:45"),
-            .setCompleted(setID: set.id, isCompleted: true)
+            .setCompleted(setID: set.id, isCompleted: true),
+            .setRestSeconds(120),
+            .adjustRest(by: -15),
+            .skipRest
         ]
         let data = try LiveWorkoutStore.encoder.encode(edits)
         let decoded = try LiveWorkoutStore.decoder.decode([LiveWorkoutEdit].self, from: data)
         #expect(decoded == edits)
+    }
+
+    // MARK: - Rest (STORY_003)
+
+    private func restingWorkout() -> (LiveWorkout, LiveSet, LiveSet, Date) {
+        var (workout, _, set1, set2) = benchWorkout()
+        workout.restSeconds = 90
+        return (workout, set1, set2, workout.startedAt.addingTimeInterval(600))
+    }
+
+    @Test("Ticking a set starts rest for the default; ticking another restarts it")
+    func completingStartsRest() {
+        var (workout, set1, set2, t) = restingWorkout()
+        #expect(workout.restRemaining(at: t) == nil)
+
+        workout.apply(.setCompleted(setID: set1.id, isCompleted: true), at: t)
+        #expect(workout.rest?.setID == set1.id)
+        #expect(workout.rest?.startedAt == t)
+        #expect(workout.rest?.endsAt == t.addingTimeInterval(90))
+        #expect(workout.restRemaining(at: t) == 90)
+        #expect(workout.restRemaining(at: t.addingTimeInterval(30)) == 60)
+        #expect(workout.restRemaining(at: t.addingTimeInterval(90)) == nil)
+
+        workout.apply(.setCompleted(setID: set2.id, isCompleted: true), at: t.addingTimeInterval(20))
+        #expect(workout.rest?.setID == set2.id)
+        #expect(workout.rest?.endsAt == t.addingTimeInterval(110))
+    }
+
+    @Test("Unticking the set that started a rest cancels it; unticking another leaves it")
+    func uncompletingCancelsRest() {
+        var (workout, set1, set2, t) = restingWorkout()
+        workout.apply(.setCompleted(setID: set1.id, isCompleted: true), at: t)
+        workout.apply(.setCompleted(setID: set2.id, isCompleted: true), at: t.addingTimeInterval(20))
+
+        workout.apply(.setCompleted(setID: set1.id, isCompleted: false), at: t.addingTimeInterval(25))
+        #expect(workout.rest?.setID == set2.id)
+
+        workout.apply(.setCompleted(setID: set2.id, isCompleted: false), at: t.addingTimeInterval(30))
+        #expect(workout.rest == nil)
+    }
+
+    @Test("Rest off starts nothing, and the default can change mid-workout")
+    func restDefault() {
+        var (workout, _, set1, _) = benchWorkout()
+        let t = workout.startedAt
+        #expect(workout.restSeconds == 0)
+        workout.apply(.setCompleted(setID: set1.id, isCompleted: true), at: t)
+        #expect(workout.rest == nil)
+
+        workout.apply(.setRestSeconds(120), at: t)
+        workout.apply(.setCompleted(setID: set1.id, isCompleted: false), at: t)
+        workout.apply(.setCompleted(setID: set1.id, isCompleted: true), at: t)
+        #expect(workout.rest?.endsAt == t.addingTimeInterval(120))
+
+        workout.apply(.setRestSeconds(-5), at: t)
+        #expect(workout.restSeconds == 0)
+        #expect(LiveWorkout(startedAt: t, restSeconds: -1).restSeconds == 0)
+    }
+
+    @Test("Nudging moves the end, never into the past; skipping clears it")
+    func adjustAndSkip() {
+        var (workout, set1, _, t) = restingWorkout()
+        let before = workout.updatedAt
+        workout.apply(.adjustRest(by: 15), at: t)
+        workout.apply(.skipRest, at: t)
+        #expect(workout.updatedAt == before) // nothing running: nothing happened
+
+        workout.apply(.setCompleted(setID: set1.id, isCompleted: true), at: t)
+        workout.apply(.adjustRest(by: 15), at: t.addingTimeInterval(10))
+        #expect(workout.rest?.endsAt == t.addingTimeInterval(105))
+        workout.apply(.adjustRest(by: -1000), at: t.addingTimeInterval(30))
+        #expect(workout.rest?.endsAt == t.addingTimeInterval(30))
+        #expect(workout.restRemaining(at: t.addingTimeInterval(30)) == nil)
+        workout.apply(.adjustRest(by: 60), at: t.addingTimeInterval(31)) // already over: stays over
+        #expect(workout.restRemaining(at: t.addingTimeInterval(31)) == nil)
+
+        workout.apply(.setCompleted(setID: set1.id, isCompleted: false), at: t.addingTimeInterval(40))
+        workout.apply(.setCompleted(setID: set1.id, isCompleted: true), at: t.addingTimeInterval(40))
+        workout.apply(.skipRest, at: t.addingTimeInterval(41))
+        #expect(workout.rest == nil)
+    }
+
+    @Test("Finishing drops the rest, and the running rest survives a trip through JSON")
+    func restPersistsAndFinishes() throws {
+        var (workout, set1, _, t) = restingWorkout()
+        workout.apply(.setCompleted(setID: set1.id, isCompleted: true), at: t)
+
+        let data = try LiveWorkoutStore.encoder.encode(workout)
+        let decoded = try LiveWorkoutStore.decoder.decode(LiveWorkout.self, from: data)
+        #expect(decoded == workout)
+        #expect(decoded.restRemaining(at: t.addingTimeInterval(45)) == 45)
+
+        #expect(workout.finished(at: t.addingTimeInterval(60)).workout.rest == nil)
+    }
+
+    @Test("The rest default offers Off to five minutes and reads a stored value or 90")
+    func restTimerDefaults() {
+        #expect(RestTimer.defaultSeconds == 90)
+        #expect(RestTimer.options.first == 0)
+        #expect(RestTimer.options.last == 300)
+        #expect(RestTimer.options == RestTimer.options.sorted())
+        #expect(RestTimer.label(0) == "Off")
+        #expect(RestTimer.label(45) == "0:45")
+        #expect(RestTimer.label(90) == "1:30")
+        #expect(RestTimer.label(300) == "5:00")
+        #expect(RestTimer.seconds(stored: nil) == 90)
+        #expect(RestTimer.seconds(stored: NSNumber(value: 0)) == 0)   // Off is a choice, not "unset"
+        #expect(RestTimer.seconds(stored: NSNumber(value: 120)) == 120)
+        #expect(RestTimer.seconds(stored: NSNumber(value: -3)) == 0)
+        #expect(RestTimer.seconds(stored: "junk") == 90)
     }
 }

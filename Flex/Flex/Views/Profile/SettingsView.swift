@@ -5,6 +5,7 @@ struct SettingsView: View {
     @Environment(ThemeManager.self) private var themeManager
     @Environment(AuthenticationManager.self) private var authManager
     @Environment(CloudKitSyncMonitor.self) private var syncMonitor
+    @Environment(PreferencesManager.self) private var preferences
     @State private var showLogOutAlert = false
 
     var body: some View {
@@ -38,6 +39,23 @@ struct SettingsView: View {
                     Text("Data & Sync")
                 } footer: {
                     Text("Tap to refresh sync status. Make sure you're signed into iCloud in Settings and have enabled iCloud for this app.")
+                        .font(.caption)
+                }
+
+                Section {
+                    Picker("Rest Timer", selection: Binding(
+                        get: { preferences.restSeconds },
+                        set: { preferences.setRestSeconds($0) }
+                    )) {
+                        ForEach(RestTimer.options, id: \.self) { seconds in
+                            Text(RestTimer.label(seconds)).tag(seconds)
+                        }
+                    }
+                    .accessibilityIdentifier("rest-timer-default")
+                } header: {
+                    Text("Workout")
+                } footer: {
+                    Text("Ticking a set starts a rest countdown. Change it mid-workout from the timer itself.")
                         .font(.caption)
                 }
 
@@ -204,4 +222,5 @@ struct ThemeSelectionView: View {
         .environment(ThemeManager())
         .environment(AuthenticationManager())
         .environment(CloudKitSyncMonitor(simulatedStatus: .synced))
+        .environment(PreferencesManager())
 }

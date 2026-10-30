@@ -18,12 +18,15 @@ class PreferencesManager {
     var userName: String? = nil
     var workoutTarget: Int = 3
     var dailyTarget: Int = 1
-    
+    /// Rest after each completed set, in seconds; 0 is off (STORY_003).
+    var restSeconds: TimeInterval = RestTimer.defaultSeconds
+
     // Keys
     private enum Keys {
         static let userName = "userName"
         static let workoutTarget = "workoutTarget"
         static let dailyTarget = "dailyTarget"
+        static let restSeconds = "restSeconds"
         static let hasSeenWelcome = "hasSeenWelcome"
         static let hasMigratedToiCloud = "hasMigratedToiCloud"
     }
@@ -77,12 +80,14 @@ class PreferencesManager {
             workoutTarget = targetValue > 0 ? Int(targetValue) : 3
             let dailyValue = store.longLong(forKey: Keys.dailyTarget)
             dailyTarget = dailyValue > 0 ? Int(dailyValue) : 1
+            restSeconds = RestTimer.seconds(stored: store.object(forKey: Keys.restSeconds))
         } else {
             userName = userDefaults.string(forKey: Keys.userName)
             let targetValue = userDefaults.integer(forKey: Keys.workoutTarget)
             workoutTarget = targetValue > 0 ? targetValue : 3
             let dailyValue = userDefaults.integer(forKey: Keys.dailyTarget)
             dailyTarget = dailyValue > 0 ? dailyValue : 1
+            restSeconds = RestTimer.seconds(stored: userDefaults.object(forKey: Keys.restSeconds))
         }
         // hasSeenWelcome is always from UserDefaults (device-specific)
         hasSeenWelcome = userDefaults.bool(forKey: Keys.hasSeenWelcome)
@@ -165,6 +170,16 @@ class PreferencesManager {
         }
     }
     
+    func setRestSeconds(_ value: TimeInterval) {
+        restSeconds = max(0, value)
+        if useICloud {
+            store.set(Int64(restSeconds), forKey: Keys.restSeconds)
+            store.synchronize()
+        } else {
+            userDefaults.set(Int64(restSeconds), forKey: Keys.restSeconds)
+        }
+    }
+
     // Method to update hasSeenWelcome and persist to UserDefaults
     func setHasSeenWelcome(_ value: Bool) {
         print("📱 Setting hasSeenWelcome to: \(value)")

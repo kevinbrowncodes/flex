@@ -11,20 +11,27 @@ struct LiveWorkout: Codable, Equatable, Identifiable, Sendable {
     /// The template this workout was started from, if any.
     var templateName: String?
     var exercises: [LiveExercise]
+    /// Rest after each completed set, in seconds; 0 is off. Copied from Settings when the workout
+    /// starts, so the watch rests the same way the phone does (STORY_003).
+    var restSeconds: TimeInterval
+    /// The rest running now, if any. It stays until skipped or replaced; `restRemaining(at:)` says
+    /// whether it is still counting.
+    var rest: LiveRest?
     /// When the last edit was applied.
     var updatedAt: Date
 
-    init(id: UUID = UUID(), title: String? = nil, startedAt: Date = Date(), templateName: String? = nil, exercises: [LiveExercise] = []) {
+    init(id: UUID = UUID(), title: String? = nil, startedAt: Date = Date(), templateName: String? = nil, exercises: [LiveExercise] = [], restSeconds: TimeInterval = 0) {
         self.id = id
         self.title = title ?? LiveWorkout.defaultTitle(for: startedAt)
         self.startedAt = startedAt
         self.templateName = templateName
         self.exercises = exercises
+        self.restSeconds = max(0, restSeconds)
         self.updatedAt = startedAt
     }
 
     private enum CodingKeys: String, CodingKey {
-        case id, title, startedAt, templateName, exercises, updatedAt
+        case id, title, startedAt, templateName, exercises, restSeconds, rest, updatedAt
     }
 
     /// Tolerant of older or smaller JSON: a missing list is empty, a missing time is the start.
@@ -35,6 +42,8 @@ struct LiveWorkout: Codable, Equatable, Identifiable, Sendable {
         title = try container.decodeIfPresent(String.self, forKey: .title) ?? LiveWorkout.defaultTitle(for: startedAt)
         templateName = try container.decodeIfPresent(String.self, forKey: .templateName)
         exercises = try container.decodeIfPresent([LiveExercise].self, forKey: .exercises) ?? []
+        restSeconds = max(0, try container.decodeIfPresent(TimeInterval.self, forKey: .restSeconds) ?? 0)
+        rest = try container.decodeIfPresent(LiveRest.self, forKey: .rest)
         updatedAt = try container.decodeIfPresent(Date.self, forKey: .updatedAt) ?? startedAt
     }
 
@@ -75,6 +84,11 @@ struct LiveWorkout: Codable, Equatable, Identifiable, Sendable {
         exercises.first { $0.sets.contains { $0.id == setID } }
     }
 
+    /// Seconds of rest left at `date`; nil when none is running or it has ended.
+    func restRemaining(at date: Date) -> TimeInterval? {
+        rest?.remaining(at: date)
+    }
+
     // MARK: - Editing
 
     /// Applies one edit. An edit naming an id this workout does not hold does nothing; adding an
@@ -107,6 +121,23 @@ struct LiveWorkout: Codable, Equatable, Identifiable, Sendable {
             guard update(setID, { $0.time = (time ?? "").isEmpty ? nil : time }) else { return }
         case .setCompleted(let setID, let isCompleted):
             guard update(setID, { $0.isCompleted = isCompleted }) else { return }
+            // Ticking a set starts rest (replacing one running); unticking the set that started it cancels.
+            if isCompleted {
+                if restSeconds > 0 {
+                    rest = LiveRest(startedAt: date, endsAt: date.addingTimeInterval(restSeconds), setID: setID)
+                }
+            } else if rest?.setID == setID {
+                rest = nil
+            }
+        case .setRestSeconds(let seconds):
+            restSeconds = max(0, seconds)
+        case .adjustRest(let delta):
+            guard var running = rest, running.remaining(at: date) != nil else { return }
+            running.endsAt = max(date, running.endsAt.addingTimeInterval(delta))
+            rest = running
+        case .skipRest:
+            guard rest != nil else { return }
+            rest = nil
         }
         updatedAt = date
     }
@@ -138,8 +169,24 @@ struct LiveWorkout: Codable, Equatable, Identifiable, Sendable {
             kept.sets = exercise.sets.filter { !$0.isEmpty }
             return kept.sets.isEmpty ? nil : kept
         }
+        trimmed.rest = nil
         trimmed.updatedAt = end
         return FinishedWorkout(workout: trimmed, endedAt: end)
+    }
+}
+
+/// The rest countdown after a set, as wall-clock times, so a relaunched app and both devices agree
+/// on what is left (STORY_003).
+struct LiveRest: Codable, Equatable, Sendable {
+    var startedAt: Date
+    var endsAt: Date
+    /// The set whose completion started this rest, when one did.
+    var setID: UUID?
+
+    /// Seconds left at `date`; nil once it has ended.
+    func remaining(at date: Date) -> TimeInterval? {
+        let left = endsAt.timeIntervalSince(date)
+        return left > 0 ? left : nil
     }
 }
 
@@ -248,6 +295,11 @@ enum LiveWorkoutEdit: Codable, Equatable, Sendable {
     case setReps(setID: UUID, reps: Int?)
     case setTime(setID: UUID, time: String?)
     case setCompleted(setID: UUID, isCompleted: Bool)
+    /// The rest default for the rest of this workout (0 is off).
+    case setRestSeconds(TimeInterval)
+    /// Moves the running rest's end, never earlier than the edit itself; nothing when none is running.
+    case adjustRest(by: TimeInterval)
+    case skipRest
 }
 
 /// A live workout that has been finished: what the phone saves, and what a watch sends it.

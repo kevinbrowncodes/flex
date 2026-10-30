@@ -24,9 +24,10 @@ struct LiveWorkoutBridgeTests {
         try context.save()
 
         let start = TestSupport.date(2026, 10, 30, hour: 18)
-        let live = LiveWorkoutBridge.start(from: template, at: start)
+        let live = LiveWorkoutBridge.start(from: template, at: start, restSeconds: 60)
 
         #expect(live.title == "Heavy Push")
+        #expect(live.restSeconds == 60)
         #expect(live.templateName == "Heavy Push")
         #expect(live.startedAt == start)
         #expect(live.exercises.map { $0.name } == ["Bench Press (Barbell)", "Chest Fly (Cable)"])
@@ -41,6 +42,7 @@ struct LiveWorkoutBridgeTests {
         let empty = LiveWorkoutBridge.start(from: nil, at: start)
         #expect(empty.exercises.isEmpty)
         #expect(empty.title == "Evening Workout")
+        #expect(empty.restSeconds == RestTimer.defaultSeconds)
     }
 
     @Test("Saving makes one Workout with the live id, exercises in order, sets renumbered")
