@@ -1,8 +1,10 @@
 # EPIC_001 — Flex on Apple Watch: start, log and finish a workout from the wrist
 
-**Status:** Drafted 2026-10-30 for the owner's approval. Scope decided with the owner the same day
-through the picker (see Decisions). No story is written yet; stories are drafted one at a time,
-each approved (UI Mockup included) before its code, in the order below.
+**Status:** Approved by the owner 2026-10-30 ("proceed to completion"), scope decided the same day
+through the picker (see Decisions). Stories are drafted one at a time in the order below, each
+with its UI Mockup, and built under that approval. 2026-10-30: STORY_001's first gate run found
+two pre-existing failures, fixed as BUG_001 and CHORE_001 before STORY_001 landed; the owner
+chores below were renumbered CHORE_002 and CHORE_003 to make room.
 
 ## Goal
 
@@ -11,7 +13,7 @@ with the Digital Crown or by telling Siri, rest on a wrist-tap timer, and finish
 lands in Flex's History on every device and in Apple Health with heart rate and calories. With the
 phone along, the phone and watch show the same workout live, and an edit on one appears on the
 other. The epic is done when version 1.1.0 is live on the App Store with the watch app in it and
-the owner has logged a real gym session on a real watch (CHORE_002).
+the owner has logged a real gym session on a real watch (CHORE_003).
 
 ## Why
 
@@ -111,8 +113,8 @@ pre-push hook from STORY_001.
 | 5 | STORY_005 — The watch has your templates and last weights | A `WatchSnapshot` (template folders and templates with their sets, each exercise's last-performed sets, workouts this week and the weekly target) built on the phone and sent with `updateApplicationContext` whenever it changes or Flex comes to the foreground. The watch caches it to disk | `watch-no-swiftdata.sh`: the watch targets never import SwiftData or CloudKit and never create a `ModelContainer`. The message names the rule (the phone is the only writer) and the fix (add it to the snapshot) | Not started |
 | 6 | STORY_006 — Start a template on the watch and log sets with the Digital Crown | Home lists the templates. Starting one makes a `LiveWorkout` pre-filled from the last-performed weights. Each exercise is a page; the Crown adjusts the focused weight or reps; Done completes the set and starts rest; Add Set; Finish shows the summary. Works with the phone out of range | None new. Unit tests: pre-fill from the snapshot. Watch UI test: start Push Day, log two sets, finish | Not started |
 | 7 | STORY_007 — A workout finished on the watch shows up in History | The finished `LiveWorkout` is queued with `transferUserInfo`. The phone saves it as a `Workout` (idempotent by id), so it reaches the iPad through CloudKit. The watch shows "Saved to iPhone" or "Will save when your iPhone is nearby" | None new. Unit tests: duplicate delivery saves once; an exercise unknown to the phone is matched by normalized name or created as a custom exercise | Not started |
-| 8 | STORY_008 — Watch workouts are recorded in Apple Health with heart rate | HealthKit permission on first start, an `HKWorkoutSession` (traditional strength training) plus a builder, heart rate and calories on the logging screen and in the summary, and the `HKWorkout` saved on finish. The session keeps Flex on screen when the wrist drops. Declining permission still lets you log; only the Health parts are gone | `health-usage-strings.sh`: a target with the HealthKit entitlement carries both Health usage strings in its Info.plist. The flex-support privacy page gains a Health section in the same story; App Store Connect's privacy answers are CHORE_001 | Not started |
-| 9 | STORY_009 — Phone and watch show the same workout live | Starting on the phone launches the watch through `startWatchApp`; starting on the watch shows it on the phone. Edits flow both ways over the mirrored session, and Finish on either device finishes both. Rest ends with a wrist haptic, and heart rate shows on the phone. If the link drops, each side keeps going and the finish arrives through STORY_007 | None new. Unit tests: merging concurrent edits (same field, last writer wins; sets added on both sides both kept). Two-device behavior is checked by hand in CHORE_002, since a simulator pair can't run a mirrored HealthKit session | Not started |
+| 8 | STORY_008 — Watch workouts are recorded in Apple Health with heart rate | HealthKit permission on first start, an `HKWorkoutSession` (traditional strength training) plus a builder, heart rate and calories on the logging screen and in the summary, and the `HKWorkout` saved on finish. The session keeps Flex on screen when the wrist drops. Declining permission still lets you log; only the Health parts are gone | `health-usage-strings.sh`: a target with the HealthKit entitlement carries both Health usage strings in its Info.plist. The flex-support privacy page gains a Health section in the same story; App Store Connect's privacy answers are CHORE_002 | Not started |
+| 9 | STORY_009 — Phone and watch show the same workout live | Starting on the phone launches the watch through `startWatchApp`; starting on the watch shows it on the phone. Edits flow both ways over the mirrored session, and Finish on either device finishes both. Rest ends with a wrist haptic, and heart rate shows on the phone. If the link drops, each side keeps going and the finish arrives through STORY_007 | None new. Unit tests: merging concurrent edits (same field, last writer wins; sets added on both sides both kept). Two-device behavior is checked by hand in CHORE_003, since a simulator pair can't run a mirrored HealthKit session | Not started |
 | 10 | STORY_010 — Siri logs a set on iPhone or Watch | A `LogSetIntent` App Intent in `FlexShared` (exercise, weight in lb, reps) with the phrases "Log \(exercise) in Flex" and "Log a set in Flex". Siri asks for anything not said. Logging fills the exercise's first unfinished set in the live workout (adding the exercise if it's missing), completes it, starts rest and reads back "Logged 135 lb × 8 on Bench Press." With no workout running it starts one by time of day and says so. "Bench press" matching several exercises asks which one, offering the one in the workout first | None new. Unit tests: the intent's effect on `LiveWorkout` for each case (existing unfinished set, all sets done, missing exercise, no workout, ambiguous name). The App Shortcuts phrases are checked at build time by Xcode | Not started |
 | 11 | STORY_011 — Weekly progress on the watch face | One WidgetKit accessory complication (circular and corner) showing a ring of workouts this week against the weekly target, from the snapshot. Tapping it opens Flex | None new. Unit test: the ring's value from a snapshot | Not started |
 
@@ -120,13 +122,13 @@ pre-push hook from STORY_001.
 
 | # | Ticket | What it delivers | Gate | Status |
 |---|---|---|---|---|
-| 12 | STORY_012 — Flex for Apple Watch ships to the App Store | Watch screenshots captured by `ScreenshotTests` on a watch simulator and rendered by `scripts/screenshots.sh`; version 1.1.0 with a new build number; `whats_new` in `appstore/asc_meta.json`; released with ascpilot. Waits on CHORE_001 and CHORE_002 | `watch-screenshots.sh`: `appstore/screenshots/out/watch/` holds PNGs at an App Store Connect watch size | Not started |
+| 12 | STORY_012 — Flex for Apple Watch ships to the App Store | Watch screenshots captured by `ScreenshotTests` on a watch simulator and rendered by `scripts/screenshots.sh`; version 1.1.0 with a new build number; `whats_new` in `appstore/asc_meta.json`; released with ascpilot. Waits on CHORE_002 and CHORE_003 | `watch-screenshots.sh`: `appstore/screenshots/out/watch/` holds PNGs at an App Store Connect watch size | Not started |
 
 ### Owner chores (work stops on these; each is cited by the story that waits)
 
-- **CHORE_001 — App Store Connect declares Health data.** The owner updates the App Privacy answers
+- **CHORE_002 — App Store Connect declares Health data.** The owner updates the App Privacy answers
   (Health & Fitness, not linked to identity, not used for tracking). Blocks STORY_012.
-- **CHORE_002 — A real gym session on a real watch.** Through TestFlight, the owner logs one full
+- **CHORE_003 — A real gym session on a real watch.** Through TestFlight, the owner logs one full
   workout from the watch with the phone in the locker, then one mirrored with the phone along, then
   logs a set through Siri on the wrist, and reports what felt wrong. Blocks STORY_012.
 
@@ -146,5 +148,5 @@ pre-push hook from STORY_001.
 ## Done when
 
 - [ ] Stories 1–12 are Done (Testing Plan tests written, gates green in the pre-push hook).
-- [ ] CHORE_001 and CHORE_002 are Done.
+- [ ] CHORE_002 and CHORE_003 are Done.
 - [ ] Flex 1.1.0 with the watch app is live on the App Store.
