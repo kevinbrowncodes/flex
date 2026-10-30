@@ -1,16 +1,17 @@
 import Foundation
 import Observation
-import SwiftData
-import os
 
 /// The workout in progress on this device: holds the `LiveWorkout`, applies edits, and keeps it on
-/// disk after each one so a closed app resumes where it left off (STORY_002).
+/// disk after each one so a closed app resumes where it left off (STORY_002). Device-neutral: the
+/// phone adds saving into SwiftData as an extension (STORY_006), the watch hands the finished
+/// workout to its outbox.
 @MainActor
 @Observable
 final class LiveWorkoutSession {
     private(set) var workout: LiveWorkout?
     private let store: LiveWorkoutStore?
-    private static let logger = Logger(subsystem: "kevinbrowncodes.Flex", category: "LiveWorkout")
+    /// The last failure to write the live workout to disk; the session keeps going regardless.
+    private(set) var lastPersistError: String?
 
     /// - Parameters:
     ///   - store: where the live workout is kept; nil keeps it in memory only (previews).
@@ -37,14 +38,12 @@ final class LiveWorkoutSession {
         persist()
     }
 
-    /// Saves the live workout as a `Workout` and ends the session. Throws with the session intact
-    /// when the save fails, so nothing is lost.
-    @discardableResult
-    func finish(into context: ModelContext, at endedAt: Date = Date()) throws -> Workout? {
+    /// Ends the session and returns the finished workout (empty sets dropped); nil when none is live.
+    func finish(at endedAt: Date = Date()) -> FinishedWorkout? {
         guard let workout else { return nil }
-        let saved = try LiveWorkoutBridge.save(workout.finished(at: endedAt), into: context)
+        let finished = workout.finished(at: endedAt)
         discard()
-        return saved
+        return finished
     }
 
     /// Ends the session without saving.
@@ -57,8 +56,9 @@ final class LiveWorkoutSession {
         guard let workout else { return }
         do {
             try store?.save(workout)
+            lastPersistError = nil
         } catch {
-            Self.logger.error("Could not save the live workout: \(error.localizedDescription)")
+            lastPersistError = error.localizedDescription
         }
     }
 }

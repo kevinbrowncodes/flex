@@ -1,14 +1,22 @@
 import SwiftUI
 
-/// The watch app's first screen: the home once the phone has sent a snapshot (STORY_005), and
-/// until then how to get one (STORY_004).
+/// The watch app's first screen: the workout in progress when there is one (STORY_006), the home
+/// once the phone has sent a snapshot (STORY_005), and until then how to get one (STORY_004).
 struct WatchRootView: View {
     @Environment(WatchState.self) private var state
+    @Environment(LiveWorkoutSession.self) private var session
+    @State private var path = NavigationPath()
+    /// The workout just finished, shown until Done.
+    @State private var justFinished: FinishedWorkout?
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             Group {
-                if let snapshot = state.snapshot {
+                if let finished = justFinished {
+                    WatchFinishedView(finished: finished) { justFinished = nil }
+                } else if session.isActive {
+                    WatchWorkoutView { justFinished = $0 }
+                } else if let snapshot = state.snapshot {
                     WatchHomeView(snapshot: snapshot)
                 } else {
                     WaitingForPhoneView()
@@ -20,6 +28,10 @@ struct WatchRootView: View {
                     WatchTemplateView(template: template)
                 }
             }
+        }
+        // Starting a workout from a pushed template screen pops back so the workout is the root.
+        .onChange(of: session.isActive) { _, isActive in
+            if isActive { path = NavigationPath() }
         }
     }
 }
@@ -59,11 +71,15 @@ struct WaitingForPhoneView: View {
 #Preview("Waiting") {
     WatchRootView()
         .environment(WatchState(store: nil))
+        .environment(LiveWorkoutSession(store: nil, resume: false))
+        .environment(WatchOutbox(store: nil))
 }
 
 #if DEBUG
 #Preview("With a snapshot") {
     WatchRootView()
         .environment(WatchState(store: nil, initial: .sample))
+        .environment(LiveWorkoutSession(store: nil, resume: false))
+        .environment(WatchOutbox(store: nil))
 }
 #endif

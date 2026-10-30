@@ -49,22 +49,38 @@ struct WatchHomeView: View {
     }
 }
 
-/// One template: its exercises, their planned set counts, and what was lifted last time.
+/// One template: Start, then its exercises, their planned set counts, and what was lifted last time.
 struct WatchTemplateView: View {
+    @Environment(WatchState.self) private var state
+    @Environment(LiveWorkoutSession.self) private var session
     let template: SnapshotTemplate
 
     var body: some View {
-        List(template.exercises, id: \.name) { exercise in
-            VStack(alignment: .leading, spacing: 2) {
-                Text(exercise.name)
-                    .font(.headline)
-                Text("\(exercise.plannedSets.count) set\(exercise.plannedSets.count == 1 ? "" : "s")")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-                Text("last \(exercise.lastSummary ?? "—")")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-                    .accessibilityIdentifier("watch-last-\(exercise.name)")
+        List {
+            Button {
+                let restSeconds = state.snapshot?.restSeconds ?? RestTimer.defaultSeconds
+                session.start(LiveWorkout(from: template, restSeconds: restSeconds))
+            } label: {
+                Label("Start", systemImage: "play.fill")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(.green)
+            .listRowBackground(Color.clear)
+            .accessibilityIdentifier("watch-start")
+
+            ForEach(template.exercises, id: \.name) { exercise in
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(exercise.name)
+                        .font(.headline)
+                    Text("\(exercise.plannedSets.count) set\(exercise.plannedSets.count == 1 ? "" : "s")")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                    Text("last \(exercise.lastSummary ?? "—")")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .accessibilityIdentifier("watch-last-\(exercise.name)")
+                }
             }
         }
         .navigationTitle(template.name)
@@ -82,5 +98,7 @@ struct WatchTemplateView: View {
     NavigationStack {
         WatchTemplateView(template: WatchSnapshot.sample.allTemplates[0])
     }
+    .environment(WatchState(store: nil, initial: .sample))
+    .environment(LiveWorkoutSession(store: nil, resume: false))
 }
 #endif

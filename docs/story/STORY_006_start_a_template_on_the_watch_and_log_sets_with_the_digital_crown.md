@@ -1,6 +1,6 @@
 # STORY_006 — Start a template on the watch and log sets with the Digital Crown
 
-**Status:** Approved by the owner 2026-10-30 (with the epic, "proceed to completion"); not started, waits on STORY_005. [EPIC_001](../epic/EPIC_001_flex_on_apple_watch.md) row 6.
+**Status:** Approved by the owner 2026-10-30 (with the epic, "proceed to completion"); built by Fable the same day. [EPIC_001](../epic/EPIC_001_flex_on_apple_watch.md) row 6.
 
 As Kevin, I want to start a template from my watch, turn the Digital Crown to set the weight or
 reps, tap once per set, rest on the wrist timer, and finish, with the phone out of reach, so that
@@ -32,34 +32,34 @@ makes that true and says "Saved to iPhone" when it has).
 
 ## Acceptance Criteria
 
-- [ ] `LiveWorkoutSession` moves to `Flex/FlexShared` as the device-neutral core (start, apply,
+- [x] `LiveWorkoutSession` moves to `Flex/FlexShared` as the device-neutral core (start, apply,
       persist after every edit, resume, discard, `finish(at:) -> FinishedWorkout?`), with no
       platform import; the phone keeps `finish(into:)` as an extension in `Flex/Flex/Support`.
       Behaviour on the phone is unchanged and its tests stay green.
-- [ ] The watch holds a `LiveWorkoutSession` over its own `LiveWorkoutStore`, so a workout in
+- [x] The watch holds a `LiveWorkoutSession` over its own `LiveWorkoutStore`, so a workout in
       progress survives the watch app being closed, and `FLEX_DEMO` launches start clean unless
       `FLEX_DEMO_RESUME=1`, as on the phone.
-- [ ] The template screen gains Start (`watch-start`), which starts
+- [x] The template screen gains Start (`watch-start`), which starts
       `LiveWorkout(from: template, restSeconds: snapshot.restSeconds)` and shows the workout.
       While a workout is live, the watch app opens on it, not the home.
-- [ ] The workout is a vertical `TabView` of pages: one per exercise, then Finish. An exercise
+- [x] The workout is a vertical `TabView` of pages: one per exercise, then Finish. An exercise
       page shows the running clock, the exercise name, "Set n of N" for the first uncompleted set
       (or the last set when all are done), "last …" from the previous sets, the set's weight
       (`watch-weight`) and reps (`watch-reps`), Done (`watch-done`) and Add Set (`watch-add-set`).
       Tapping weight or reps highlights it; the Digital Crown changes the highlighted value (2.5 lb
       or 1 rep a step, never below 0) through `LiveWorkoutEdit`s, so every turn is persisted.
-- [ ] Done completes the current set (which starts rest when the default is on), moves to the
+- [x] Done completes the current set (which starts rest when the default is on), moves to the
       next uncompleted set, and after the last set of the last exercise moves to the Finish page.
       Add Set appends a set copying the current set's weight and reps.
-- [ ] While rest runs, a bar at the top shows the countdown and Skip (`watch-rest`, `watch-rest-skip`);
+- [x] While rest runs, a bar at the top shows the countdown and Skip (`watch-rest`, `watch-rest-skip`);
       when rest reaches zero the watch plays the success haptic once. Cardio exercises show the
       set's time as text instead of weight and reps, read-only, with Done.
-- [ ] The Finish page shows the title, the clock, completed over logged sets, total volume, Finish
+- [x] The Finish page shows the title, the clock, completed over logged sets, total volume, Finish
       (`watch-finish`) and Discard (`watch-discard`, confirmed). Finish keeps the `FinishedWorkout`
       in the watch's outbox (`JSONFileStore<[FinishedWorkout]>`, "finished-workouts.json") for
       STORY_007 to deliver, clears the live workout, and shows "Finished", the duration and volume,
       and "Will save when your iPhone is nearby", with Done back to the home.
-- [ ] No new rule, no new gate; `watch-no-swiftdata.sh` keeps holding.
+- [x] No new rule, no new gate; `watch-no-swiftdata.sh` keeps holding.
 
 ## Testing Plan
 

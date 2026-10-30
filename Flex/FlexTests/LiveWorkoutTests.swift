@@ -86,6 +86,25 @@ struct LiveWorkoutTests {
         #expect(workout.updatedAt == before)
     }
 
+    @Test("The current set is the first not done, or the last when all are; volume sums weight × reps")
+    func currentSetAndVolume() {
+        var (workout, bench, set1, set2) = benchWorkout()
+        #expect(workout.exercises[0].currentSetIndex == 0)
+        #expect(!workout.exercises[0].allSetsCompleted)
+        #expect(workout.totalVolume == 185 * 8 + 205 * 6)
+
+        workout.apply(.setCompleted(setID: set1.id, isCompleted: true))
+        #expect(workout.exercises[0].currentSetIndex == 1)
+        workout.apply(.setCompleted(setID: set2.id, isCompleted: true))
+        #expect(workout.exercises[0].currentSetIndex == 1)
+        #expect(workout.exercises[0].allSetsCompleted)
+
+        workout.apply(.addSet(exerciseID: bench.id, set: LiveSet(weight: 100)))
+        #expect(workout.exercises[0].currentSetIndex == 2)
+        #expect(workout.totalVolume == 185 * 8 + 205 * 6 + 100) // a weight with no reps counts once
+        #expect(LiveExercise(name: "Empty", bodyPart: "Arms").currentSetIndex == nil)
+    }
+
     @Test("Finishing drops empty sets and exercises with nothing logged, and keeps completed flags")
     func finishing() {
         var (workout, bench, set1, _) = benchWorkout()

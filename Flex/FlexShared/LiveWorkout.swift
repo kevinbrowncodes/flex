@@ -61,6 +61,9 @@ struct LiveWorkout: Codable, Equatable, Identifiable, Sendable {
 
     var allSets: [LiveSet] { exercises.flatMap { $0.sets } }
 
+    /// Total volume so far: weight × reps, summed over every set.
+    var totalVolume: Double { allSets.reduce(0) { $0 + $1.volume } }
+
     /// Sets with something logged in them.
     var loggedSetCount: Int { allSets.filter { !$0.isEmpty }.count }
 
@@ -244,6 +247,15 @@ struct LiveExercise: Codable, Equatable, Identifiable, Sendable {
     func previousSet(at index: Int) -> LiveSet? {
         index < previousSets.count ? previousSets[index] : nil
     }
+
+    /// The set to log next: the first not yet completed, or the last one when every set is done.
+    var currentSetIndex: Int? {
+        sets.firstIndex { !$0.isCompleted } ?? (sets.isEmpty ? nil : sets.count - 1)
+    }
+
+    var allSetsCompleted: Bool {
+        !sets.isEmpty && sets.allSatisfy { $0.isCompleted }
+    }
 }
 
 /// One set in a live workout. Its number is its position in the exercise's `sets`.
@@ -281,6 +293,12 @@ struct LiveSet: Codable, Equatable, Identifiable, Sendable {
     /// True when nothing has been logged for this set.
     var isEmpty: Bool {
         weight == nil && reps == nil && (time ?? "").isEmpty && distance == nil
+    }
+
+    /// Volume for this set: weight × reps. A set with a weight but no reps counts the weight once.
+    var volume: Double {
+        guard let weight, weight > 0 else { return 0 }
+        return weight * Double(max(reps ?? 1, 0))
     }
 }
 
