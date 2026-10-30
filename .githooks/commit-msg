@@ -1,0 +1,60 @@
+#!/bin/sh
+# Commit-msg gate (STORY_001): a commit subject starts with a ticket id whose file exists in
+# docs/, because tickets are how work is specified (no story file, no code). Also allowed: an
+# EPIC_ id when the commit touches only docs/epic/, and git's own merge, revert, fixup and squash
+# subjects. Enabled once per clone with: git config core.hooksPath .githooks
+# Emergencies only: git commit --no-verify, with the justification in the message.
+set -e
+subject=$(sed -n '1p' "$1")
+case "$subject" in
+  Merge\ *|Revert\ *|fixup!*|squash!*) exit 0 ;;
+esac
+# BSD expr has no \| alternation: try each ticket kind in turn.
+id=""
+for prefix in STORY BUG CHORE EPIC; do
+  id=$(expr "$subject" : "\\(${prefix}_[0-9][0-9][0-9]\\)" || true)
+  [ -n "$id" ] && break
+done
+if [ -z "$id" ]; then
+  echo "refused: the commit subject names no ticket: \"$subject\"" >&2
+  echo "Rule: commit subjects start with the ticket id (CLAUDE.md): STORY_003: ..., BUG_002: ...," >&2
+  echo "CHORE_001: ... Also allowed: an EPIC_ id for a commit touching only docs/epic/, merges" >&2
+  echo "and reverts. Fix: write the ticket first (no story file, no code), then commit as" >&2
+  echo "'STORY_012: what changed' (STORY_001)." >&2
+  exit 1
+fi
+rest=$(printf '%s' "$subject" | cut -c "$((${#id} + 1))-")
+case "$rest" in
+  [A-Za-z0-9_]*)
+    echo "refused: \"$subject\" does not start with a three-digit ticket id (STORY_001)." >&2
+    echo "Rule: ticket ids are the kind plus three digits, zero-padded (CLAUDE.md): STORY_012: ..." >&2
+    exit 1 ;;
+esac
+cd "$(git rev-parse --show-toplevel)"
+case "$id" in
+  STORY_*) dir=docs/story ;;
+  BUG_*) dir=docs/bug ;;
+  CHORE_*) dir=docs/chore ;;
+  EPIC_*) dir=docs/epic ;;
+esac
+found=""
+for file in "$dir/${id}_"*.md; do
+  [ -e "$file" ] && found="$file"
+done
+if [ -z "$found" ]; then
+  echo "refused: $id has no ticket file under $dir/ (${id}_*.md)." >&2
+  echo "Rule: no story file, no code (CLAUDE.md). Fix: draft the ticket, get it approved, then" >&2
+  echo "commit with its id first in the subject (STORY_001)." >&2
+  exit 1
+fi
+case "$id" in
+  EPIC_*)
+    outside=$(git diff --cached --name-only | grep -v '^docs/epic/' || true)
+    if [ -n "$outside" ]; then
+      echo "refused: an EPIC_ subject fits only a commit touching docs/epic/ alone, but this" >&2
+      echo "commit stages: $(printf '%s' "$outside" | tr '\n' ' ')" >&2
+      echo "Fix: use the story, bug or chore doing the work as the subject (CLAUDE.md, STORY_001)." >&2
+      exit 1
+    fi ;;
+esac
+exit 0

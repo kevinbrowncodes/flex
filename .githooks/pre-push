@@ -1,0 +1,60 @@
+#!/bin/sh
+# Pre-push gate (STORY_001): the pushes the rules refuse stop at git itself, with the rule in the
+# message, then every gate in scripts/gates runs and any failure blocks the push. Enabled once
+# per clone with: git config core.hooksPath .githooks
+# Emergencies only: git push --no-verify, with the justification in the commit message.
+cd "$(git rev-parse --show-toplevel)" || exit 1
+zero=0000000000000000000000000000000000000000
+while read -r local_ref local_sha remote_ref remote_sha; do
+  [ -z "$local_ref" ] && continue
+  case "$remote_ref" in
+    refs/heads/main)
+      echo "refused: push to develop only, never main (CLAUDE.md, Dev workflow)." >&2
+      echo "Fix: git push origin develop (STORY_001)." >&2
+      exit 1 ;;
+  esac
+  # Deleting a remote ref pushes no commits, so there is no diff to check.
+  [ "$local_sha" = "$zero" ] && continue
+  # A brand-new ref has no base on the remote; the diff checks below need one.
+  [ "$remote_sha" = "$zero" ] && continue
+  base=$remote_sha
+  deleted_bugs=$(git diff --name-only --diff-filter=D "$base" "$local_sha" -- 'docs/bug' 2>/dev/null || true)
+  if [ -n "$deleted_bugs" ]; then
+    echo "refused: a bug is never deleted (CLAUDE.md: set Status to Resolved and add a" >&2
+    echo "Resolution note at the bottom). This push deletes: $(printf '%s' "$deleted_bugs" | tr '\n' ' ')" >&2
+    echo "Fix: restore the file and resolve it in place (STORY_001)." >&2
+    exit 1
+  fi
+  # Ticket prose is frozen once implemented: a story, bug or chore whose every box was ticked at
+  # the push base may only gain flips and appended lines (a Resolution, a dated note).
+  for file in $(git diff --name-only --diff-filter=M "$base" "$local_sha" -- 'docs/story' 'docs/bug' 'docs/chore' 2>/dev/null); do
+    frozen_old=$(mktemp) && frozen_new=$(mktemp)
+    git show "$base:$file" > "$frozen_old" 2>/dev/null || { rm -f "$frozen_old" "$frozen_new"; continue; }
+    if ! grep -q -e '- \[x\]' "$frozen_old" || grep -q -e '- \[ \]' "$frozen_old"; then
+      rm -f "$frozen_old" "$frozen_new"; continue
+    fi
+    git show "$local_sha:$file" > "$frozen_new" 2>/dev/null || { rm -f "$frozen_old" "$frozen_new"; continue; }
+    ok=1
+    if [ "$(wc -l < "$frozen_new")" -lt "$(wc -l < "$frozen_old")" ]; then ok=0; fi
+    if [ "$ok" = "1" ] && ! awk 'NR==FNR { kept[FNR] = $0; n = FNR; next }
+           FNR <= n { line = kept[FNR]
+             if ($0 != line) { flip = line; sub(/\[ \]/, "[x]", flip); if ($0 != flip) exit 1 } }' \
+           "$frozen_old" "$frozen_new"; then ok=0; fi
+    rm -f "$frozen_old" "$frozen_new"
+    if [ "$ok" = "0" ]; then
+      echo "refused: $file was finished at the push base (every box ticked) and this push" >&2
+      echo "rewrites it. Ticket prose is frozen once implemented (CLAUDE.md): only" >&2
+      echo "[ ] -> [x] flips and appended lines pass. Fix: put new requirements in a new" >&2
+      echo "ticket (STORY_001)." >&2
+      exit 1
+    fi
+  done
+done
+# Git runs hooks with GIT_DIR and friends set; a gate that runs git in a temporary folder would
+# act on this repository instead. The gates get none of them.
+for var in $(env | sed -n 's/^\(GIT_[A-Za-z0-9_]*\)=.*/\1/p'); do unset "$var"; done
+status=0
+for gate in scripts/gates/*.sh; do
+  sh "$gate" || status=1
+done
+exit $status
