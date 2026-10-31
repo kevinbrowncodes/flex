@@ -84,8 +84,9 @@ on trial, rules are gates.
   `WorkoutFlowUITests` on the iPhone 17 Pro simulator, `FlexWatchTests` and `FlexWatchUITests`
   on an Apple Watch simulator), `shared-is-portable.sh` (`Flex/FlexShared` imports only
   Foundation and Observation, STORY_004), `watch-no-swiftdata.sh` (`Flex/FlexWatch` never
-  imports SwiftData or CloudKit or names a ModelContainer or ModelContext, STORY_005). Each
-  watch story in EPIC_001 adds its own.
+  imports SwiftData or CloudKit or names a ModelContainer or ModelContext, STORY_005),
+  `health-usage-strings.sh` (a target whose entitlements grant HealthKit sets both Health usage
+  strings, STORY_008). Each watch story in EPIC_001 adds its own.
 - Run a gate by hand with `sh scripts/gates/<name>.sh`. `git push --no-verify` is for
   emergencies only, with the justification in the commit message.
 

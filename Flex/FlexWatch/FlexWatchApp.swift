@@ -7,6 +7,8 @@ struct FlexWatchApp: App {
     @State private var state: WatchState
     @State private var session: LiveWorkoutSession
     @State private var delivery: WatchDelivery
+    /// Apple Health for the workout in progress; no HealthKit in demo launches (STORY_008).
+    @State private var health: WatchHealthSession
     /// Takes the phone's snapshot and carries finished workouts back; nil in demo launches,
     /// which carry their own snapshot and never reach a phone (STORY_005, STORY_007).
     @State private var link: WatchLink?
@@ -15,6 +17,7 @@ struct FlexWatchApp: App {
         let state: WatchState
         let session: LiveWorkoutSession
         let delivery: WatchDelivery
+        let health: WatchHealthSession
         var link: WatchLink?
 
         #if DEBUG
@@ -23,10 +26,12 @@ struct FlexWatchApp: App {
             // The live workout file is real so a relaunch can prove resume; cleared unless asked for.
             session = LiveWorkoutSession(store: .default(), resume: demo.resumesLiveWorkout)
             delivery = WatchDelivery(outbox: WatchOutbox(store: nil))
+            health = WatchHealthSession(store: nil)
         } else {
             state = WatchState(store: .default(named: "watch-snapshot.json"))
             session = LiveWorkoutSession(store: .default())
             delivery = WatchDelivery(outbox: WatchOutbox(store: .default(named: "finished-workouts.json")))
+            health = WatchHealthSession(store: HealthKitStore())
             let realLink = WatchLink(state: state, delivery: delivery)
             delivery.attach(realLink)
             link = realLink
@@ -35,6 +40,7 @@ struct FlexWatchApp: App {
         state = WatchState(store: .default(named: "watch-snapshot.json"))
         session = LiveWorkoutSession(store: .default())
         delivery = WatchDelivery(outbox: WatchOutbox(store: .default(named: "finished-workouts.json")))
+        health = WatchHealthSession(store: HealthKitStore())
         let realLink = WatchLink(state: state, delivery: delivery)
         delivery.attach(realLink)
         link = realLink
@@ -44,6 +50,7 @@ struct FlexWatchApp: App {
         _state = State(initialValue: state)
         _session = State(initialValue: session)
         _delivery = State(initialValue: delivery)
+        _health = State(initialValue: health)
         _link = State(initialValue: link)
     }
 
@@ -53,6 +60,7 @@ struct FlexWatchApp: App {
                 .environment(state)
                 .environment(session)
                 .environment(delivery)
+                .environment(health)
         }
     }
 }

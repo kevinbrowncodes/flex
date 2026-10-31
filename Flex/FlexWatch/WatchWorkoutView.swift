@@ -15,6 +15,7 @@ enum CrownAdjust {
 struct WatchWorkoutView: View {
     @Environment(LiveWorkoutSession.self) private var session
     @Environment(WatchDelivery.self) private var delivery
+    @Environment(WatchHealthSession.self) private var health
     var onFinished: (FinishedWorkout) -> Void
 
     @State private var page = 0
@@ -47,15 +48,19 @@ struct WatchWorkoutView: View {
     }
 
     private func finish() {
-        guard let finished = session.finish() else { return }
+        let endedAt = Date()
+        guard let finished = session.finish(at: endedAt) else { return }
         delivery.enqueue(finished)
         onFinished(finished)
+        // The Health workout ends with the live one; its summary arrives on the finished screen.
+        Task { await health.end(at: endedAt) }
     }
 }
 
 /// One exercise: the clock, the rest bar, the current set's weight and reps for the Crown, Done and Add Set.
 struct WatchExercisePage: View {
     @Environment(LiveWorkoutSession.self) private var session
+    @Environment(WatchHealthSession.self) private var health
     let exercise: LiveExercise
     let workout: LiveWorkout
     var onAdvance: () -> Void
@@ -146,6 +151,11 @@ struct WatchExercisePage: View {
                     .monospacedDigit()
                     .foregroundStyle(.secondary)
             }
+            Text(health.heartRateText)
+                .font(.caption2)
+                .monospacedDigit()
+                .foregroundStyle(health.heartRate == nil ? Color.secondary : Color.red)
+                .accessibilityIdentifier("watch-heart-rate")
             Spacer()
             if let rest = workout.rest {
                 TimelineView(.periodic(from: rest.startedAt, by: 1)) { context in
@@ -239,6 +249,7 @@ struct WatchExercisePage: View {
 /// The last page: what was done, Finish, Discard.
 struct WatchFinishPage: View {
     @Environment(LiveWorkoutSession.self) private var session
+    @Environment(WatchHealthSession.self) private var health
     let workout: LiveWorkout
     var onFinish: () -> Void
 
@@ -281,7 +292,10 @@ struct WatchFinishPage: View {
             }
         }
         .alert("Discard Workout?", isPresented: $isConfirmingDiscard) {
-            Button("Discard Workout", role: .destructive) { session.discard() }
+            Button("Discard Workout", role: .destructive) {
+                health.discard()
+                session.discard()
+            }
             Button("Keep Going", role: .cancel) {}
         } message: {
             Text("Your logged sets will be lost.")
@@ -292,11 +306,21 @@ struct WatchFinishPage: View {
 /// After Finish: what was done and where it is going.
 struct WatchFinishedView: View {
     @Environment(WatchDelivery.self) private var delivery
+    @Environment(WatchHealthSession.self) private var health
     let finished: FinishedWorkout
     var onDone: () -> Void
 
     private var isDelivered: Bool {
         delivery.status(of: finished.workout.id) == .delivered
+    }
+
+    /// "♥ 131 avg · 412 kcal", with whatever Health recorded.
+    private var healthSummary: String? {
+        guard let summary = health.summary else { return nil }
+        var parts: [String] = []
+        if let average = summary.averageHeartRate { parts.append("♥ \(Int(average.rounded())) avg") }
+        if let energy = summary.activeEnergy { parts.append("\(Int(energy.rounded())) kcal") }
+        return parts.isEmpty ? nil : parts.joined(separator: " · ")
     }
 
     var body: some View {
@@ -311,6 +335,18 @@ struct WatchFinishedView: View {
                 Text("\(Formatting.duration(finished.duration)) · \(Formatting.weightWithUnit(finished.workout.totalVolume))")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
+                if health.state == .saved {
+                    if let healthSummary {
+                        Text(healthSummary)
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                            .accessibilityIdentifier("watch-health-summary")
+                    }
+                    Label("Saved to Apple Health", systemImage: "heart.text.square")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .accessibilityIdentifier("watch-health-saved")
+                }
                 Label(
                     isDelivered ? "Saved to iPhone" : "Will save when your iPhone is nearby",
                     systemImage: isDelivered ? "checkmark.icloud" : "applewatch.radiowaves.left.and.right"
@@ -334,5 +370,6 @@ struct WatchFinishedView: View {
     return WatchWorkoutView { _ in }
         .environment(session)
         .environment(WatchDelivery(outbox: WatchOutbox(store: nil)))
+        .environment(WatchHealthSession(store: nil))
 }
 #endif

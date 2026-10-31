@@ -30,6 +30,8 @@ final class WatchWorkoutUITests: XCTestCase {
         XCTAssertEqual(app.staticTexts["watch-set-label"].label, "Set 1 of 2")
         XCTAssertEqual(app.staticTexts["watch-weight"].label, "185")
         XCTAssertEqual(app.staticTexts["watch-reps"].label, "8")
+        // A demo launch never touches HealthKit: no sheet, no reading (STORY_008).
+        XCTAssertEqual(app.staticTexts["watch-heart-rate"].label, "♥ --")
 
         app.buttons["watch-done"].tap()
         XCTAssertTrue(app.staticTexts["watch-rest"].waitForExistence(timeout: 5))
@@ -56,6 +58,7 @@ final class WatchWorkoutUITests: XCTestCase {
 
         XCTAssertTrue(app.staticTexts["watch-finished"].waitForExistence(timeout: 5))
         XCTAssertEqual(app.staticTexts["watch-finished-status"].label, "Will save when your iPhone is nearby")
+        XCTAssertFalse(app.staticTexts["watch-health-saved"].exists) // no Health in a demo launch
         app.buttons["watch-finished-done"].tap()
         XCTAssertTrue(app.staticTexts["Heavy Push"].waitForExistence(timeout: 5))
     }

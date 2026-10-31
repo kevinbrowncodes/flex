@@ -1,6 +1,6 @@
 # STORY_008 — Watch workouts are recorded in Apple Health with heart rate
 
-**Status:** Approved by the owner 2026-10-30 (with the epic, "proceed to completion"); not started, waits on STORY_007. [EPIC_001](../epic/EPIC_001_flex_on_apple_watch.md) row 8.
+**Status:** Approved by the owner 2026-10-30 (with the epic, "proceed to completion"); built by Fable the same day; CHORE_002 publishes the privacy page and answers App Store Connect. [EPIC_001](../epic/EPIC_001_flex_on_apple_watch.md) row 8.
 
 As Kevin, I want a workout I run from the watch to count in Apple Health, with my heart rate and
 calories, and to keep Flex on the screen when my wrist drops, so that lifting counts toward my
@@ -28,29 +28,29 @@ once (the system's Health sheet):
 
 ## Acceptance Criteria
 
-- [ ] `FlexWatch` and `Flex` gain the HealthKit entitlement (`com.apple.developer.healthkit`,
+- [x] `FlexWatch` and `Flex` gain the HealthKit entitlement (`com.apple.developer.healthkit`,
       no clinical access) in `FlexWatch.entitlements` and `Flex.entitlements`, and both targets
       set `NSHealthShareUsageDescription` and `NSHealthUpdateUsageDescription` through their
       `INFOPLIST_KEY_` settings, in words a reviewer reads: why Flex reads heart rate and energy
       and why it writes workouts.
-- [ ] `WatchHealthSession` (watch) starts an `HKWorkoutSession` (traditional strength training,
+- [x] `WatchHealthSession` (watch) starts an `HKWorkoutSession` (traditional strength training,
       indoor) with an `HKLiveWorkoutBuilder` when a live workout starts, after asking for
       authorization the first time; it publishes the latest heart rate and active energy, ends the
       session and saves the `HKWorkout` (the Flex title as metadata) when the live workout
       finishes, and discards it when the live workout is discarded. The health store is behind a
       protocol so the controller is tested with a fake.
-- [ ] Authorization declined, or Health unavailable, changes nothing about logging: the page shows
+- [x] Authorization declined, or Health unavailable, changes nothing about logging: the page shows
       "♥ --", the finish screen shows no Health lines, and no session is started.
-- [ ] The exercise pages show the current heart rate (`watch-heart-rate`); the finish screen shows
+- [x] The exercise pages show the current heart rate (`watch-heart-rate`); the finish screen shows
       average heart rate and active energy (`watch-health-summary`) and "Saved to Apple Health"
       once the `HKWorkout` is saved.
-- [ ] The running `HKWorkoutSession` keeps Flex frontmost when the wrist drops, as watchOS does
+- [x] The running `HKWorkoutSession` keeps Flex frontmost when the wrist drops, as watchOS does
       for workout apps; nothing else is needed for it.
-- [ ] `FLEX_DEMO` launches never touch HealthKit (no sheet in UI tests); the page shows "♥ --".
-- [ ] `scripts/gates/health-usage-strings.sh` fails any target whose entitlements grant HealthKit
+- [x] `FLEX_DEMO` launches never touch HealthKit (no sheet in UI tests); the page shows "♥ --".
+- [x] `scripts/gates/health-usage-strings.sh` fails any target whose entitlements grant HealthKit
       while its build settings lack either usage string, with the rule and the fix in its
       message, self-tested on a planted project fragment.
-- [ ] The privacy policy on the support site (repo `kevinbrowncodes/flex-support`, the App Store's
+- [x] The privacy policy on the support site (repo `kevinbrowncodes/flex-support`, the App Store's
       privacy URL) gains a Health section: what is read (heart rate, active energy during a
       workout), what is written (the workout), that it stays on the device and in the user's
       Health data and is never sent to Flex's servers (there are none). Committed in that repo;

@@ -5,6 +5,7 @@ import SwiftUI
 struct WatchRootView: View {
     @Environment(WatchState.self) private var state
     @Environment(LiveWorkoutSession.self) private var session
+    @Environment(WatchHealthSession.self) private var health
     @State private var path = NavigationPath()
     /// The workout just finished, shown until Done.
     @State private var justFinished: FinishedWorkout?
@@ -29,9 +30,21 @@ struct WatchRootView: View {
                 }
             }
         }
-        // Starting a workout from a pushed template screen pops back so the workout is the root.
+        // Starting a workout from a pushed template screen pops back so the workout is the root, and
+        // the Health workout starts with it (STORY_008); finish and discard end it where they happen.
         .onChange(of: session.isActive) { _, isActive in
-            if isActive { path = NavigationPath() }
+            if isActive {
+                path = NavigationPath()
+                if let workout = session.workout {
+                    Task { await health.begin(title: workout.title, at: workout.startedAt) }
+                }
+            }
+        }
+        .task {
+            // A relaunch with a live workout: the system ended the old Health session, start another.
+            if let workout = session.workout, !health.isRunning {
+                await health.begin(title: workout.title, at: workout.startedAt)
+            }
         }
     }
 }
@@ -73,6 +86,7 @@ struct WaitingForPhoneView: View {
         .environment(WatchState(store: nil))
         .environment(LiveWorkoutSession(store: nil, resume: false))
         .environment(WatchDelivery(outbox: WatchOutbox(store: nil)))
+        .environment(WatchHealthSession(store: nil))
 }
 
 #if DEBUG
@@ -81,5 +95,6 @@ struct WaitingForPhoneView: View {
         .environment(WatchState(store: nil, initial: .sample))
         .environment(LiveWorkoutSession(store: nil, resume: false))
         .environment(WatchDelivery(outbox: WatchOutbox(store: nil)))
+        .environment(WatchHealthSession(store: nil))
 }
 #endif
