@@ -31,6 +31,9 @@ struct LiveWorkoutTests {
         #expect(workout.set(withID: set2.id)?.time == "1:30")
         #expect(workout.set(withID: set2.id)?.weight == 205) // untouched
         #expect(workout.updatedAt == later)
+        workout.apply(.setReps(setID: set2.id, reps: 7), at: later.addingTimeInterval(-3600))
+        #expect(workout.set(withID: set2.id)?.reps == 7)
+        #expect(workout.updatedAt == later) // an edit dated earlier never moves the time back
 
         workout.apply(.setTime(setID: set2.id, time: ""))
         #expect(workout.set(withID: set2.id)?.time == nil)

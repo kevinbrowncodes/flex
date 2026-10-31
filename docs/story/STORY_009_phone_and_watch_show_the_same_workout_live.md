@@ -1,6 +1,6 @@
 # STORY_009 — Phone and watch show the same workout live
 
-**Status:** Approved by the owner 2026-10-30 (with the epic, "proceed to completion"); not started, waits on STORY_008. [EPIC_001](../epic/EPIC_001_flex_on_apple_watch.md) row 9.
+**Status:** Approved by the owner 2026-10-30 (with the epic, "proceed to completion"); built by Fable the same day; two real devices prove it in CHORE_003. [EPIC_001](../epic/EPIC_001_flex_on_apple_watch.md) row 9.
 
 As Kevin, I want a workout I start on either device to be on both, with every set I tick or
 weight I change on one showing on the other within a second, the rest timer tapping my wrist
@@ -28,7 +28,7 @@ bench and the watch on my wrist are one workout, not two.
 
 ## Acceptance Criteria
 
-- [ ] `Flex/FlexShared/WorkoutMirror.swift` defines the messages the two devices exchange over
+- [x] `Flex/FlexShared/WorkoutMirror.swift` defines the messages the two devices exchange over
       the HealthKit mirrored workout session's data channel: `.hello` (a side joined), `.state(LiveWorkout)`
       (the whole workout, the watch's copy), `.edit(LiveWorkoutEdit, at: Date)`, `.vitals(heartRate:, activeEnergy:)`,
       `.finish(at: Date)` and `.discard`, `Codable` through `FlexJSON`. The watch is the source of
@@ -36,27 +36,27 @@ bench and the watch on my wrist are one workout, not two.
       `.state`; the phone applies its own edit at once for responsiveness and adopts each `.state`
       whose `updatedAt` is not older than its own. A `MirrorPeer` holds this logic over a
       `MirrorTransport` protocol, so it is tested with two fakes wired together.
-- [ ] Starting on the watch (STORY_006) begins mirroring to the phone
+- [x] Starting on the watch (STORY_006) begins mirroring to the phone
       (`HKWorkoutSession.startMirroringToCompanionDevice`); the phone's `PhoneWatchLink` installs
       `HKHealthStore.workoutSessionMirroringStartHandler`, takes the mirrored session, sends
       `.hello`, receives `.state`, and the phone's `LiveWorkoutSession` starts with it, so
       `ActiveWorkoutView` comes up on the phone by itself.
-- [ ] Starting on the phone (`WorkoutView`) calls `HKHealthStore.startWatchApp(toHandle:)` with a
+- [x] Starting on the phone (`WorkoutView`) calls `HKHealthStore.startWatchApp(toHandle:)` with a
       strength-training configuration; the watch app handles it (`WKApplicationDelegateAdaptor`,
       `handle(_ workoutConfiguration:)`), starts its Health session (STORY_008) mirroring to the
       phone, sends `.hello`, and the phone answers `.state` with its workout, which the watch adopts.
       With no watch paired or the watch app not installed, the phone works as today.
-- [ ] Every `LiveWorkoutSession.apply` on either side sends `.edit`; the rest timer is part of the
+- [x] Every `LiveWorkoutSession.apply` on either side sends `.edit`; the rest timer is part of the
       workout, so one `LiveRest` runs on both: the watch taps when it ends (STORY_006), the phone
       shows the countdown (STORY_003). Finish on either sends `.finish`: the watch ends its Health
       session and saves the `HKWorkout` (STORY_008), the phone saves the `Workout`
       (`LiveWorkoutBridge.save`, idempotent) and both sessions end. Discard on either discards both.
-- [ ] The phone shows the watch's current heart rate beside the clock (`live-heart-rate`) and
+- [x] The phone shows the watch's current heart rate beside the clock (`live-heart-rate`) and
       "On watch" while mirrored; the watch shows nothing new.
-- [ ] If the mirrored session ends unexpectedly (out of range, the watch app killed), each side
+- [x] If the mirrored session ends unexpectedly (out of range, the watch app killed), each side
       keeps its own copy and goes on; the watch's finished workout reaches the phone through the
       STORY_007 outbox, and the phone's `LiveWorkoutBridge.save` makes a double arrival a no-op.
-- [ ] No SwiftData model changes; no new rule, no new gate.
+- [x] No SwiftData model changes; no new rule, no new gate.
 
 ## Testing Plan
 

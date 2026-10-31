@@ -8,8 +8,10 @@ extension LiveWorkoutSession {
     @discardableResult
     func finish(into context: ModelContext, at endedAt: Date = Date()) throws -> Workout? {
         guard let workout else { return nil }
-        let saved = try LiveWorkoutBridge.save(workout.finished(at: endedAt), into: context)
-        discard()
+        let finished = workout.finished(at: endedAt)
+        let saved = try LiveWorkoutBridge.save(finished, into: context)
+        endSession()
+        onFinish?(finished)
         return saved
     }
 }

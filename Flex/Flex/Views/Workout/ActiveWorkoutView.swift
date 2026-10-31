@@ -7,6 +7,7 @@ struct ActiveWorkoutView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @Environment(LiveWorkoutSession.self) private var session
+    @Environment(PhoneMirrorHost.self) private var mirrorHost
 
     @State private var editingTitle = false
     @State private var editedTitle = ""
@@ -24,6 +25,8 @@ struct ActiveWorkoutView: View {
     @State private var lastShown: LiveWorkout?
     /// Bumped when a rest reaches zero, for the success haptic (STORY_003).
     @State private var restsFinished = 0
+    /// True while Finish or Discard here ends the session, so the remote-ended check stays quiet.
+    @State private var isEndingLocally = false
 
     private var workout: LiveWorkout? {
         session.workout ?? lastShown
@@ -97,6 +100,11 @@ struct ActiveWorkoutView: View {
             .onAppear { lastShown = session.workout }
             .onChange(of: session.workout) { _, newValue in
                 if let newValue { lastShown = newValue }
+            }
+            // The watch finished or discarded the workout (STORY_009): the phone's copy is saved or
+            // gone already, so this screen closes.
+            .onChange(of: session.isActive) { _, isActive in
+                if !isActive && !isEndingLocally && finishedWorkout == nil { dismiss() }
             }
             // One success tap when the running rest reaches zero. A rest that ended while the app
             // was away gets no tap; it just is not shown.
@@ -223,6 +231,19 @@ struct ActiveWorkoutView: View {
                         .foregroundStyle(.secondary)
                         .monospacedDigit()
                 }
+                if mirrorHost.isLinked {
+                    Spacer(minLength: 12)
+                    if let heartRate = mirrorHost.watchHeartRate {
+                        Label("\(Int(heartRate.rounded()))", systemImage: "heart.fill")
+                            .foregroundStyle(.red)
+                            .monospacedDigit()
+                            .accessibilityLabel("Heart rate \(Int(heartRate.rounded()))")
+                            .accessibilityIdentifier("live-heart-rate")
+                    }
+                    Label("On watch", systemImage: "applewatch")
+                        .foregroundStyle(.secondary)
+                        .accessibilityIdentifier("live-on-watch")
+                }
             }
             .font(.body)
 
@@ -299,21 +320,26 @@ struct ActiveWorkoutView: View {
     }
 
     private func discardWorkout() {
+        isEndingLocally = true
         session.discard()
         dismiss()
     }
 
     private func finishWorkout() {
+        isEndingLocally = true
         do {
             finishedWorkout = try session.finish(into: modelContext)
         } catch {
+            isEndingLocally = false
             saveError = error.localizedDescription
         }
     }
 }
 
 #Preview {
-    ActiveWorkoutView()
+    let session = PreviewData.liveWorkoutSession()
+    return ActiveWorkoutView()
         .modelContainer(PreviewData.shared.modelContainer)
-        .environment(PreviewData.liveWorkoutSession())
+        .environment(session)
+        .environment(PhoneMirrorHost(session: session, healthStore: nil))
 }

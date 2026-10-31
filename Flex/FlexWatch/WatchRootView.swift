@@ -6,6 +6,8 @@ struct WatchRootView: View {
     @Environment(WatchState.self) private var state
     @Environment(LiveWorkoutSession.self) private var session
     @Environment(WatchHealthSession.self) private var health
+    @Environment(WatchDelivery.self) private var delivery
+    @Environment(MirrorPeer.self) private var mirror
     @State private var path = NavigationPath()
     /// The workout just finished, shown until Done.
     @State private var justFinished: FinishedWorkout?
@@ -36,11 +38,26 @@ struct WatchRootView: View {
             if isActive {
                 path = NavigationPath()
                 if let workout = session.workout {
+                    health.rename(workout.title)
                     Task { await health.begin(title: workout.title, at: workout.startedAt) }
                 }
             }
         }
         .task {
+            // The phone finished or discarded the shared workout (STORY_009): end here the same way.
+            mirror.onRemoteFinish = { endedAt in
+                Task { @MainActor in
+                    await health.end(at: endedAt)
+                    if let finished = session.finish(at: endedAt) {
+                        delivery.enqueue(finished)
+                        justFinished = finished
+                    }
+                }
+            }
+            mirror.onRemoteDiscard = {
+                health.discard()
+                session.discard()
+            }
             // A relaunch with a live workout: the system ended the old Health session, start another.
             if let workout = session.workout, !health.isRunning {
                 await health.begin(title: workout.title, at: workout.startedAt)
@@ -87,6 +104,7 @@ struct WaitingForPhoneView: View {
         .environment(LiveWorkoutSession(store: nil, resume: false))
         .environment(WatchDelivery(outbox: WatchOutbox(store: nil)))
         .environment(WatchHealthSession(store: nil))
+        .environment(MirrorPeer(role: .watch, session: LiveWorkoutSession(store: nil, resume: false)))
 }
 
 #if DEBUG
@@ -96,5 +114,6 @@ struct WaitingForPhoneView: View {
         .environment(LiveWorkoutSession(store: nil, resume: false))
         .environment(WatchDelivery(outbox: WatchOutbox(store: nil)))
         .environment(WatchHealthSession(store: nil))
+        .environment(MirrorPeer(role: .watch, session: LiveWorkoutSession(store: nil, resume: false)))
 }
 #endif

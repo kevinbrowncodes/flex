@@ -6,7 +6,10 @@ import Testing
 @MainActor
 struct WatchHealthSessionTests {
     final class FakeHandle: HealthWorkoutHandle {
+        var title = ""
         var onVitals: ((Double?, Double?) -> Void)?
+        var onData: ((Data) -> Void)?
+        var sent: [Data] = []
         var endedAt: Date?
         var discarded = false
         var failsToEnd = false
@@ -16,6 +19,8 @@ struct WatchHealthSessionTests {
             if failsToEnd { throw Failed() }
             endedAt = end
         }
+
+        func send(_ data: Data) { sent.append(data) }
 
         func discard() { discarded = true }
     }

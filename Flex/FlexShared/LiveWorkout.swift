@@ -17,7 +17,7 @@ struct LiveWorkout: Codable, Equatable, Identifiable, Sendable {
     /// The rest running now, if any. It stays until skipped or replaced; `restRemaining(at:)` says
     /// whether it is still counting.
     var rest: LiveRest?
-    /// When the last edit was applied.
+    /// The newest time an edit was applied at; never moves backwards.
     var updatedAt: Date
 
     init(id: UUID = UUID(), title: String? = nil, startedAt: Date = Date(), templateName: String? = nil, exercises: [LiveExercise] = [], restSeconds: TimeInterval = 0) {
@@ -142,7 +142,9 @@ struct LiveWorkout: Codable, Equatable, Identifiable, Sendable {
             guard rest != nil else { return }
             rest = nil
         }
-        updatedAt = date
+        // The newest edit time seen: an edit that arrives late from the other device (STORY_009)
+        // must not make this copy look older than it is.
+        updatedAt = max(updatedAt, date)
     }
 
     func applying(_ edit: LiveWorkoutEdit, at date: Date = Date()) -> LiveWorkout {

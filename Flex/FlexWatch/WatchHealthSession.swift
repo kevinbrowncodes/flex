@@ -12,12 +12,32 @@ protocol HealthStoring: AnyObject {
     func startWorkout(title: String, at start: Date) async throws -> HealthWorkoutHandle
 }
 
-/// A running Health workout: vitals as they arrive, then end and save, or discard.
+/// A running Health workout: vitals as they arrive, then end and save, or discard. It is also the
+/// pipe to the phone while the session is mirrored there (STORY_009).
 @MainActor
 protocol HealthWorkoutHandle: AnyObject {
+    var title: String { get set }
     var onVitals: ((_ heartRate: Double?, _ activeEnergy: Double?) -> Void)? { get set }
+    /// Bytes from the phone over the mirrored session.
+    var onData: ((Data) -> Void)? { get set }
+    /// Bytes to the phone over the mirrored session.
+    func send(_ data: Data)
     func end(at end: Date) async throws
     func discard()
+}
+
+/// A Health workout handle as the mirror's transport.
+@MainActor
+final class HandleTransport: MirrorTransport {
+    private weak var handle: (any HealthWorkoutHandle)?
+
+    init(handle: any HealthWorkoutHandle) {
+        self.handle = handle
+    }
+
+    func send(_ data: Data) {
+        handle?.send(data)
+    }
 }
 
 /// Runs the Apple Health side of a watch workout (STORY_008): asks for authorization the first
@@ -45,12 +65,18 @@ final class WatchHealthSession {
     private(set) var activeEnergy: Double?
     private(set) var summary: Summary?
     private let store: HealthStoring?
+    /// The live link to the phone, run over the mirrored session while one is up (STORY_009).
+    private let mirror: MirrorPeer?
     private var handle: HealthWorkoutHandle?
+    private var transport: HandleTransport?
     private var heartRateSamples: [Double] = []
 
-    /// - Parameter store: HealthKit, or nil where there is none (demo launches, previews).
-    init(store: HealthStoring?) {
+    /// - Parameters:
+    ///   - store: HealthKit, or nil where there is none (demo launches, previews).
+    ///   - mirror: the watch's peer, or nil when there is no phone to link to.
+    init(store: HealthStoring?, mirror: MirrorPeer? = nil) {
         self.store = store
+        self.mirror = mirror
     }
 
     var isRunning: Bool { state == .running }
@@ -75,6 +101,13 @@ final class WatchHealthSession {
             handle.onVitals = { [weak self] heartRate, activeEnergy in
                 self?.take(heartRate: heartRate, activeEnergy: activeEnergy)
             }
+            if let mirror {
+                let transport = HandleTransport(handle: handle)
+                self.transport = transport
+                handle.onData = { [weak mirror] data in mirror?.receive(data) }
+                mirror.attach(transport)
+                mirror.sayHello()
+            }
             self.handle = handle
             heartRateSamples = []
             heartRate = nil
@@ -94,6 +127,12 @@ final class WatchHealthSession {
         if let activeEnergy {
             self.activeEnergy = activeEnergy
         }
+        mirror?.sendVitals(heartRate: self.heartRate, activeEnergy: self.activeEnergy)
+    }
+
+    /// The workout's title for the Health record, once a phone-started workout tells the watch its name.
+    func rename(_ title: String) {
+        handle?.title = title
     }
 
     /// Ends the Health workout and saves it, keeping the summary for the finish screen.
@@ -107,6 +146,8 @@ final class WatchHealthSession {
         } catch {
             state = .unavailable
         }
+        mirror?.detach()
+        transport = nil
         self.handle = nil
     }
 
@@ -114,6 +155,8 @@ final class WatchHealthSession {
     func discard() {
         handle?.discard()
         handle = nil
+        mirror?.detach()
+        transport = nil
         heartRateSamples = []
         heartRate = nil
         activeEnergy = nil
@@ -148,6 +191,8 @@ final class HealthKitStore: HealthStoring {
         let handle = HealthKitWorkout(session: session, builder: builder, title: title)
         session.startActivity(with: start)
         try await builder.beginCollection(at: start)
+        // Mirror to the phone when one is reachable; without one the workout runs on its own.
+        try? await session.startMirroringToCompanionDevice()
         return handle
     }
 }
@@ -156,8 +201,9 @@ final class HealthKitStore: HealthStoring {
 final class HealthKitWorkout: NSObject, HealthWorkoutHandle {
     private let session: HKWorkoutSession
     private let builder: HKLiveWorkoutBuilder
-    private let title: String
+    var title: String
     var onVitals: ((Double?, Double?) -> Void)?
+    var onData: ((Data) -> Void)?
 
     init(session: HKWorkoutSession, builder: HKLiveWorkoutBuilder, title: String) {
         self.session = session
@@ -165,6 +211,11 @@ final class HealthKitWorkout: NSObject, HealthWorkoutHandle {
         self.title = title
         super.init()
         builder.delegate = self
+        session.delegate = self
+    }
+
+    func send(_ data: Data) {
+        session.sendToRemoteWorkoutSession(data: data) { _, _ in }
     }
 
     func end(at end: Date) async throws {
@@ -192,4 +243,16 @@ extension HealthKitWorkout: HKLiveWorkoutBuilderDelegate {
     }
 
     nonisolated func workoutBuilderDidCollectEvent(_ workoutBuilder: HKLiveWorkoutBuilder) {}
+}
+
+extension HealthKitWorkout: HKWorkoutSessionDelegate {
+    nonisolated func workoutSession(_ workoutSession: HKWorkoutSession, didChangeTo toState: HKWorkoutSessionState, from fromState: HKWorkoutSessionState, date: Date) {}
+
+    nonisolated func workoutSession(_ workoutSession: HKWorkoutSession, didFailWithError error: Error) {}
+
+    nonisolated func workoutSession(_ workoutSession: HKWorkoutSession, didReceiveDataFromRemoteWorkoutSession data: [Data]) {
+        Task { @MainActor in
+            for message in data { self.onData?(message) }
+        }
+    }
 }

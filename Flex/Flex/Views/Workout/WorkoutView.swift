@@ -26,6 +26,7 @@ struct WorkoutView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(LiveWorkoutSession.self) private var session
     @Environment(PreferencesManager.self) private var preferences
+    @Environment(PhoneMirrorHost.self) private var mirrorHost
     @Query private var templates: [WorkoutTemplate]
     @Query(sort: \TemplateFolder.name) private var folders: [TemplateFolder]
     @AppStorage("templateSortOrder") private var sortOrderRawValue = TemplateSortOrder.name.rawValue
@@ -98,9 +99,13 @@ struct WorkoutView: View {
             .sheet(isPresented: $showingWorkout) {
                 ActiveWorkoutView()
             }
-            // A workout saved mid-session (Flex was closed) comes straight back on top (STORY_002).
+            // A workout saved mid-session (Flex was closed) comes straight back on top (STORY_002),
+            // and one the watch starts while this tab is up comes up too (STORY_009).
             .onAppear {
                 if session.isActive { showingWorkout = true }
+            }
+            .onChange(of: session.isActive) { _, isActive in
+                if isActive { showingWorkout = true }
             }
             .sheet(isPresented: $showingNewTemplate) {
                 CreateTemplateView()
@@ -189,7 +194,8 @@ struct WorkoutView: View {
 
     // MARK: - Starting
 
-    /// Starts a live workout (empty, or from a template) and shows it (STORY_002).
+    /// Starts a live workout (empty, or from a template) and shows it (STORY_002); the watch is
+    /// asked to open Flex and join (STORY_009).
     private func startWorkout(from template: WorkoutTemplate?) {
         var start = Date()
         #if DEBUG
@@ -197,6 +203,7 @@ struct WorkoutView: View {
         #endif
         session.start(LiveWorkoutBridge.start(from: template, at: start, restSeconds: preferences.restSeconds))
         showingWorkout = true
+        mirrorHost.startWatchApp()
     }
 
     // MARK: - Sections
@@ -353,4 +360,5 @@ struct WorkoutView: View {
         .modelContainer(PreviewData.shared.modelContainer)
         .environment(LiveWorkoutSession(store: nil, resume: false))
         .environment(PreferencesManager())
+        .environment(PhoneMirrorHost(session: LiveWorkoutSession(store: nil, resume: false), healthStore: nil))
 }

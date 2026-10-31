@@ -14,9 +14,13 @@ struct ContentView: View {
 
     var body: some View {
         tabs
-            // A workout Flex was closed in the middle of comes back on the Workout tab (STORY_002).
+            // A workout Flex was closed in the middle of comes back on the Workout tab (STORY_002), and
+            // one the watch starts while Flex is open goes there too (STORY_009).
             .onAppear {
                 if session.isActive { selectedTab = .workout }
+            }
+            .onChange(of: session.isActive) { _, isActive in
+                if isActive { selectedTab = .workout }
             }
     }
 
@@ -58,4 +62,5 @@ struct ContentView: View {
         .environment(AuthenticationManager())
         .environment(CloudKitSyncMonitor(simulatedStatus: .synced))
         .environment(LiveWorkoutSession(store: nil, resume: false))
+        .environment(PhoneMirrorHost(session: LiveWorkoutSession(store: nil, resume: false), healthStore: nil))
 }

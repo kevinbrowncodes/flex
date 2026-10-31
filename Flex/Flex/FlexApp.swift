@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import HealthKit
 import os
 
 @main
@@ -12,6 +13,8 @@ struct FlexKeyApp: App {
     @State private var liveWorkoutSession: LiveWorkoutSession
     /// Sends the watch its snapshot; nil in demo launches and previews (STORY_005).
     @State private var watchLink: PhoneWatchLink?
+    /// The live link to a watch showing the same workout; inert without HealthKit (STORY_009).
+    @State private var mirrorHost: PhoneMirrorHost
 
     private let modelContainer: ModelContainer
     private let isDemo: Bool
@@ -36,6 +39,7 @@ struct FlexKeyApp: App {
         let sync: CloudKitSyncMonitor
         let container: ModelContainer
         let live: LiveWorkoutSession
+        let mirror: PhoneMirrorHost
         var link: PhoneWatchLink?
         var demoActive = false
 
@@ -50,12 +54,14 @@ struct FlexKeyApp: App {
             theme = ThemeManager(initialTheme: demo.theme, persists: false)
             sync = CloudKitSyncMonitor(simulatedStatus: .synced)
             live = LiveWorkoutSession(store: .default(), resume: demo.resumesLiveWorkout)
+            mirror = PhoneMirrorHost(session: live, healthStore: nil)
             demoActive = true
         } else {
             container = Self.makeModelContainer()
             theme = ThemeManager()
             sync = CloudKitSyncMonitor()
             live = LiveWorkoutSession(store: .default())
+            mirror = Self.makeMirrorHost(session: live, container: container)
             link = Self.makeWatchLink(container: container, preferences: preferences)
         }
         #else
@@ -63,6 +69,7 @@ struct FlexKeyApp: App {
         theme = ThemeManager()
         sync = CloudKitSyncMonitor()
         live = LiveWorkoutSession(store: .default())
+        mirror = Self.makeMirrorHost(session: live, container: container)
         link = Self.makeWatchLink(container: container, preferences: preferences)
         #endif
 
@@ -74,6 +81,7 @@ struct FlexKeyApp: App {
         _syncMonitor = State(initialValue: sync)
         _liveWorkoutSession = State(initialValue: live)
         _watchLink = State(initialValue: link)
+        _mirrorHost = State(initialValue: mirror)
 
         if !demoActive {
             Self.synchronizeExerciseLibrary(in: container)
@@ -107,6 +115,22 @@ struct FlexKeyApp: App {
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
+    }
+
+    /// The live link to the watch. A finish or discard arriving from the watch ends the phone's
+    /// workout the way the Finish and Discard buttons do; the save is the same idempotent one.
+    private static func makeMirrorHost(session: LiveWorkoutSession, container: ModelContainer) -> PhoneMirrorHost {
+        let isPreview = ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
+        let host = PhoneMirrorHost(session: session, healthStore: isPreview || !HKHealthStore.isHealthDataAvailable() ? nil : HKHealthStore())
+        host.peer.onRemoteFinish = { endedAt in
+            do {
+                try session.finish(into: container.mainContext, at: endedAt)
+            } catch {
+                logger.error("Could not save the workout the watch finished: \(error.localizedDescription)")
+            }
+        }
+        host.peer.onRemoteDiscard = { session.discard() }
+        return host
     }
 
     /// The WatchConnectivity sender, building each snapshot from the live store and preferences.
@@ -156,6 +180,7 @@ struct FlexKeyApp: App {
         .environment(preferencesManager)
         .environment(syncMonitor)
         .environment(liveWorkoutSession)
+        .environment(mirrorHost)
         .onChange(of: scenePhase) { _, newPhase in
             // CloudKit can deliver a second copy of the seeded library from another device while
             // the app is in the background; merge whenever we come back to the foreground.
