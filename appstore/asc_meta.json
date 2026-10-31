@@ -1,16 +1,16 @@
 {
   "bundle_id": "kevinbrowncodes.Flex",
-  "version": "1.0.3",
-  "subtitle": "Workout log & plate calculator",
+  "version": "1.1.0",
+  "subtitle": "Workout log, plates & Apple Watch",
   "primary_category": "HEALTH_AND_FITNESS",
   "copyright": "© 2026 FlexKey LLC",
   "support_url": "https://kevinbrowncodes.github.io/flex-support/",
   "privacy_policy_url": "https://kevinbrowncodes.github.io/flex-support/privacy",
-  "promotional_text": "Track workouts, build strength, and achieve your goals. Flex features custom templates, a plate calculator, progress analytics, and seamless iCloud sync.",
-  "keywords": "workout,tracker,gym,log,weight,lifting,strength,plate,calculator,fitness,exercise,bodybuilding,sets",
-  "description": "Flex is the ultimate companion for your strength training journey. Whether you're a powerlifter, bodybuilder, or just getting started in the gym, Flex helps you track your progress, build strength, and achieve your fitness goals with simplicity and precision.\n\nExperience effortless workout tracking designed to keep you focused on your lift, not your phone. You can build personalized workout templates for any routine and organize them into custom folders to keep your training schedule clean and accessible. With the built-in Smart Plate Calculator, you never have to do gym math again.... Flex automatically visualizes how to load the bar for your specific lifts.\n\nYour workouts go where you go. Flex seamlessly syncs your data across all your devices using iCloud, so your history is always up to date. Designed with privacy in mind, Flex uses Sign in with Apple and iCloud to ensure your health data remains secure without third-party accounts. Build consistency and see results. Download Flex today and make every rep count.\n\nFlex is designed and built by two fitness freaks, Ashton Krstolic and Kevin Brown. Every feature exists because we needed it at the rack. Questions or ideas? Visit our support page — we read every message.",
-  "whats_new": "• Finishing a workout now confirms first, drops empty sets and counts your personal records; cancelling a workout with logged sets asks before discarding.\n• The Previous column shows the sets from your last session of that exercise.\n• Deleted exercises stay deleted, and duplicate exercises are merged without losing history.\n• Edit a past workout freely: Cancel discards every change, Save keeps them.\n• Templates inside folders no longer show twice; sort by name or date; rename and delete with confirmation.\n• Plate calculator shows the correct bar and exact remaining weight.\n• New Support, Privacy and About in Settings, a refreshed icon, and support for iOS 18.",
-  "review_notes": "Flex is a workout tracker. Sign in with Apple is the only sign-in (any Apple ID works; no demo account needed) and is used solely to recognise the user across their own devices. All workout data is stored on-device and in the user's private iCloud (CloudKit) database; there are no third-party services, accounts, ads or analytics.\n\nQuick review path: sign in with Apple → Workout tab → Start Workout → Add Exercises → tap a weight or reps cell to use the keypad (barbell exercises show a plate calculator via the scale button) → Finish. History, Profile (goals and charts) and Exercises tabs show the saved data. The app also runs fully without an iCloud account (data stays on the device).",
+  "promotional_text": "Track workouts on iPhone and Apple Watch, build strength, and achieve your goals. Flex features custom templates, a plate calculator, a rest timer, Siri set logging, Apple Health and seamless iCloud sync.",
+  "keywords": "workout,tracker,gym,log,weight,lifting,strength,plate,calculator,fitness,watch,rest,timer",
+  "description": "Flex is the ultimate companion for your strength training journey. Whether you're a powerlifter, bodybuilder, or just getting started in the gym, Flex helps you track your progress, build strength, and achieve your fitness goals with simplicity and precision.\n\nExperience effortless workout tracking designed to keep you focused on your lift, not your phone. You can build personalized workout templates for any routine and organize them into custom folders to keep your training schedule clean and accessible. With the built-in Smart Plate Calculator, you never have to do gym math again.... Flex automatically visualizes how to load the bar for your specific lifts.\n\nFlex is on your wrist too. Start any template from Apple Watch, set the weight and reps with the Digital Crown, rest on a wrist-tap timer and finish with your iPhone in the locker; the workout lands in History the moment the two meet. With your phone along, both show the same workout live. Say \"Log bench press in Flex\" to Siri to log a set hands-free, let Apple Health record your heart rate and calories, and keep this week's count on your watch face.\n\nYour workouts go where you go. Flex seamlessly syncs your data across all your devices using iCloud, so your history is always up to date. Designed with privacy in mind, Flex uses Sign in with Apple and iCloud to ensure your health data remains secure without third-party accounts. Build consistency and see results. Download Flex today and make every rep count.\n\nFlex is designed and built by two fitness freaks, Ashton Krstolic and Kevin Brown. Every feature exists because we needed it at the rack. Questions or ideas? Visit our support page — we read every message.",
+  "whats_new": "• Flex on Apple Watch: start any template from your wrist, log sets with the Digital Crown, rest on a wrist-tap timer and finish, with your iPhone in the locker. Finished workouts land in History when the two meet.\n• Phone and watch show the same workout live: tick a set on one and it is ticked on the other; finish on either.\n• A rest timer on both devices, with its default in Settings.\n• Siri: \"Log bench press in Flex\" logs a set on iPhone or Apple Watch.\n• Apple Health: watch workouts record heart rate and calories and count toward your rings.\n• A watch-face complication shows this week's workouts against your goal.\n• A workout in progress now survives Flex being closed.",
+  "review_notes": "Flex is a workout tracker. Sign in with Apple is the only sign-in (any Apple ID works; no demo account needed) and is used solely to recognise the user across their own devices. All workout data is stored on-device and in the user's private iCloud (CloudKit) database; there are no third-party services, accounts, ads or analytics.\n\nQuick review path: sign in with Apple → Workout tab → Start Workout → Add Exercises → tap a weight or reps cell to use the keypad (barbell exercises show a plate calculator via the scale button) → Finish. History, Profile (goals and charts) and Exercises tabs show the saved data. The app also runs fully without an iCloud account (data stays on the device).\n\nApple Watch and Health (1.1.0): the watch app (embedded) starts template workouts, logs sets with the Digital Crown, and with the user's permission runs a HealthKit workout session for heart rate and calories; HealthKit is used only during a watch workout and the app works fully when the permission is declined. Workouts finished on the watch reach the iPhone over Watch Connectivity and are saved to the user's private CloudKit database as before. The iPhone app can be reviewed in full without a watch; the watch screenshots show the watch flow (home, logging, rest, finished). Siri: \"Log bench press in Flex\" asks for weight and reps and logs the set.",
   "review_contact": {
     "first": "Kevin",
     "last": "Brown",
@@ -40,6 +40,15 @@
         "05-profile",
         "06-summary",
         "07-exercises"
+      ]
+    },
+    "APP_WATCH_SERIES_10": {
+      "dir": "screenshots/out-watch",
+      "order": [
+        "01-home",
+        "02-logging",
+        "03-rest",
+        "04-finished"
       ]
     }
   },

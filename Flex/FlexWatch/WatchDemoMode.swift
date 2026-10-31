@@ -9,6 +9,8 @@ struct WatchDemoMode: Sendable {
     let dataset: Dataset
     /// `FLEX_DEMO_RESUME=1` keeps a live workout saved by an earlier launch.
     let resumesLiveWorkout: Bool
+    /// Seconds added to a new workout's start time (negative = "started a while ago"), for screenshots.
+    let workoutStartOffset: TimeInterval
 
     static let current = WatchDemoMode(environment: ProcessInfo.processInfo.environment)
 
@@ -18,6 +20,7 @@ struct WatchDemoMode: Sendable {
         }
         self.dataset = dataset
         resumesLiveWorkout = DemoLaunch.resumesLiveWorkout(in: environment)
+        workoutStartOffset = DemoLaunch.workoutStartOffset(in: environment)
     }
 }
 #endif

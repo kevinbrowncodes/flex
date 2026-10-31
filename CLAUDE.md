@@ -86,7 +86,8 @@ on trial, rules are gates.
   Foundation, Observation and AppIntents, STORY_004 and STORY_010), `watch-no-swiftdata.sh` (`Flex/FlexWatch` and `Flex/FlexWatchWidgets` never
   import SwiftData or CloudKit or name a ModelContainer or ModelContext, STORY_005, STORY_011),
   `health-usage-strings.sh` (a target whose entitlements grant HealthKit sets both Health usage
-  strings, STORY_008). Each watch story in EPIC_001 adds its own.
+  strings, STORY_008), `watch-screenshots.sh` (the watch's App Store screenshots exist at an
+  App Store size, STORY_012). Each watch story in EPIC_001 adds its own.
 - Run a gate by hand with `sh scripts/gates/<name>.sh`. `git push --no-verify` is for
   emergencies only, with the justification in the commit message.
 

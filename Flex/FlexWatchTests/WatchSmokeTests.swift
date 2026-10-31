@@ -30,5 +30,7 @@ struct WatchSmokeTests {
         #expect(WatchDemoMode(environment: ["FLEX_DEMO": "1"])?.dataset == .sample)
         #expect(WatchDemoMode(environment: ["FLEX_DEMO": "1"])?.resumesLiveWorkout == false)
         #expect(WatchDemoMode(environment: ["FLEX_DEMO": "sample", "FLEX_DEMO_RESUME": "1"])?.resumesLiveWorkout == true)
+        #expect(WatchDemoMode(environment: ["FLEX_DEMO": "1"])?.workoutStartOffset == 0)
+        #expect(WatchDemoMode(environment: ["FLEX_DEMO": "1", "FLEX_DEMO_WORKOUT_OFFSET": "-2472"])?.workoutStartOffset == -2472)
     }
 }

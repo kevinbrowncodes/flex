@@ -1,6 +1,6 @@
 # STORY_012 — Flex for Apple Watch ships to the App Store
 
-**Status:** Approved by the owner 2026-10-30 (with the epic, "proceed to completion"); not started, waits on STORY_011, CHORE_002 and CHORE_003. [EPIC_001](../epic/EPIC_001_flex_on_apple_watch.md) row 12.
+**Status:** Approved by the owner 2026-10-30 (with the epic, "proceed to completion"); built by Fable the same day up to the upload: 1.1.0 build 10 is prepared, the watch screenshots captured and gated, the metadata written. The upload (the one open box) waits on CHORE_002 and CHORE_003. [EPIC_001](../epic/EPIC_001_flex_on_apple_watch.md) row 12.
 
 As Kevin, I want Flex 1.1.0 with the watch app uploaded to App Store Connect with watch
 screenshots and release notes, so that the epic ends on the store and not on a branch.
@@ -23,24 +23,25 @@ same pipeline as the phone's:
 
 ## Acceptance Criteria
 
-- [ ] `FlexWatchUITests/WatchScreenshotTests.swift` captures the four screens above in a
+- [x] `FlexWatchUITests/WatchScreenshotTests.swift` captures the four screens above in a
       `FLEX_DEMO=sample` launch into `FLEX_SCREENSHOT_DIR`, the way `ScreenshotTests` does on the
       phone; `scripts/screenshots.sh` runs them on the Apple Watch Series 11 (46mm) simulator and
-      writes `appstore/screenshots/out/watch/*.png` at 416 × 496; `appstore/screenshots/shots.json`
-      and `appstore/SUBMISSION.md` list them.
-- [ ] `scripts/gates/watch-screenshots.sh` fails when `appstore/screenshots/out/watch/` is missing
+      writes `appstore/screenshots/out-watch/*.png` at 416 × 496 (corrected while building from
+      `out/watch/`: shotkit's verify knows no watch device and would call that folder the wrong size);
+      `appstore/SUBMISSION.md` and the screenshots README list them.
+- [x] `scripts/gates/watch-screenshots.sh` fails when `appstore/screenshots/out-watch/` is missing
       or holds a PNG that is not 416 × 496 or 410 × 502 (the two sizes App Store Connect takes for
       current watches), with the rule and the fix in its message.
-- [ ] `MARKETING_VERSION` is 1.1.0 and `CURRENT_PROJECT_VERSION` 10 in every target;
+- [x] `MARKETING_VERSION` is 1.1.0 and `CURRENT_PROJECT_VERSION` 10 in every target;
       `appstore/asc_meta.json` carries the version and a `whats_new` that names the watch app, the
       rest timer, Siri and Apple Health; the App Store description gains a line on the watch.
-- [ ] `README.md`'s release section says the watch screenshots are part of a release, and that
+- [x] `README.md`'s release section says the watch screenshots are part of a release, and that
       the HealthKit entitlement means App Review may ask for a demo of the Health flow.
 - [ ] The build is uploaded with ascpilot (`ASC_META=appstore/asc_meta.json
       ../ascpilot/bin/release.sh`) only after CHORE_002 (the privacy answers and page) and
       CHORE_003 (a real gym session) are Done, and the upload's result (version, build number,
       processing state) is written into this story's Status line.
-- [ ] No SwiftData model changes in this epic, so no CloudKit schema deploy before release; the
+- [x] No SwiftData model changes in this epic, so no CloudKit schema deploy before release; the
       story says so where the release steps would otherwise ask for one.
 
 ## Testing Plan

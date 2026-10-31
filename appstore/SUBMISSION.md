@@ -44,7 +44,32 @@ previous-lift column in the iPad form sheet); all iPad captions sit on one line 
 App Store Connect ▸ Flex ▸ version ▸ *iPhone 6.9" Display* (`out/iphone-6.9/`) and
 *iPad 13" Display* (`out/ipad-13/`). Apple scales these to the smaller sizes.
 
-## Before shipping this build
+## Apple Watch screenshots (1.1.0)
+
+Captured by `FlexWatchUITests/WatchScreenshotTests` on the Apple Watch Series 11 (46mm) simulator
+(`scripts/screenshots.sh --watch-only`), uploaded as captured from `appstore/screenshots/out-watch/`
+under *Apple Watch Series 10* (416 × 496): the watch has no frame or caption, and `shotkit` knows no
+watch device, which is why they sit beside `out/`, not in it. `scripts/gates/watch-screenshots.sh`
+holds the sizes and the count.
+
+| # | Screen |
+|---|---|
+| 1 | Home: the Heavy Duty folder's templates and this week's 2/3 |
+| 2 | Logging: Heavy Push, Set 1 of 2, 185 lb × 8 under the Digital Crown |
+| 3 | Rest: the countdown and Skip after a set is done |
+| 4 | Finished: duration, volume and "Will save when your iPhone is nearby" |
+
+## Before shipping 1.1.0
+
+- **Version 1.1.0, build 10** (bumped 2026-10-30), every target, watch and widget included.
+- **No SwiftData model changed in EPIC_001**, so no CloudKit schema deploy this time.
+- **HealthKit**: both apps carry the entitlement and usage strings (`health-usage-strings.sh`);
+  App Review may ask to see the Health permission flow, which only a watch workout shows.
+  CHORE_002 (privacy page published, App Privacy answers) and CHORE_003 (a real gym session on a
+  real watch) are done before the upload.
+- Upload: `ASC_META=appstore/asc_meta.json ../ascpilot/bin/release.sh`.
+
+## Before shipping 1.0.3 (kept for the record)
 
 - **Deployment target is now iOS 18.0** (was 26.2). Test on an iOS 18 device or
   simulator; the UI test suite runs on iOS 18.3 in CI-less local runs.

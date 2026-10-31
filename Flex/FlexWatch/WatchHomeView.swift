@@ -59,7 +59,11 @@ struct WatchTemplateView: View {
         List {
             Button {
                 let restSeconds = state.snapshot?.restSeconds ?? RestTimer.defaultSeconds
-                session.start(LiveWorkout(from: template, restSeconds: restSeconds))
+                var start = Date()
+                #if DEBUG
+                start = start.addingTimeInterval(WatchDemoMode.current?.workoutStartOffset ?? 0)
+                #endif
+                session.start(LiveWorkout(from: template, at: start, restSeconds: restSeconds))
             } label: {
                 Label("Start", systemImage: "play.fill")
                     .frame(maxWidth: .infinity)

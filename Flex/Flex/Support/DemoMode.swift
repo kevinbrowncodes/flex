@@ -31,7 +31,7 @@ struct DemoMode: Sendable {
         theme = environment["FLEX_THEME"]
         initialTab = environment["FLEX_TAB"]?.lowercased()
         userName = environment["FLEX_USER_NAME"] ?? "Alex"
-        workoutStartOffset = environment["FLEX_DEMO_WORKOUT_OFFSET"].flatMap(TimeInterval.init) ?? 0
+        workoutStartOffset = DemoLaunch.workoutStartOffset(in: environment)
         resumesLiveWorkout = DemoLaunch.resumesLiveWorkout(in: environment)
     }
 

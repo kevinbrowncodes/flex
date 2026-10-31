@@ -87,6 +87,7 @@ Run one by hand with `sh scripts/gates/<name>.sh`. How we work (tickets, gates, 
 | `shared-is-portable.sh` | Every file under `Flex/FlexShared` imports only Foundation, Observation or AppIntents, so it compiles into the phone and the watch alike |
 | `watch-no-swiftdata.sh` | Nothing under `Flex/FlexWatch` or `Flex/FlexWatchWidgets` imports SwiftData or CloudKit or names a ModelContainer or ModelContext: the phone is the only writer |
 | `health-usage-strings.sh` | Every configuration signed with entitlements that grant HealthKit sets both `NSHealthShareUsageDescription` and `NSHealthUpdateUsageDescription` |
+| `watch-screenshots.sh` | `appstore/screenshots/out-watch/` holds one to ten PNGs at an Apple Watch App Store size (416×496 or 410×502) |
 
 ## Releasing
 
@@ -95,10 +96,16 @@ Flex ships with [ascpilot](https://github.com/kevinbrowncodes/ascpilot), driven 
 793YF22DGM). Live: 1.0.3, build 9 (2026-09-05).
 
 1. Bump `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` in `Flex/Flex.xcodeproj/project.pbxproj`
-   (every upload needs a new build number).
+   (every upload needs a new build number; every target, the watch app and its widget included).
 2. Set `version` and `whats_new` in `appstore/asc_meta.json`.
 3. If a SwiftData model changed, deploy the CloudKit schema to Production in CloudKit Console first.
-4. `ASC_META=appstore/asc_meta.json ../ascpilot/bin/release.sh`
+4. Screenshots: `scripts/screenshots.sh` (phone, iPad and the watch; `--watch-only` for the watch
+   set alone). The watch set is uploaded as captured, 416 × 496, from `appstore/screenshots/out-watch/`.
+5. HealthKit: the entitlement means App Review may ask to see the Health permission flow, which only a
+   watch workout shows; `appstore/asc_meta.json`'s review notes say so.
+6. `ASC_META=appstore/asc_meta.json ../ascpilot/bin/release.sh`
+
+Prepared, not yet uploaded: 1.1.0, build 10 (2026-10-30), waiting on CHORE_002 and CHORE_003.
 
 ## Scripts
 
