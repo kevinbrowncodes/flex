@@ -30,6 +30,10 @@ that costs a review cycle. Anything only the owner can do is a chore the moment 
 - [ ] Claude, after: records the answer given and the date in this chore's Status line and in
       STORY_012.
 
+2026-10-31: the owner approved the push through the picker and Claude pushed `flex-support`
+(commit dc70afc); GitHub Pages publishes it within minutes. Opening the page to confirm the
+"Health" heading, and the App Privacy answers, remain the owner's steps above.
+
 ## Testing
 
 - **Unit / integration / e2e:** N/A, a store configuration and a published page.
