@@ -1,6 +1,6 @@
 # STORY_007 — A workout finished on the watch shows up in History
 
-**Status:** Approved by the owner 2026-10-30 (with the epic, "proceed to completion"); not started, waits on STORY_006. [EPIC_001](../epic/EPIC_001_flex_on_apple_watch.md) row 7.
+**Status:** Approved by the owner 2026-10-30 (with the epic, "proceed to completion"); built by Fable the same day. [EPIC_001](../epic/EPIC_001_flex_on_apple_watch.md) row 7.
 
 As Kevin, I want a workout I finish on the watch to appear in Flex's History on my phone, and
 through it on my iPad, whether the phone was in my pocket or in the locker, so that nothing I log
@@ -30,26 +30,26 @@ duration, and the Profile's week count includes it.
 
 ## Acceptance Criteria
 
-- [ ] `WatchSnapshot.finishedKey` names the WatchConnectivity user-info key a `FinishedWorkout`
+- [x] `WatchSnapshot.finishedKey` names the WatchConnectivity user-info key a `FinishedWorkout`
       travels under (`FlexShared`).
-- [ ] The watch's outbox (`JSONFileStore<[FinishedWorkout]>`, from STORY_006) is drained by
+- [x] The watch's outbox (`JSONFileStore<[FinishedWorkout]>`, from STORY_006) is drained by
       `WatchLink`: every pending finished workout is sent with `transferUserInfo`, which the
       system queues until the phone is reachable; a transfer that completes removes its workout
       from the outbox; on activation, workouts still in the outbox and not among the session's
       outstanding transfers are sent again. The transport is behind a small protocol so the logic
       is tested without a `WCSession`.
-- [ ] `WatchState` publishes each finished workout's delivery (`pending`, `delivered`) so the
+- [x] `WatchState` publishes each finished workout's delivery (`pending`, `delivered`) so the
       finish screen says "Will save when your iPhone is nearby" until the transfer completes and
       "Saved to iPhone" after, including when the completion arrives while the screen is up.
-- [ ] `PhoneWatchLink` receives the user info, decodes the `FinishedWorkout` and saves it through
+- [x] `PhoneWatchLink` receives the user info, decodes the `FinishedWorkout` and saves it through
       `LiveWorkoutBridge.save` on the main actor (the live id makes a second delivery a no-op; an
       exercise the phone has never seen becomes a custom exercise). The save posts
       `ModelContext.didSave`, so the watch gets a fresh snapshot (week count, last weights) by the
       path STORY_005 built.
-- [ ] A finished workout that cannot be decoded is logged and dropped on the phone, never
+- [x] A finished workout that cannot be decoded is logged and dropped on the phone, never
       crashes it; a save that throws is logged and the transfer is still considered delivered (the
       watch cannot fix it).
-- [ ] No SwiftData model changes; no new rule, no new gate.
+- [x] No SwiftData model changes; no new rule, no new gate.
 
 ## Testing Plan
 

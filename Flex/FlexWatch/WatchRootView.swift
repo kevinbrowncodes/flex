@@ -72,7 +72,7 @@ struct WaitingForPhoneView: View {
     WatchRootView()
         .environment(WatchState(store: nil))
         .environment(LiveWorkoutSession(store: nil, resume: false))
-        .environment(WatchOutbox(store: nil))
+        .environment(WatchDelivery(outbox: WatchOutbox(store: nil)))
 }
 
 #if DEBUG
@@ -80,6 +80,6 @@ struct WaitingForPhoneView: View {
     WatchRootView()
         .environment(WatchState(store: nil, initial: .sample))
         .environment(LiveWorkoutSession(store: nil, resume: false))
-        .environment(WatchOutbox(store: nil))
+        .environment(WatchDelivery(outbox: WatchOutbox(store: nil)))
 }
 #endif

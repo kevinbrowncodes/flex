@@ -113,14 +113,17 @@ struct FlexKeyApp: App {
     /// Not in Xcode previews, which have no session to talk to.
     private static func makeWatchLink(container: ModelContainer, preferences: PreferencesManager) -> PhoneWatchLink? {
         guard ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" else { return nil }
-        let link = PhoneWatchLink {
-            try WatchSnapshotBuilder.make(
-                context: container.mainContext,
-                weeklyTarget: preferences.workoutTarget,
-                restSeconds: preferences.restSeconds,
-                userName: preferences.userName
-            )
-        }
+        let link = PhoneWatchLink(
+            makeSnapshot: {
+                try WatchSnapshotBuilder.make(
+                    context: container.mainContext,
+                    weeklyTarget: preferences.workoutTarget,
+                    restSeconds: preferences.restSeconds,
+                    userName: preferences.userName
+                )
+            },
+            saveFinished: { try LiveWorkoutBridge.save($0, into: container.mainContext) }
+        )
         link.activate()
         return link
     }

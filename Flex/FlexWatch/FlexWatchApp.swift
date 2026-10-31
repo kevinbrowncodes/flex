@@ -6,14 +6,15 @@ import SwiftUI
 struct FlexWatchApp: App {
     @State private var state: WatchState
     @State private var session: LiveWorkoutSession
-    @State private var outbox: WatchOutbox
-    /// Takes the phone's snapshot; nil in demo launches, which carry their own (STORY_005).
+    @State private var delivery: WatchDelivery
+    /// Takes the phone's snapshot and carries finished workouts back; nil in demo launches,
+    /// which carry their own snapshot and never reach a phone (STORY_005, STORY_007).
     @State private var link: WatchLink?
 
     init() {
         let state: WatchState
         let session: LiveWorkoutSession
-        let outbox: WatchOutbox
+        let delivery: WatchDelivery
         var link: WatchLink?
 
         #if DEBUG
@@ -21,24 +22,28 @@ struct FlexWatchApp: App {
             state = WatchState(store: nil, initial: demo.dataset == .sample ? .sample : nil)
             // The live workout file is real so a relaunch can prove resume; cleared unless asked for.
             session = LiveWorkoutSession(store: .default(), resume: demo.resumesLiveWorkout)
-            outbox = WatchOutbox(store: nil)
+            delivery = WatchDelivery(outbox: WatchOutbox(store: nil))
         } else {
             state = WatchState(store: .default(named: "watch-snapshot.json"))
             session = LiveWorkoutSession(store: .default())
-            outbox = WatchOutbox(store: .default(named: "finished-workouts.json"))
-            link = WatchLink(state: state)
+            delivery = WatchDelivery(outbox: WatchOutbox(store: .default(named: "finished-workouts.json")))
+            let realLink = WatchLink(state: state, delivery: delivery)
+            delivery.attach(realLink)
+            link = realLink
         }
         #else
         state = WatchState(store: .default(named: "watch-snapshot.json"))
         session = LiveWorkoutSession(store: .default())
-        outbox = WatchOutbox(store: .default(named: "finished-workouts.json"))
-        link = WatchLink(state: state)
+        delivery = WatchDelivery(outbox: WatchOutbox(store: .default(named: "finished-workouts.json")))
+        let realLink = WatchLink(state: state, delivery: delivery)
+        delivery.attach(realLink)
+        link = realLink
         #endif
 
         link?.activate()
         _state = State(initialValue: state)
         _session = State(initialValue: session)
-        _outbox = State(initialValue: outbox)
+        _delivery = State(initialValue: delivery)
         _link = State(initialValue: link)
     }
 
@@ -47,7 +52,7 @@ struct FlexWatchApp: App {
             WatchRootView()
                 .environment(state)
                 .environment(session)
-                .environment(outbox)
+                .environment(delivery)
         }
     }
 }

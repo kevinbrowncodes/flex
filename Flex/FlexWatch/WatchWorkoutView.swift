@@ -14,7 +14,7 @@ enum CrownAdjust {
 /// The workout in progress on the wrist: one vertical page per exercise, then Finish (STORY_006).
 struct WatchWorkoutView: View {
     @Environment(LiveWorkoutSession.self) private var session
-    @Environment(WatchOutbox.self) private var outbox
+    @Environment(WatchDelivery.self) private var delivery
     var onFinished: (FinishedWorkout) -> Void
 
     @State private var page = 0
@@ -48,7 +48,7 @@ struct WatchWorkoutView: View {
 
     private func finish() {
         guard let finished = session.finish() else { return }
-        outbox.add(finished)
+        delivery.enqueue(finished)
         onFinished(finished)
     }
 }
@@ -291,8 +291,13 @@ struct WatchFinishPage: View {
 
 /// After Finish: what was done and where it is going.
 struct WatchFinishedView: View {
+    @Environment(WatchDelivery.self) private var delivery
     let finished: FinishedWorkout
     var onDone: () -> Void
+
+    private var isDelivered: Bool {
+        delivery.status(of: finished.workout.id) == .delivered
+    }
 
     var body: some View {
         ScrollView {
@@ -306,11 +311,14 @@ struct WatchFinishedView: View {
                 Text("\(Formatting.duration(finished.duration)) · \(Formatting.weightWithUnit(finished.workout.totalVolume))")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
-                Text("Will save when your iPhone is nearby")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .accessibilityIdentifier("watch-finished-status")
+                Label(
+                    isDelivered ? "Saved to iPhone" : "Will save when your iPhone is nearby",
+                    systemImage: isDelivered ? "checkmark.icloud" : "applewatch.radiowaves.left.and.right"
+                )
+                .font(.footnote)
+                .foregroundStyle(isDelivered ? .green : .secondary)
+                .multilineTextAlignment(.center)
+                .accessibilityIdentifier("watch-finished-status")
                 Button("Done", action: onDone)
                     .accessibilityIdentifier("watch-finished-done")
             }
@@ -325,6 +333,6 @@ struct WatchFinishedView: View {
     session.start(LiveWorkout(from: WatchSnapshot.sample.allTemplates[0], restSeconds: 90))
     return WatchWorkoutView { _ in }
         .environment(session)
-        .environment(WatchOutbox(store: nil))
+        .environment(WatchDelivery(outbox: WatchOutbox(store: nil)))
 }
 #endif

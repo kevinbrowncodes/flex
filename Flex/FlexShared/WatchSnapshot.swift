@@ -7,6 +7,10 @@ import Foundation
 struct WatchSnapshot: Codable, Equatable, Sendable {
     /// The WatchConnectivity application-context key the snapshot travels under.
     static let contextKey = "snapshot"
+    /// The user-info keys a finished workout travels back under (STORY_007): the encoded
+    /// `FinishedWorkout`, and its workout id as a string so a transfer can be matched to it.
+    static let finishedKey = "finishedWorkout"
+    static let finishedIDKey = "finishedWorkoutID"
 
     var madeAt: Date
     /// Folders in name order, each with its templates in the Workout tab's order.
