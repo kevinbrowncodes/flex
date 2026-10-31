@@ -1,6 +1,7 @@
 #!/bin/sh
 # Gate (STORY_005): the phone is the only writer of SwiftData and CloudKit (EPIC_001). The watch
-# app holds values and what the phone sends it, so nothing under Flex/FlexWatch imports SwiftData
+# app and its widget extension hold values and what the phone sends them, so nothing under
+# Flex/FlexWatch or Flex/FlexWatchWidgets (STORY_011) imports SwiftData
 # or CloudKit or names a ModelContainer or ModelContext. The gate proves itself on a planted file
 # first, then checks the real folder.
 cd "$(dirname "$0")/../.." || exit 1
@@ -25,7 +26,7 @@ case "$hits" in
   *Fine.swift*) echo "watch-no-swiftdata self-test FAILED: a comment is not a reach"; echo "$hits"; exit 1 ;;
 esac
 
-hits=$(store_reaches Flex/FlexWatch)
+hits=$(store_reaches Flex/FlexWatch; store_reaches Flex/FlexWatchWidgets)
 if [ -n "$hits" ]; then
   echo "watch-no-swiftdata gate FAILED:"
   echo "$hits"

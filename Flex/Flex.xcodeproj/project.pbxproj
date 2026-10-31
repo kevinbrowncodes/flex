@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F1E00001000000000000A025 /* FlexWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = F1E00001000000000000A022 /* FlexWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F1E00001000000000000A028 /* FlexWatchWidgets.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F1E00001000000000000A027 /* FlexWatchWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -17,6 +18,7 @@
 		F1E00001000000000000A022 /* FlexWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlexWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1E00001000000000000A023 /* FlexWatchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlexWatchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1E00001000000000000A024 /* FlexWatchUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlexWatchUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1E00001000000000000A027 /* FlexWatchWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FlexWatchWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -29,6 +31,17 @@
 				F1E00001000000000000A025 /* FlexWatch.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1E00001000000000000A029 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				F1E00001000000000000A028 /* FlexWatchWidgets.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -69,6 +82,13 @@
 			remoteGlobalIDString = F1E00001000000000000A012;
 			remoteInfo = FlexWatch;
 		};
+		F1E00001000000000000A045 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8B1255812F2157CB0079B7F2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F1E00001000000000000A015;
+			remoteInfo = FlexWatchWidgets;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -78,6 +98,13 @@
 				Info.plist,
 			);
 			target = 8B1255882F2157CB0079B7F2 /* Flex */;
+		};
+		F1E00001000000000000A009 /* Exceptions for "FlexWatchWidgets" folder in "FlexWatchWidgets" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = F1E00001000000000000A015 /* FlexWatchWidgets */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -118,6 +145,14 @@
 		F1E00001000000000000A007 /* FlexWatchUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = FlexWatchUITests;
+			sourceTree = "<group>";
+		};
+		F1E00001000000000000A008 /* FlexWatchWidgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				F1E00001000000000000A009 /* Exceptions for "FlexWatchWidgets" folder in "FlexWatchWidgets" target */,
+			);
+			path = FlexWatchWidgets;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -165,6 +200,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F1E00001000000000000A03C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -178,6 +220,7 @@
 				F1E00001000000000000A003 /* FlexUITests */,
 				F1E00001000000000000A006 /* FlexWatchTests */,
 				F1E00001000000000000A007 /* FlexWatchUITests */,
+				F1E00001000000000000A008 /* FlexWatchWidgets */,
 				8B12558A2F2157CB0079B7F2 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -191,6 +234,7 @@
 				F1E00001000000000000A022 /* FlexWatch.app */,
 				F1E00001000000000000A023 /* FlexWatchTests.xctest */,
 				F1E00001000000000000A024 /* FlexWatchUITests.xctest */,
+				F1E00001000000000000A027 /* FlexWatchWidgets.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -274,10 +318,12 @@
 				F1E00001000000000000A034 /* Sources */,
 				F1E00001000000000000A037 /* Frameworks */,
 				F1E00001000000000000A03A /* Resources */,
+				F1E00001000000000000A029 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				F1E00001000000000000A055 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				F1E00001000000000000A005 /* FlexWatch */,
@@ -334,6 +380,29 @@
 			productReference = F1E00001000000000000A024 /* FlexWatchUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		F1E00001000000000000A015 /* FlexWatchWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1E00001000000000000A075 /* Build configuration list for PBXNativeTarget "FlexWatchWidgets" */;
+			buildPhases = (
+				F1E00001000000000000A03B /* Sources */,
+				F1E00001000000000000A03C /* Frameworks */,
+				F1E00001000000000000A03D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				F1E00001000000000000A008 /* FlexWatchWidgets */,
+				F1E00001000000000000A004 /* FlexShared */,
+			);
+			name = FlexWatchWidgets;
+			packageProductDependencies = (
+			);
+			productName = FlexWatchWidgets;
+			productReference = F1E00001000000000000A027 /* FlexWatchWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -366,6 +435,9 @@
 						CreatedOnToolsVersion = 27.1;
 						TestTargetID = F1E00001000000000000A012;
 					};
+					F1E00001000000000000A015 = {
+						CreatedOnToolsVersion = 27.1;
+					};
 				};
 			};
 			buildConfigurationList = 8B1255842F2157CB0079B7F2 /* Build configuration list for PBXProject "Flex" */;
@@ -388,6 +460,7 @@
 				F1E00001000000000000A012 /* FlexWatch */,
 				F1E00001000000000000A013 /* FlexWatchTests */,
 				F1E00001000000000000A014 /* FlexWatchUITests */,
+				F1E00001000000000000A015 /* FlexWatchWidgets */,
 			);
 		};
 /* End PBXProject section */
@@ -401,6 +474,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		F1E00001000000000000A03A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F1E00001000000000000A03D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -452,6 +532,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F1E00001000000000000A03B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -479,6 +566,11 @@
 			isa = PBXTargetDependency;
 			target = F1E00001000000000000A012 /* FlexWatch */;
 			targetProxy = F1E00001000000000000A044 /* PBXContainerItemProxy */;
+		};
+		F1E00001000000000000A055 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F1E00001000000000000A015 /* FlexWatchWidgets */;
+			targetProxy = F1E00001000000000000A045 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -916,6 +1008,62 @@
 			};
 			name = Release;
 		};
+		F1E00001000000000000A086 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = FlexWatchWidgets/FlexWatchWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 9;
+				DEVELOPMENT_TEAM = 793YF22DGM;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FlexWatchWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Flex;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 FlexKey LLC";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.3;
+				PRODUCT_BUNDLE_IDENTIFIER = kevinbrowncodes.Flex.watchkitapp.widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Debug;
+		};
+		F1E00001000000000000A087 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = FlexWatchWidgets/FlexWatchWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 9;
+				DEVELOPMENT_TEAM = 793YF22DGM;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FlexWatchWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Flex;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 FlexKey LLC";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.3;
+				PRODUCT_BUNDLE_IDENTIFIER = kevinbrowncodes.Flex.watchkitapp.widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -978,6 +1126,15 @@
 			buildConfigurations = (
 				F1E00001000000000000A084 /* Debug */,
 				F1E00001000000000000A085 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F1E00001000000000000A075 /* Build configuration list for PBXNativeTarget "FlexWatchWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1E00001000000000000A086 /* Debug */,
+				F1E00001000000000000A087 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

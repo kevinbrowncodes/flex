@@ -1,6 +1,6 @@
 # STORY_011 — Weekly progress on the watch face
 
-**Status:** Approved by the owner 2026-10-30 (with the epic, "proceed to completion"); not started, waits on STORY_010. [EPIC_001](../epic/EPIC_001_flex_on_apple_watch.md) row 11.
+**Status:** Approved by the owner 2026-10-30 (with the epic, "proceed to completion"); built by Fable the same day; a face on a real watch is CHORE_003. [EPIC_001](../epic/EPIC_001_flex_on_apple_watch.md) row 11.
 
 As Kevin, I want a complication on my watch face that shows how many workouts I have done this
 week against my target and opens Flex when tapped, so that the number I care about is a glance
@@ -20,21 +20,21 @@ away and the app is one tap away.
 
 ## Acceptance Criteria
 
-- [ ] `Flex/FlexShared/WeekProgress.swift` holds the numbers the face shows: `fraction` (0…1,
+- [x] `Flex/FlexShared/WeekProgress.swift` holds the numbers the face shows: `fraction` (0…1,
       clamped), `label` ("2/3", "–/3" with no snapshot), `isMet`, and `text` ("2 of 3 workouts
       this week"), tested.
-- [ ] The watch app writes `workoutsThisWeek` and `weeklyTarget` into the shared container of an
+- [x] The watch app writes `workoutsThisWeek` and `weeklyTarget` into the shared container of an
       App Group (`group.kevinbrowncodes.Flex`) every time a snapshot arrives and asks WidgetKit to
       reload, so the extension never reads the snapshot file itself. `FlexWatch` and the extension
       carry the App Groups entitlement.
-- [ ] A `FlexWatchWidgets` target (watchOS WidgetKit extension, bundle
+- [x] A `FlexWatchWidgets` target (watchOS WidgetKit extension, bundle
       `kevinbrowncodes.Flex.watchkitapp.widgets`, embedded in `FlexWatch` through an "Embed App
       Extensions" phase, written into the project by hand on Wristwide's pattern, compiling
       `FlexShared`) provides one widget, `WeekProgressWidget`, in the accessory circular, corner
       and rectangular families, drawn from `WeekProgress`; a tap opens Flex.
-- [ ] The timeline is a single entry refreshed on reload; with nothing in the shared container the
+- [x] The timeline is a single entry refreshed on reload; with nothing in the shared container the
       widget shows the empty state, never a crash.
-- [ ] `scripts/gates/tests.sh` builds the extension as part of the `FlexWatch` scheme (no extra
+- [x] `scripts/gates/tests.sh` builds the extension as part of the `FlexWatch` scheme (no extra
       bundle to test); `README.md` names the target.
 
 ## Testing Plan

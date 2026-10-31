@@ -2,6 +2,7 @@ import AppIntents
 import HealthKit
 import SwiftUI
 import WatchKit
+import WidgetKit
 
 /// Takes the workout configuration the phone starts the watch app with (STORY_009).
 final class WatchAppDelegate: NSObject, WKApplicationDelegate {
@@ -45,7 +46,7 @@ struct FlexWatchApp: App {
             mirror = MirrorPeer(role: .watch, session: session)
             health = WatchHealthSession(store: nil, mirror: mirror)
         } else {
-            state = WatchState(store: .default(named: "watch-snapshot.json"))
+            state = WatchState(store: .default(named: "watch-snapshot.json"), sharedDefaults: UserDefaults(suiteName: WeekProgress.appGroup))
             session = LiveWorkoutSession(store: .default())
             delivery = WatchDelivery(outbox: WatchOutbox(store: .default(named: "finished-workouts.json")))
             mirror = MirrorPeer(role: .watch, session: session)
@@ -55,7 +56,7 @@ struct FlexWatchApp: App {
             link = realLink
         }
         #else
-        state = WatchState(store: .default(named: "watch-snapshot.json"))
+        state = WatchState(store: .default(named: "watch-snapshot.json"), sharedDefaults: UserDefaults(suiteName: WeekProgress.appGroup))
         session = LiveWorkoutSession(store: .default())
         delivery = WatchDelivery(outbox: WatchOutbox(store: .default(named: "finished-workouts.json")))
         mirror = MirrorPeer(role: .watch, session: session)
@@ -73,6 +74,8 @@ struct FlexWatchApp: App {
             }
         }
 
+        // The complication reads the App Group; redraw it whenever a snapshot lands (STORY_011).
+        state.reloadWidgets = { WidgetCenter.shared.reloadAllTimelines() }
         link?.activate()
         _state = State(initialValue: state)
         _session = State(initialValue: session)

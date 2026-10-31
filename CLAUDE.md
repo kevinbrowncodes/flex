@@ -83,8 +83,8 @@ on trial, rules are gates.
   (the commit-msg hook against sample subjects), `tests.sh` (`FlexTests` and
   `WorkoutFlowUITests` on the iPhone 17 Pro simulator, `FlexWatchTests` and `FlexWatchUITests`
   on an Apple Watch simulator), `shared-is-portable.sh` (`Flex/FlexShared` imports only
-  Foundation, Observation and AppIntents, STORY_004 and STORY_010), `watch-no-swiftdata.sh` (`Flex/FlexWatch` never
-  imports SwiftData or CloudKit or names a ModelContainer or ModelContext, STORY_005),
+  Foundation, Observation and AppIntents, STORY_004 and STORY_010), `watch-no-swiftdata.sh` (`Flex/FlexWatch` and `Flex/FlexWatchWidgets` never
+  import SwiftData or CloudKit or name a ModelContainer or ModelContext, STORY_005, STORY_011),
   `health-usage-strings.sh` (a target whose entitlements grant HealthKit sets both Health usage
   strings, STORY_008). Each watch story in EPIC_001 adds its own.
 - Run a gate by hand with `sh scripts/gates/<name>.sh`. `git push --no-verify` is for
@@ -108,8 +108,10 @@ on trial, rules are gates.
 
 ## Phone, watch and the shared folder
 
-- `Flex/Flex` is the iPhone and iPad app, `Flex/FlexWatch` the watch app, `Flex/FlexShared` the
-  value types both compile (the live workout, formatting, the demo-launch parser). The phone is
+- `Flex/Flex` is the iPhone and iPad app, `Flex/FlexWatch` the watch app, `Flex/FlexWatchWidgets`
+  its complication (a WidgetKit extension that reads only the App Group the watch app writes,
+  STORY_011), `Flex/FlexShared` the value types all three compile (the live workout, formatting,
+  the demo-launch parser, the Siri intent). The phone is
   the only device that touches SwiftData and CloudKit (EPIC_001); the watch holds values and what
   the phone sends it. `shared-is-portable.sh` holds the first half of that;
   `watch-no-swiftdata.sh` the second. What the watch needs goes into `WatchSnapshot`

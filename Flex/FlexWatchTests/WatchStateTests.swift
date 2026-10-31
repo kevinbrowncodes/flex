@@ -37,6 +37,27 @@ struct WatchStateTests {
         #expect(WatchState(store: store).snapshot == nil)
     }
 
+    @Test("A received snapshot leaves this week's numbers in the shared defaults and asks for a redraw")
+    func sharesWeekProgress() throws {
+        let suite = "test.watchstate.\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let state = WatchState(store: nil, sharedDefaults: defaults)
+        var reloads = 0
+        state.reloadWidgets = { reloads += 1 }
+        #expect(WeekProgress.read(from: defaults) == .empty)
+
+        state.receive(.sample)
+
+        #expect(WeekProgress.read(from: defaults) == WeekProgress(workoutsThisWeek: 2, weeklyTarget: 3))
+        #expect(reloads == 1)
+
+        // A snapshot the app starts with (stored or initial) is shared too, without a redraw request.
+        let started = WatchState(store: nil, initial: .sample, sharedDefaults: defaults)
+        #expect(started.snapshot == WatchSnapshot.sample)
+        #expect(WeekProgress.read(from: defaults).workoutsThisWeek == 2)
+    }
+
     @Test("A demo launch starts from the sample, or from nothing")
     func demoStarts() {
         #expect(WatchState(store: nil, initial: .sample).snapshot == WatchSnapshot.sample)

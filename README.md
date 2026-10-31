@@ -42,10 +42,12 @@ A modern workout tracking app built with SwiftUI and SwiftData.
 
 ## Building & testing
 
-- Open `Flex/Flex.xcodeproj`, scheme **Flex** (iPhone and iPad) or **FlexWatch** (Apple Watch).
-  The project uses Xcode folder-synchronized groups: any file dropped into `Flex/Flex`,
-  `Flex/FlexShared` (compiled into both apps), `Flex/FlexWatch`, or one of the four test folders
-  (`FlexTests`, `FlexUITests`, `FlexWatchTests`, `FlexWatchUITests`) is compiled automatically.
+- Open `Flex/Flex.xcodeproj`, scheme **Flex** (iPhone and iPad) or **FlexWatch** (Apple Watch,
+  which also builds the `FlexWatchWidgets` complication extension it embeds). The project uses
+  Xcode folder-synchronized groups: any file dropped into `Flex/Flex`, `Flex/FlexShared` (compiled
+  into both apps and the extension), `Flex/FlexWatch`, `Flex/FlexWatchWidgets`, or one of the four
+  test folders (`FlexTests`, `FlexUITests`, `FlexWatchTests`, `FlexWatchUITests`) is compiled
+  automatically.
 - Deployment targets: iOS 18.0, watchOS 11.0. The watch app is embedded in the iOS app and runs
   on its own (`kevinbrowncodes.Flex.watchkitapp`).
 - **Unit tests** (`FlexTests`, Swift Testing): models, PR/volume math, plate math,
@@ -83,7 +85,7 @@ Run one by hand with `sh scripts/gates/<name>.sh`. How we work (tickets, gates, 
 | `commit-subjects.sh` | The commit-msg hook judges sample subjects as CLAUDE.md says |
 | `tests.sh` | `FlexTests` and `FlexUITests/WorkoutFlowUITests` pass on the iPhone 17 Pro simulator; `FlexWatchTests` and `FlexWatchUITests` pass on the Apple Watch Series 11 (46mm) simulator |
 | `shared-is-portable.sh` | Every file under `Flex/FlexShared` imports only Foundation, Observation or AppIntents, so it compiles into the phone and the watch alike |
-| `watch-no-swiftdata.sh` | Nothing under `Flex/FlexWatch` imports SwiftData or CloudKit or names a ModelContainer or ModelContext: the phone is the only writer |
+| `watch-no-swiftdata.sh` | Nothing under `Flex/FlexWatch` or `Flex/FlexWatchWidgets` imports SwiftData or CloudKit or names a ModelContainer or ModelContext: the phone is the only writer |
 | `health-usage-strings.sh` | Every configuration signed with entitlements that grant HealthKit sets both `NSHealthShareUsageDescription` and `NSHealthUpdateUsageDescription` |
 
 ## Releasing
