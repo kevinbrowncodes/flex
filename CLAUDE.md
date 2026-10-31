@@ -83,7 +83,7 @@ on trial, rules are gates.
   (the commit-msg hook against sample subjects), `tests.sh` (`FlexTests` and
   `WorkoutFlowUITests` on the iPhone 17 Pro simulator, `FlexWatchTests` and `FlexWatchUITests`
   on an Apple Watch simulator), `shared-is-portable.sh` (`Flex/FlexShared` imports only
-  Foundation and Observation, STORY_004), `watch-no-swiftdata.sh` (`Flex/FlexWatch` never
+  Foundation, Observation and AppIntents, STORY_004 and STORY_010), `watch-no-swiftdata.sh` (`Flex/FlexWatch` never
   imports SwiftData or CloudKit or names a ModelContainer or ModelContext, STORY_005),
   `health-usage-strings.sh` (a target whose entitlements grant HealthKit sets both Health usage
   strings, STORY_008). Each watch story in EPIC_001 adds its own.

@@ -1,6 +1,6 @@
 # STORY_010 — Siri logs a set on iPhone or Watch
 
-**Status:** Approved by the owner 2026-10-30 (with the epic, "proceed to completion"); not started, waits on STORY_009. [EPIC_001](../epic/EPIC_001_flex_on_apple_watch.md) row 10.
+**Status:** Approved by the owner 2026-10-30 (with the epic, "proceed to completion"); built by Fable the same day; a real "Log bench press in Flex" is CHORE_003. [EPIC_001](../epic/EPIC_001_flex_on_apple_watch.md) row 10.
 
 As Kevin, I want to tell Siri "Log bench press in Flex", answer "135" and "8", and have the set
 logged in the workout I am doing (or in a workout Flex starts for me), on the phone or the watch,
@@ -28,26 +28,26 @@ and reps are asked for):
 
 ## Acceptance Criteria
 
-- [ ] `Flex/FlexShared/SetLogger.swift` holds the logic, pure and tested: given a catalog exercise
+- [x] `Flex/FlexShared/SetLogger.swift` holds the logic, pure and tested: given a catalog exercise
       (name, body part, category, bar type), a weight and reps, a live workout or nil, the rest
       default and now, it returns the edits to apply (start a workout named by time of day when
       there is none; add the exercise when the workout lacks it; fill the first uncompleted set,
       or a new set when every set is done; complete it) and the sentence Siri says.
-- [ ] `LogSetIntent` (`AppIntents`) lives once in `Flex/FlexShared` and is built into both apps:
+- [x] `LogSetIntent` (`AppIntents`) lives once in `Flex/FlexShared` and is built into both apps:
       parameters exercise (`ExerciseEntity`, resolved by a query over the device's catalog), weight
       in lb and reps, each asked for when not said. `FlexShortcuts` (`AppShortcutsProvider`) offers
       "Log \(exercise) in Flex" and "Log a set in Flex". The intent runs the logger against the
       device's `LiveWorkoutSession` (through `AppDependency`), applies the edits, and returns the
       sentence as its dialog. `shared-is-portable.sh` allows `AppIntents` in `FlexShared` for this,
       with the reason in the gate.
-- [ ] The catalog is a protocol: the phone resolves exercises from SwiftData (every exercise,
+- [x] The catalog is a protocol: the phone resolves exercises from SwiftData (every exercise,
       archived excluded), the watch from the snapshot's exercises; both prefer an exercise already
       in the live workout and let Siri disambiguate between the rest by name.
-- [ ] The phone registers the dependencies and the shortcuts at launch; the watch likewise. The
+- [x] The phone registers the dependencies and the shortcuts at launch; the watch likewise. The
       intent opens no UI and runs in the background (`openAppWhenRun` false).
-- [ ] Logging through Siri mirrors like any edit when STORY_009's link is up (nothing extra needed:
+- [x] Logging through Siri mirrors like any edit when STORY_009's link is up (nothing extra needed:
       it goes through `LiveWorkoutSession.apply`).
-- [ ] No SwiftData model changes; the gate change is the allowed-imports line.
+- [x] No SwiftData model changes; the gate change is the allowed-imports line.
 
 ## Testing Plan
 

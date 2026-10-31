@@ -1,3 +1,4 @@
+import AppIntents
 import HealthKit
 import SwiftUI
 import WatchKit
@@ -79,6 +80,11 @@ struct FlexWatchApp: App {
         _health = State(initialValue: health)
         _mirror = State(initialValue: mirror)
         _link = State(initialValue: link)
+
+        // What Siri's intent reaches for on the watch (STORY_010).
+        let catalog: any WorkoutCatalog = WatchWorkoutCatalog(state: state, session: session)
+        AppDependencyManager.shared.add(dependency: session)
+        AppDependencyManager.shared.add(key: SiriDependencies.catalog, dependency: catalog)
     }
 
     var body: some Scene {

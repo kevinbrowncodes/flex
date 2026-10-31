@@ -1,3 +1,4 @@
+import AppIntents
 import SwiftUI
 import SwiftData
 import HealthKit
@@ -82,6 +83,11 @@ struct FlexKeyApp: App {
         _liveWorkoutSession = State(initialValue: live)
         _watchLink = State(initialValue: link)
         _mirrorHost = State(initialValue: mirror)
+
+        // What Siri's intent reaches for on this device (STORY_010).
+        let catalog: any WorkoutCatalog = PhoneWorkoutCatalog(container: container, session: live, preferences: preferences)
+        AppDependencyManager.shared.add(dependency: live)
+        AppDependencyManager.shared.add(key: SiriDependencies.catalog, dependency: catalog)
 
         if !demoActive {
             Self.synchronizeExerciseLibrary(in: container)
