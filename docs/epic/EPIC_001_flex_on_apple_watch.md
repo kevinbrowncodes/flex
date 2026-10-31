@@ -1,10 +1,13 @@
 # EPIC_001 — Flex on Apple Watch: start, log and finish a workout from the wrist
 
 **Status:** Approved by the owner 2026-10-30 ("proceed to completion"), scope decided the same day
-through the picker (see Decisions). Stories are drafted one at a time in the order below, each
-with its UI Mockup, and built under that approval. 2026-10-30: STORY_001's first gate run found
-two pre-existing failures, fixed as BUG_001 and CHORE_001 before STORY_001 landed; the owner
-chores below were renumbered CHORE_002 and CHORE_003 to make room.
+through the picker (see Decisions). Built 2026-10-30, one story at a time in the order below,
+each with its UI Mockup and its gates green: stories 1 to 11 are Done and STORY_012 is built up
+to the upload, which waits on the two owner chores (CHORE_002: the privacy page published and the
+App Privacy answers; CHORE_003: a real gym session on a real watch through TestFlight). Nothing is
+pushed yet; the owner pushes `develop` and `flex-support` at the end. Along the way STORY_001's
+first gate run found two pre-existing failures, fixed as BUG_001 and CHORE_001 before STORY_001
+landed, and the owner chores were renumbered CHORE_002 and CHORE_003 to make room.
 
 ## Goal
 
@@ -122,7 +125,7 @@ pre-push hook from STORY_001.
 
 | # | Ticket | What it delivers | Gate | Status |
 |---|---|---|---|---|
-| 12 | STORY_012 — Flex for Apple Watch ships to the App Store | Watch screenshots captured by `ScreenshotTests` on a watch simulator and rendered by `scripts/screenshots.sh`; version 1.1.0 with a new build number; `whats_new` in `appstore/asc_meta.json`; released with ascpilot. Waits on CHORE_002 and CHORE_003 | `watch-screenshots.sh`: `appstore/screenshots/out/watch/` holds PNGs at an App Store Connect watch size | Not started |
+| 12 | STORY_012 — Flex for Apple Watch ships to the App Store | Watch screenshots captured by `ScreenshotTests` on a watch simulator and rendered by `scripts/screenshots.sh`; version 1.1.0 with a new build number; `whats_new` in `appstore/asc_meta.json`; released with ascpilot. Waits on CHORE_002 and CHORE_003 | `watch-screenshots.sh`: `appstore/screenshots/out/watch/` holds PNGs at an App Store Connect watch size | Built 2026-10-30 up to the upload: 1.1.0 build 10 prepared, watch screenshots captured and gated, metadata written; the upload waits on CHORE_002 and CHORE_003 |
 
 ### Owner chores (work stops on these; each is cited by the story that waits)
 
@@ -148,5 +151,6 @@ pre-push hook from STORY_001.
 ## Done when
 
 - [ ] Stories 1–12 are Done (Testing Plan tests written, gates green in the pre-push hook).
+      2026-10-30: 1–11 Done; 12 built up to the upload.
 - [ ] CHORE_002 and CHORE_003 are Done.
 - [ ] Flex 1.1.0 with the watch app is live on the App Store.
