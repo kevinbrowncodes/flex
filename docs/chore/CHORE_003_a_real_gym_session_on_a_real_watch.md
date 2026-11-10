@@ -1,6 +1,7 @@
 # CHORE_003 — A real gym session on a real watch
 
-**Status:** Open (2026-10-30). Waits on STORY_011; STORY_012 waits on it.
+**Status:** Open (2026-10-30). Waits on STORY_011; STORY_012 waits on it. 2026-11-10: the
+TestFlight build (1.1.0, build 10) is uploaded; the gym session is the owner's next step.
 
 ## Summary
 
@@ -15,8 +16,12 @@ real watch. A gate cannot hold this; a chore holds it instead (CLAUDE.md).
 
 ## Changes
 
-- [ ] Claude, before: uploads a TestFlight build with STORY_011 landed and writes the build number
+- [x] Claude, before: uploads a TestFlight build with STORY_011 landed and writes the build number
       here.
+      2026-11-10 16:26: Flex 1.1.0 build 10 archived from commit 1c407d2 (STORY_013 and STORY_014
+      included) and uploaded with Launch's `upload.sh`; App Store Connect processes it for 5 to 30
+      minutes, then it appears under TestFlight. The owner installs it on the iPhone and the Apple
+      Watch Ultra from the TestFlight app (the first-generation SE cannot run watchOS 11).
 - [ ] The owner installs it on the phone and the watch and, with the phone in the locker, starts
       a template on the watch, logs a workout with the Crown, rests on the wrist timer, finishes,
       and later finds it in History on the phone (STORY_005, STORY_006, STORY_007).
