@@ -62,5 +62,9 @@
       "file": "preview/iphone-6.9.mp4",
       "poster": "00:00:05:00"
     }
+  },
+  "min_ios": {
+    "version": "18.0",
+    "reason": "The tab bar is built on the iOS 18 Tab API, and iOS 17 runs on exactly the same iPhones (XS, XR and later), so a lower floor would add no devices; SwiftData closes iOS 16. Decided by the owner 2026-11-10 (STORY_012)."
   }
 }
