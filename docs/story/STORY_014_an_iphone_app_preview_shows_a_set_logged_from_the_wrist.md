@@ -63,3 +63,8 @@ Workout tab, so the tab-and-folder taps are not in it.
 - **Gates:** every gate in `scripts/gates/`, plus Launch's preflight, which checks the preview
   file exists.
 - **By hand:** none that a simulator cannot do; the simulator records its own screen.
+
+2026-11-10, 17:48: App Store Connect's processing failed the silent file (ASSET_FAILED, checksum
+missing); a preview needs an audio track even when silent. `scripts/preview.sh` now adds a silent
+AAC track and `app-preview.sh` requires one. The re-rendered file processed COMPLETE and 1.1.0
+was submitted again with it (STORY_012's Status line has the submission).

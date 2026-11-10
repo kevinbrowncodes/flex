@@ -69,3 +69,9 @@ same day to fit App Store Connect's limits of 30 and 170, which Launch's preflig
 Claude to do the rest: the Launch exemption, CHORE_002 (the privacy page confirmed by fetching
 it; the App Privacy answers in App Store Connect through the owner's browser session) and the
 release. The upload box above now waits on CHORE_002 only.
+
+2026-11-10, 17:48: the 17:30 submission lacked the preview video (`release.sh` uploads
+screenshots, not previews), so Launch gained `cancel-submission` and took 1.1.0 back (Hands could
+not press the page's banner link); the first preview failed Apple's processing for having no
+audio track; the re-rendered file with a silent AAC track processed COMPLETE, and 1.1.0 was
+submitted again with it: submission 43622ff7-651f-497c-b126-ce423c9e1469, WAITING_FOR_REVIEW.

@@ -7,7 +7,7 @@
 #      into FLEX_PREVIEW_DIR
 #   3. stops the recording, trims it to the storyboard, scales it to Apple's 886 x 1920, burns the
 #      five overlays between the beats, and writes appstore/preview/iphone-6.9.mp4
-#      (H.264, 30 fps, silent); scripts/gates/app-preview.sh then checks it
+#      (H.264, 30 fps, with a silent AAC track, which App Store Connect requires); scripts/gates/app-preview.sh checks it
 #
 # Usage: scripts/preview.sh [--render-only]   (render again from the last recording in PREVIEW_WORK)
 # Env:   IPHONE_SIM (name or UDID), DERIVED_DATA, PREVIEW_WORK (scratch folder)
@@ -99,8 +99,12 @@ render() {
     i=$((i + 1))
   done
   mkdir -p "$(dirname "$OUT")"
-  ffmpeg -v error -y "${inputs[@]}" -filter_complex "$filter" -map "[v$i]" -t "$dur" \
-    -r 30 -fps_mode cfr -c:v libx264 -preset slow -crf 18 -pix_fmt yuv420p -movflags +faststart -an "$OUT"
+  # App Store Connect refuses a preview with no audio track, even a silent one (ASSET_FAILED on
+  # 2026-11-10), and a simulator recording has none: add silence.
+  inputs+=(-f lavfi -i "anullsrc=channel_layout=stereo:sample_rate=44100")
+  ffmpeg -v error -y "${inputs[@]}" -filter_complex "$filter" -map "[v$i]" -map "$((i + 1)):a" -t "$dur" \
+    -r 30 -fps_mode cfr -c:v libx264 -preset slow -crf 18 -pix_fmt yuv420p -c:a aac -b:a 64k \
+    -movflags +faststart "$OUT"
   echo "wrote $OUT ($(ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 "$OUT")s); clip starts ${clip}s into the recording; beats: opened=$opened tick1=$tick1 restcue=$restcue tick2=$tick2 finished=$finished end=$end"
 }
 

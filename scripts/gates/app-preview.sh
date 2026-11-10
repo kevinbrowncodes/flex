@@ -1,8 +1,9 @@
 #!/bin/sh
 # Gate (STORY_014): the iPhone app preview Launch uploads exists and is what App Store Connect
 # takes for the 6.9" slot: appstore/preview/iphone-6.9.mp4, 886 x 1920 portrait, H.264, 30 fps or
-# less, 15 to 30 seconds. The gate first proves each rule against planted videos, then checks the
-# real one. Needs ffprobe and ffmpeg (brew install ffmpeg).
+# less, 15 to 30 seconds, with an audio track (App Store Connect's processing failed a silent-track-
+# less file with ASSET_FAILED on 2026-11-10). The gate first proves each rule against planted
+# videos, then checks the real one. Needs ffprobe and ffmpeg (brew install ffmpeg).
 cd "$(dirname "$0")/../.." || exit 1
 
 PATH="$PATH:/opt/homebrew/bin:/usr/local/bin"
@@ -31,16 +32,19 @@ problems() { # file
   [ "$width" = "886" ] && [ "$height" = "1920" ] || echo "size is ${width}x${height}, not 886x1920"
   awk -v f="$fps" 'BEGIN { exit !(f > 30.01) }' && echo "frame rate is $fps, over 30"
   awk -v d="$duration" 'BEGIN { exit !(d < 15 || d > 30) }' && echo "duration is ${duration}s, outside 15 to 30"
+  audio=$(ffprobe -v error -select_streams a:0 -show_entries stream=codec_name -of default=nw=1:nk=1 "$1" 2>/dev/null)
+  [ -n "$audio" ] || echo "no audio track (App Store Connect refuses a preview without one, even silent; 2026-11-10)"
 }
 
 # Self-test: a planted wrong video fails on every count; a planted right one passes.
 tmp=$(mktemp -d)
 ffmpeg -v error -y -f lavfi -i "color=c=black:s=100x100:r=60:d=2" -c:v mpeg4 "$tmp/wrong.mp4" || exit 1
-ffmpeg -v error -y -f lavfi -i "color=c=black:s=886x1920:r=30:d=16" -c:v libx264 -preset ultrafast -pix_fmt yuv420p "$tmp/right.mp4" || exit 1
+ffmpeg -v error -y -f lavfi -i "color=c=black:s=886x1920:r=30:d=16" -f lavfi -i "anullsrc=channel_layout=stereo:sample_rate=44100" \
+  -t 16 -c:v libx264 -preset ultrafast -pix_fmt yuv420p -c:a aac "$tmp/right.mp4" || exit 1
 wrong=$(problems "$tmp/wrong.mp4")
 right=$(problems "$tmp/right.mp4")
 rm -rf "$tmp"
-for want in "not h264" "not 886x1920" "over 30" "outside 15 to 30"; do
+for want in "not h264" "not 886x1920" "over 30" "outside 15 to 30" "no audio track"; do
   case "$wrong" in *"$want"*) ;; *)
     echo "app-preview gate FAILED its self-test: a planted wrong video was not refused for '$want'."
     echo "Fix: scripts/gates/app-preview.sh's checks changed; make them refuse it again."
@@ -58,7 +62,8 @@ if [ -n "$found" ]; then
   echo "app-preview gate FAILED:"
   echo "$found" | sed 's/^/  /'
   echo "Rule: Launch uploads $PREVIEW as the iPhone 6.9\" app preview, so it is 886 x 1920 H.264"
-  echo "at 30 fps or less and 15 to 30 seconds long, Apple's spec for the slot (STORY_014)."
+  echo "at 30 fps or less and 15 to 30 seconds long, with an audio track (silent is fine), Apple's"
+  echo "spec for the slot and what its processing accepts (STORY_014)."
   echo "Fix: scripts/preview.sh records and renders it from the simulator; run it and commit the result."
   exit 1
 fi

@@ -165,4 +165,6 @@ pre-push hook from STORY_001.
 - [ ] CHORE_002 and CHORE_003 are Done.
       2026-11-10: CHORE_002 Done; CHORE_003 after publication, by the owner's decision.
 - [ ] Flex 1.1.0 with the watch app is live on the App Store.
-      2026-11-10 17:30: submitted for review (submission fcc4407f-1ce4-4059-9e15-4d0395dad42c).
+      2026-11-10 17:30: submitted for review (submission fcc4407f-1ce4-4059-9e15-4d0395dad42c);
+      17:48: taken back to add the preview video and submitted again (submission
+      43622ff7-651f-497c-b126-ce423c9e1469).
