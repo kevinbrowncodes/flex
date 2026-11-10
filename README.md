@@ -94,6 +94,7 @@ Run one by hand with `sh scripts/gates/<name>.sh`. How we work (tickets, gates, 
 | `watch-no-swiftdata.sh` | Nothing under `Flex/FlexWatch` or `Flex/FlexWatchWidgets` imports SwiftData or CloudKit or names a ModelContainer or ModelContext: the phone is the only writer |
 | `health-usage-strings.sh` | Every configuration signed with entitlements that grant HealthKit sets both `NSHealthShareUsageDescription` and `NSHealthUpdateUsageDescription` |
 | `watch-screenshots.sh` | `appstore/screenshots/out-watch/` holds one to ten PNGs at an Apple Watch App Store size (416×496 or 410×502) |
+| `app-preview.sh` | `appstore/preview/iphone-6.9.mp4` exists and is 886×1920 H.264 at 30 fps or less, 15 to 30 s, Apple's spec for the iPhone 6.9" preview (needs `brew install ffmpeg`) |
 
 ## Releasing
 
@@ -107,9 +108,12 @@ Flex ships with [Launch](https://github.com/kevinbrowncodes/launch) (formerly as
 3. If a SwiftData model changed, deploy the CloudKit schema to Production in CloudKit Console first.
 4. Screenshots: `scripts/screenshots.sh` (phone, iPad and the watch; `--watch-only` for the watch
    set alone). The watch set is uploaded as captured, 416 × 496, from `appstore/screenshots/out-watch/`.
-5. HealthKit: the entitlement means App Review may ask to see the Health permission flow, which only a
+5. App preview: `scripts/preview.sh` records the iPhone 6.9" preview from the simulator (the
+   `PreviewTests` storyboard, demo data) into `appstore/preview/iphone-6.9.mp4`; Launch uploads it
+   from the meta's `previews` map. The App Store takes no preview for Apple Watch (STORY_014).
+6. HealthKit: the entitlement means App Review may ask to see the Health permission flow, which only a
    watch workout shows; `appstore/asc_meta.json`'s review notes say so.
-6. `../launch/bin/launch release flex`
+7. `../launch/bin/launch release flex`
 
 Prepared, not yet uploaded: 1.1.0, build 10 (2026-10-30), waiting on CHORE_002 and CHORE_003.
 
@@ -118,6 +122,7 @@ Prepared, not yet uploaded: 1.1.0, build 10 (2026-10-30), waiting on CHORE_002 a
 | Script | Purpose |
 |---|---|
 | `scripts/screenshots.sh` | Capture, compose and verify App Store screenshots (see `appstore/screenshots/README.md`) |
+| `scripts/preview.sh` | Record and render the iPhone App Store preview video (STORY_014) |
 | `scripts/generate-app-icon.sh` | Re-render every AppIcon PNG from `Support/FlexAppIcon.swift` |
 | `scripts/gates/*.sh` | The pre-push gates (see Hooks and gates) |
 

@@ -4,8 +4,9 @@
 for Apple Watch and no people or devices on camera (Apple's app preview specifications list
 iPhone, iPad, Mac, Apple TV and Apple Vision Pro; the API's preview types have no watch value), so
 the video is an iPhone preview of the phone's screen with text overlays. The storyboard was
-approved by the owner the same day through the picker; built after STORY_013. STORY_012's upload
-waits on it.
+approved by the owner the same day through the picker; built after STORY_013. Done 2026-11-10:
+`appstore/preview/iphone-6.9.mp4`, 25.3 s, 886 × 1920, H.264 30 fps, the gate green. STORY_012's
+upload waits on it.
 [EPIC_001](../epic/EPIC_001_flex_on_apple_watch.md) row 14.
 
 As Kevin, I want a twenty-second app preview in the iPhone 6.9" slot that shows a workout with the
@@ -30,18 +31,24 @@ Portrait, 886 × 1920 (Apple's size for the 6.9" group), H.264, 30 fps, silent, 
 5 s (the ♥ 128 · On watch header). No iPad preview; Apple makes it optional and the iPad set
 keeps the screenshots alone.
 
+Corrected while building (2026-11-10): the History beat is gone. Finishing, closing the summary
+and loading History took fourteen seconds on a busy Mac and ran the clip to 31 s, past Apple's
+30. The clip now ends on the "Great Job!" summary, with the last overlay ("Or just say…") over
+its final seconds, and the clip begins a second before the workout opens rather than on the
+Workout tab, so the tab-and-folder taps are not in it.
+
 ## Acceptance Criteria
 
-- [ ] `FlexUITests/PreviewTests.swift` drives the storyboard in `FLEX_DEMO=sample` with
+- [x] `FlexUITests/PreviewTests.swift` drives the storyboard in `FLEX_DEMO=sample` with
       `FLEX_DEMO_WATCH=128` (STORY_013) at a human pace, asserting each state before it pauses, and
       skips itself unless `FLEX_PREVIEW=1` so `tests.sh` never runs it.
-- [ ] `scripts/preview.sh` boots the iPhone 17 Pro Max simulator, records it with
+- [x] `scripts/preview.sh` boots the iPhone 17 Pro Max simulator, records it with
       `xcrun simctl io <udid> recordVideo --codec h264` around that test, then with ffmpeg scales
       the capture to 886 × 1920, burns the five overlays at the times above, caps 30 fps, and
       writes `appstore/preview/iphone-6.9.mp4` of 15 to 30 seconds.
-- [ ] `appstore/asc_meta.json` gains `"previews": {"IPHONE_67": {"file": "preview/iphone-6.9.mp4",
+- [x] `appstore/asc_meta.json` gains `"previews": {"IPHONE_67": {"file": "preview/iphone-6.9.mp4",
       "poster": "00:00:05:00"}}`, which `launch release flex` uploads after the screenshots.
-- [ ] `scripts/gates/app-preview.sh` fails when `appstore/preview/iphone-6.9.mp4` is missing or,
+- [x] `scripts/gates/app-preview.sh` fails when `appstore/preview/iphone-6.9.mp4` is missing or,
       by ffprobe, is not 886 × 1920, not H.264, over 30 fps, or outside 15 to 30 seconds, with the
       rule and the fix in its message; `README.md` lists the gate and the preview in the release
       steps.

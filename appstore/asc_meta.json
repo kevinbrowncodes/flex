@@ -56,5 +56,11 @@
   },
   "scheme": "Flex",
   "team_id": "793YF22DGM",
-  "project_dir": "Flex"
+  "project_dir": "Flex",
+  "previews": {
+    "IPHONE_67": {
+      "file": "preview/iphone-6.9.mp4",
+      "poster": "00:00:05:00"
+    }
+  }
 }
