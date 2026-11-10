@@ -13,7 +13,7 @@ Source for both pages: https://github.com/kevinbrowncodes/flex-support
 
 ## Release automation
 
-`appstore/asc_meta.json` drives `../ascpilot/bin/release.sh` (archive, upload, create
+`appstore/asc_meta.json` drives `../launch/bin/launch release flex` (Launch, formerly ascpilot: archive, upload, create
 version, metadata, screenshots, attach build, submit). Version 1.0.3 / build 9 was
 uploaded this way on 2026-09-05.
 
@@ -67,7 +67,7 @@ holds the sizes and the count.
   App Review may ask to see the Health permission flow, which only a watch workout shows.
   CHORE_002 (privacy page published, App Privacy answers) and CHORE_003 (a real gym session on a
   real watch) are done before the upload.
-- Upload: `ASC_META=appstore/asc_meta.json ../ascpilot/bin/release.sh`.
+- Upload: `../launch/bin/launch release flex`.
 
 ## Before shipping 1.0.3 (kept for the record)
 

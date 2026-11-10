@@ -37,8 +37,8 @@ same pipeline as the phone's:
       rest timer, Siri and Apple Health; the App Store description gains a line on the watch.
 - [x] `README.md`'s release section says the watch screenshots are part of a release, and that
       the HealthKit entitlement means App Review may ask for a demo of the Health flow.
-- [ ] The build is uploaded with ascpilot (`ASC_META=appstore/asc_meta.json
-      ../ascpilot/bin/release.sh`) only after CHORE_002 (the privacy answers and page) and
+- [ ] The build is uploaded with Launch, formerly ascpilot (`../launch/bin/launch release
+      flex`) only after CHORE_002 (the privacy answers and page) and
       CHORE_003 (a real gym session) are Done, and the upload's result (version, build number,
       processing state) is written into this story's Status line.
 - [x] No SwiftData model changes in this epic, so no CloudKit schema deploy before release; the

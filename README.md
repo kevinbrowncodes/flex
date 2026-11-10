@@ -91,7 +91,7 @@ Run one by hand with `sh scripts/gates/<name>.sh`. How we work (tickets, gates, 
 
 ## Releasing
 
-Flex ships with [ascpilot](https://github.com/kevinbrowncodes/ascpilot), driven by
+Flex ships with [Launch](https://github.com/kevinbrowncodes/launch) (formerly ascpilot; slug `flex`), driven by
 `appstore/asc_meta.json` (App Store Connect app 6758920531, bundle `kevinbrowncodes.Flex`, team
 793YF22DGM). Live: 1.0.3, build 9 (2026-09-05).
 
@@ -103,7 +103,7 @@ Flex ships with [ascpilot](https://github.com/kevinbrowncodes/ascpilot), driven 
    set alone). The watch set is uploaded as captured, 416 × 496, from `appstore/screenshots/out-watch/`.
 5. HealthKit: the entitlement means App Review may ask to see the Health permission flow, which only a
    watch workout shows; `appstore/asc_meta.json`'s review notes say so.
-6. `ASC_META=appstore/asc_meta.json ../ascpilot/bin/release.sh`
+6. `../launch/bin/launch release flex`
 
 Prepared, not yet uploaded: 1.1.0, build 10 (2026-10-30), waiting on CHORE_002 and CHORE_003.
 
