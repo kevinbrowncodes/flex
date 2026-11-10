@@ -66,5 +66,9 @@
   "min_ios": {
     "version": "18.0",
     "reason": "The tab bar is built on the iOS 18 Tab API, and iOS 17 runs on exactly the same iPhones (XS, XR and later), so a lower floor would add no devices; SwiftData closes iOS 16. Decided by the owner 2026-11-10 (STORY_012)."
+  },
+  "languages_exempt": {
+    "through": "1.1.0",
+    "reason": "1.1.0 is the Apple Watch release, built before the ten-language rule existed (2026-11-10); Flex has no string catalog yet. BACKLOG_001 carries the ten languages to 1.2.0, where this exemption ends."
   }
 }
