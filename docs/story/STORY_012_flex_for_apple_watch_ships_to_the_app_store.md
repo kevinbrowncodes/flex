@@ -52,3 +52,8 @@ same pipeline as the phone's:
 - **Unit (shell):** `watch-screenshots.sh` refuses a planted PNG of the wrong size and passes the
   rendered set.
 - **Gates:** every gate in `scripts/gates/`, green before the upload.
+
+2026-11-10: the upload also waits on STORY_013 (the refreshed screenshots, Ashton as the demo
+lifter) and STORY_014 (the iPhone app preview), so Launch uploads the new sets and the video with
+the build. The subtitle (33 → 25 characters) and promotional text (204 → 140) were shortened the
+same day to fit App Store Connect's limits of 30 and 170, which Launch's preflight enforces.

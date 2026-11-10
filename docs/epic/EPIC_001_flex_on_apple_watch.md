@@ -9,6 +9,13 @@ pushed yet; the owner pushes `develop` and `flex-support` at the end. Along the 
 first gate run found two pre-existing failures, fixed as BUG_001 and CHORE_001 before STORY_001
 landed, and the owner chores were renumbered CHORE_002 and CHORE_003 to make room.
 
+2026-10-31: `develop` and `flex-support` pushed. 2026-11-10: the owner asked for the phone
+screenshots to open on the watch with Ashton as the lifter (STORY_013) and for a video
+(STORY_014, an iPhone preview, since the store takes none for the watch); both sit in Phase 3
+before STORY_012's upload, which now waits on them as well as on CHORE_002 and CHORE_003. The
+same day the tests gate learned to find its simulators after an Xcode update (CHORE_004) and will
+get devices of its own (CHORE_005).
+
 ## Goal
 
 A lifter can leave the phone in the locker, start a template workout on the watch, log every set
@@ -125,6 +132,8 @@ pre-push hook from STORY_001.
 
 | # | Ticket | What it delivers | Gate | Status |
 |---|---|---|---|---|
+| 13 | STORY_013 — The store screenshots tell the watch story | A watch-first hero shot (the active workout with the watch linked, "♥ 128 · On watch", rest counting) as shot 1, the old hero at shot 3, eight shots per slot; Ashton is the demo lifter in every capture; all three sets re-captured on the 1.1.0 build | None new. The captures assert their screens; Launch's preflight checks the sets | Drafted 2026-11-10, waiting for the owner's approval of the mockup |
+| 14 | STORY_014 — An iPhone app preview shows a set logged from the wrist | A twenty-second 886 × 1920 preview of the phone's screen with text overlays (the App Store takes no watch previews and no people or devices on camera), recorded from the simulator by a scripted UI test, uploaded by Launch from a `previews` map | `app-preview.sh`: the file exists, 886 × 1920, H.264, 30 fps or less, 15 to 30 s | Drafted 2026-11-10, waiting for the owner's approval of the storyboard |
 | 12 | STORY_012 — Flex for Apple Watch ships to the App Store | Watch screenshots captured by `ScreenshotTests` on a watch simulator and rendered by `scripts/screenshots.sh`; version 1.1.0 with a new build number; `whats_new` in `appstore/asc_meta.json`; released with Launch (formerly ascpilot). Waits on CHORE_002 and CHORE_003 | `watch-screenshots.sh`: `appstore/screenshots/out/watch/` holds PNGs at an App Store Connect watch size | Built 2026-10-30 up to the upload: 1.1.0 build 10 prepared, watch screenshots captured and gated, metadata written; the upload waits on CHORE_002 and CHORE_003 |
 
 ### Owner chores (work stops on these; each is cited by the story that waits)
