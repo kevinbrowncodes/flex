@@ -65,6 +65,12 @@ xcodebuild test -project Flex/Flex.xcodeproj -scheme FlexWatch \
   -destination 'platform=watchOS Simulator,name=Apple Watch Series 11 (46mm)'
 ```
 
+xcodebuild resolves a bare device name against the newest installed runtime and fails when that
+runtime has no such device (Xcode 27.2 added iOS 27.2 without an iPhone 17 Pro). The gate,
+`scripts/gates/tests.sh`, resolves each name to the newest runtime that has it and passes the
+device id; `sh scripts/gates/tests.sh --devices` shows which. By hand, add `,OS=26.5` (the
+runtime that has the device) to the destination when xcodebuild cannot find it (CHORE_004).
+
 ## Hooks and gates
 
 Once per clone:
