@@ -81,8 +81,10 @@ on trial, rules are gates.
   same story and the story names it.
 - Gates today: `tickets-shape.sh` (ticket shapes, the owner-chore rule), `commit-subjects.sh`
   (the commit-msg hook against sample subjects), `tests.sh` (`FlexTests` and
-  `WorkoutFlowUITests` on the iPhone 17 Pro simulator, `FlexWatchTests` and `FlexWatchUITests`
-  on an Apple Watch simulator), `shared-is-portable.sh` (`Flex/FlexShared` imports only
+  `WorkoutFlowUITests` on "Flex Gate", `FlexWatchTests` and `FlexWatchUITests` on "Flex Watch
+  Gate", simulators of Flex's own on the newest runtimes, plus the unit tests and a smoke UI test
+  on "Flex Gate 18" and "Flex Watch Gate 11", the oldest supported runtimes, or the oldest
+  installed when Apple no longer offers the floor's, CHORE_004 and CHORE_005), `shared-is-portable.sh` (`Flex/FlexShared` imports only
   Foundation, Observation and AppIntents, STORY_004 and STORY_010), `watch-no-swiftdata.sh` (`Flex/FlexWatch` and `Flex/FlexWatchWidgets` never
   import SwiftData or CloudKit or name a ModelContainer or ModelContext, STORY_005, STORY_011),
   `health-usage-strings.sh` (a target whose entitlements grant HealthKit sets both Health usage

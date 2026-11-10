@@ -67,9 +67,13 @@ xcodebuild test -project Flex/Flex.xcodeproj -scheme FlexWatch \
 
 xcodebuild resolves a bare device name against the newest installed runtime and fails when that
 runtime has no such device (Xcode 27.2 added iOS 27.2 without an iPhone 17 Pro). The gate,
-`scripts/gates/tests.sh`, resolves each name to the newest runtime that has it and passes the
-device id; `sh scripts/gates/tests.sh --devices` shows which. By hand, add `,OS=26.5` (the
-runtime that has the device) to the destination when xcodebuild cannot find it (CHORE_004).
+`scripts/gates/tests.sh`, runs on devices of Flex's own instead ("Flex Gate", "Flex Watch Gate",
+"Flex Gate 18", and "Flex Watch Gate 26" because Apple offers no watchOS 11 simulator for Xcode
+27, so the watch floor falls back to the oldest installed runtime and the gate says so), creating
+each on first use and passing its id; no other repo on the Mac installs onto them (CHORE_004,
+CHORE_005). `sh scripts/gates/tests.sh --devices`
+shows the four. By hand, add `,OS=26.5` (a runtime that has the device) to the destinations above
+when xcodebuild cannot find one.
 
 ## Hooks and gates
 
@@ -89,7 +93,7 @@ Run one by hand with `sh scripts/gates/<name>.sh`. How we work (tickets, gates, 
 |---|---|
 | `tickets-shape.sh` | Every ticket under `docs/` has its kind's file name, heading and sections; owner-only steps cite a chore |
 | `commit-subjects.sh` | The commit-msg hook judges sample subjects as CLAUDE.md says |
-| `tests.sh` | `FlexTests` and `FlexUITests/WorkoutFlowUITests` pass on the iPhone 17 Pro simulator; `FlexWatchTests` and `FlexWatchUITests` pass on the Apple Watch Series 11 (46mm) simulator |
+| `tests.sh` | On simulators of Flex's own, created on first use: `FlexTests` and `FlexUITests/WorkoutFlowUITests` on "Flex Gate" (the newest iOS runtime) and `FlexWatchTests` and `FlexWatchUITests` on "Flex Watch Gate" (the newest watchOS runtime); the unit tests plus one smoke UI test on "Flex Gate 18" and "Flex Watch Gate 11", the oldest installed runtimes of the deployment floors; a floor runtime Apple no longer offers falls back to the oldest installed one (watchOS 26 today, so that run is skipped as a repeat of the newest) and the gate says so (CHORE_005). `sh scripts/gates/tests.sh --devices` shows the four |
 | `shared-is-portable.sh` | Every file under `Flex/FlexShared` imports only Foundation, Observation or AppIntents, so it compiles into the phone and the watch alike |
 | `watch-no-swiftdata.sh` | Nothing under `Flex/FlexWatch` or `Flex/FlexWatchWidgets` imports SwiftData or CloudKit or names a ModelContainer or ModelContext: the phone is the only writer |
 | `health-usage-strings.sh` | Every configuration signed with entitlements that grant HealthKit sets both `NSHealthShareUsageDescription` and `NSHealthUpdateUsageDescription` |
