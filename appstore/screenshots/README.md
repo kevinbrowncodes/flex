@@ -19,7 +19,8 @@ The app has a DEBUG-only launch hook (`Support/DemoMode.swift`):
 | `FLEX_DEMO=empty` | In-memory store with only the bundled exercise library |
 | `FLEX_THEME=Dark` | Forces the theme without touching UserDefaults |
 | `FLEX_TAB=workout` | Initial tab (`profile`, `history`, `exercises`, `workout`) |
-| `FLEX_USER_NAME=Alex` | Display name |
+| `FLEX_USER_NAME=Ashton` | Display name (Ashton is the demo lifter everywhere, STORY_013) |
+| `FLEX_DEMO_WATCH=128` | Pretends a watch is linked at that heart rate, so the active workout shows "♥ 128" and "On watch" (STORY_013) |
 
 `FlexUITests/ScreenshotTests.swift` launches with those variables, drives the UI to each
 state and writes `XCUIScreen.main.screenshot()` to `FLEX_SCREENSHOT_DIR`
@@ -28,6 +29,7 @@ to 9:41 / full battery with `simctl status_bar` before the run.
 
 | Raw file | App state |
 |---|---|
+| `00-watch-hero` | HEAVY DUTY PUSH 41 minutes in, first bench set done, rest counting, the watch linked (`FLEX_DEMO_WATCH=128`); shot 1 |
 | `01-templates` | Workout tab, "Heavy Duty" folder expanded |
 | `02-active-workout` | HEAVY DUTY PUSH started from its template, first bench set completed |
 | `03-plate-calculator` | Second bench set weight → keypad → plate calculator |

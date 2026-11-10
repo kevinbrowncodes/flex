@@ -17,7 +17,7 @@ class FlexUITestCase: XCTestCase {
         app.launchEnvironment["FLEX_DEMO"] = dataset
         app.launchEnvironment["FLEX_TAB"] = tab
         app.launchEnvironment["FLEX_THEME"] = theme
-        app.launchEnvironment["FLEX_USER_NAME"] = "Alex"
+        app.launchEnvironment["FLEX_USER_NAME"] = "Ashton"
         for (key, value) in extra {
             app.launchEnvironment[key] = value
         }

@@ -21,25 +21,27 @@
     "APP_IPHONE_67": {
       "dir": "screenshots/out/iphone-6.9",
       "order": [
-        "01-active-workout",
+        "01-watch-hero",
         "02-plate-calculator",
-        "03-templates",
-        "04-history",
-        "05-profile",
-        "06-summary",
-        "07-exercises"
+        "03-active-workout",
+        "04-templates",
+        "05-history",
+        "06-profile",
+        "07-summary",
+        "08-exercises"
       ]
     },
     "APP_IPAD_PRO_3GEN_129": {
       "dir": "screenshots/out/ipad-13",
       "order": [
-        "01-active-workout",
+        "01-watch-hero",
         "02-plate-calculator",
-        "03-templates",
-        "04-history",
-        "05-profile",
-        "06-summary",
-        "07-exercises"
+        "03-active-workout",
+        "04-templates",
+        "05-history",
+        "06-profile",
+        "07-summary",
+        "08-exercises"
       ]
     },
     "APP_WATCH_SERIES_10": {

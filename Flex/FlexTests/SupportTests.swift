@@ -41,11 +41,35 @@ struct SupportTests {
         #expect(sample?.dataset == .sample)
         #expect(sample?.theme == "Dark")
         #expect(sample?.initialTab == "history")
-        #expect(sample?.userName == "Alex")
+        #expect(sample?.userName == "Ashton")
+        #expect(sample?.watchLink == nil)
 
         let empty = DemoMode(environment: ["FLEX_DEMO": "empty", "FLEX_USER_NAME": "Sam"])
         #expect(empty?.dataset == .empty)
         #expect(empty?.userName == "Sam")
+
+        // STORY_013: a pretend watch for the screenshots, at a heart rate or without one.
+        let linked = DemoMode(environment: ["FLEX_DEMO": "1", "FLEX_DEMO_WATCH": "128"])
+        #expect(linked?.watchLink?.heartRate == 128)
+        let linkedNoRate = DemoMode(environment: ["FLEX_DEMO": "1", "FLEX_DEMO_WATCH": "yes"])
+        #expect(linkedNoRate?.watchLink != nil)
+        #expect(linkedNoRate?.watchLink?.heartRate == nil)
+    }
+
+    @MainActor
+    @Test("A demo watch link makes the phone report the watch as linked, at that heart rate")
+    func demoWatchLink() {
+        let host = PhoneMirrorHost(session: LiveWorkoutSession(store: nil, resume: false), healthStore: nil)
+        #expect(host.isLinked == false)
+        #expect(host.watchHeartRate == nil)
+
+        host.demoLink = PhoneMirrorHost.DemoLink(heartRate: 128)
+        #expect(host.isLinked == true)
+        #expect(host.watchHeartRate == 128)
+
+        host.demoLink = PhoneMirrorHost.DemoLink(heartRate: nil)
+        #expect(host.isLinked == true)
+        #expect(host.watchHeartRate == nil)
     }
 
     @Test("Bar types expose readable names")

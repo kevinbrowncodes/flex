@@ -6,15 +6,24 @@ import SwiftData
 ///
 /// - `FLEX_DEMO=sample` (or `1`): in-memory store filled with realistic sample data, signed in, welcome dismissed.
 /// - `FLEX_DEMO=empty`: in-memory store with only the bundled exercise library.
-/// - `FLEX_THEME=Light|Dark|System`, `FLEX_TAB=profile|history|exercises|workout`, `FLEX_USER_NAME=…`,
-///   `FLEX_DEMO_WORKOUT_OFFSET=-2460` (seconds; makes a new workout look like it started 41 minutes ago).
+/// - `FLEX_THEME=Light|Dark|System`, `FLEX_TAB=profile|history|exercises|workout`, `FLEX_USER_NAME=…`
+///   (Ashton unless set, STORY_013),
+///   `FLEX_DEMO_WORKOUT_OFFSET=-2460` (seconds; makes a new workout look like it started 41 minutes ago),
+///   `FLEX_DEMO_WATCH=128` (pretends a watch is linked at that heart rate, so the active workout
+///   shows "♥ 128" and "On watch"; a value that is not a number links with no heart rate, STORY_013).
 struct DemoMode: Sendable {
     typealias Dataset = DemoLaunch.Dataset
+
+    /// `FLEX_DEMO_WATCH`: the watch the phone pretends is linked.
+    struct WatchLink: Sendable, Equatable {
+        let heartRate: Double?
+    }
 
     let dataset: Dataset
     let theme: String?
     let initialTab: String?
     let userName: String
+    let watchLink: WatchLink?
     /// Seconds added to a new workout's start time (negative = "started a while ago"), for screenshots.
     let workoutStartOffset: TimeInterval
     /// `FLEX_DEMO_RESUME=1` keeps a live workout saved by an earlier launch; otherwise a demo launch
@@ -30,7 +39,8 @@ struct DemoMode: Sendable {
         self.dataset = dataset
         theme = environment["FLEX_THEME"]
         initialTab = environment["FLEX_TAB"]?.lowercased()
-        userName = environment["FLEX_USER_NAME"] ?? "Alex"
+        userName = environment["FLEX_USER_NAME"] ?? "Ashton"
+        watchLink = environment["FLEX_DEMO_WATCH"].map { WatchLink(heartRate: Double($0)) }
         workoutStartOffset = DemoLaunch.workoutStartOffset(in: environment)
         resumesLiveWorkout = DemoLaunch.resumesLiveWorkout(in: environment)
     }

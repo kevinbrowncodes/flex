@@ -2,7 +2,8 @@
 
 **Status:** Drafted 2026-11-10 from the owner's picker answers (refresh the phone set with a
 watch-first hero shot; Ashton is the lifter in every screenshot); the mockup below approved by the
-owner the same day through the picker. STORY_012's upload waits on it. [EPIC_001](../epic/EPIC_001_flex_on_apple_watch.md)
+owner the same day through the picker. Done 2026-11-10: all three sets re-captured and rendered,
+tests gate green. STORY_012's upload waits on it. [EPIC_001](../epic/EPIC_001_flex_on_apple_watch.md)
 row 13.
 
 As Kevin, I want the iPhone and iPad screenshots to open on the watch and to show Ashton as the
@@ -36,23 +37,28 @@ calculator stays at shot 2 because shots 1 and 2 are what search results show.
 
 ## Acceptance Criteria
 
-- [ ] A DEBUG-only demo seam makes `PhoneMirrorHost` report the watch as linked with a heart rate
+- [x] A DEBUG-only demo seam makes `PhoneMirrorHost` report the watch as linked with a heart rate
       from the launch environment (`FLEX_DEMO_WATCH=128`), so the active-workout header shows
       "♥ 128" and "On watch" in a demo launch (`Flex/Flex/Views/Workout/ActiveWorkoutView.swift`
       shows both only when `mirrorHost.isLinked`). `Support/DemoMode.swift` documents the variable.
-- [ ] The demo lifter is Ashton everywhere a screenshot can show a name: the default in
+- [x] The demo lifter is Ashton everywhere a screenshot can show a name: the default in
       `Support/DemoMode.swift`, the launch helper in `FlexUITests/FlexUITestCase.swift`,
       `FlexWatch/WatchSampleData.swift`, and the tests that assert the name.
-- [ ] `FlexUITests/ScreenshotTests.swift` captures `00-watch-hero` (Heavy Push 41 minutes in,
+- [x] `FlexUITests/ScreenshotTests.swift` captures `00-watch-hero` (Heavy Push 41 minutes in,
       set 1 done, rest counting, "♥ 128", "On watch") with `FLEX_DEMO_WATCH=128`, and the profile
       capture asserts "Ashton" on screen.
-- [ ] `appstore/screenshots/shots.json` gains the hero as shot 1 (caption "Start on your
+- [x] `appstore/screenshots/shots.json` gains the hero as shot 1 (caption "Start on your
       **Apple Watch**", subcaption "Log sets from your wrist, phone in the locker"), moves the old
       hero to shot 3, and the eight shots render for `iphone-6.9` and `ipad-13`.
-- [ ] `appstore/asc_meta.json`'s `screenshots` map lists the eight stems in order for both slots;
+- [x] `appstore/asc_meta.json`'s `screenshots` map lists the eight stems in order for both slots;
       `appstore/SUBMISSION.md` and `appstore/screenshots/README.md` describe the new set.
-- [ ] `scripts/screenshots.sh` regenerates all three sets from the 1.1.0 build and
+- [x] `scripts/screenshots.sh` regenerates all three sets from the 1.1.0 build and
       `../launch/bin/launch preflight flex` passes on them.
+      Corrected while building (2026-11-10): preflight's screenshot checks pass (counts, sizes,
+      alpha, every listed file present); preflight as a whole still fails on three findings outside
+      this story, Launch's ten-language rule, a reason for the iOS 18 floor (added to the meta as
+      `min_ios` the same day, STORY_012), and an iPhone Duo warning for April 2027. Also found:
+      shotkit never clears its output folder, so `scripts/screenshots.sh` now does before rendering.
 
 ## Testing Plan
 

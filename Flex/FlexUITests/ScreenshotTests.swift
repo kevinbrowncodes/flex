@@ -56,6 +56,18 @@ final class ScreenshotTests: FlexUITestCase {
         try capture("06-summary")
     }
 
+    func testCaptureWatchHero() throws {
+        // Shot 1 (STORY_013): the workout 41 minutes in, the first bench set done, rest counting,
+        // and the watch linked at 128 bpm, so the header reads "♥ 128 · On watch".
+        launch(theme: theme, extra: ["FLEX_DEMO_WORKOUT_OFFSET": "-2472", "FLEX_DEMO_WATCH": "128"])
+        startPushDayWorkout()
+        waitFor(app.descendants(matching: .any)["live-on-watch"])
+        waitFor(app.descendants(matching: .any)["live-heart-rate"])
+        tap(app.buttons["complete-Bench Press (Barbell)-1"])
+        waitFor(app.staticTexts["rest-timer"])
+        try capture("00-watch-hero")
+    }
+
     func testCaptureTemplates() throws {
         launch(theme: theme)
         selectTab("Workout")
@@ -76,6 +88,7 @@ final class ScreenshotTests: FlexUITestCase {
     func testCaptureProfile() throws {
         launch(tab: "profile", theme: theme)
         waitFor(app.staticTexts["Dashboard"])
+        waitFor(app.staticTexts["Ashton"]) // the demo lifter's name on the store shot (STORY_013)
         try capture("05-profile")
     }
 

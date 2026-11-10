@@ -90,7 +90,7 @@ struct WatchSnapshotTests {
         let now = TestSupport.date(2026, 10, 28, hour: 12)
         let container = try sampleContainer(now: now)
         let context = container.mainContext
-        let snapshot = try WatchSnapshotBuilder.make(context: context, weeklyTarget: 3, restSeconds: 90, userName: "Alex", now: now, sortOrder: .name)
+        let snapshot = try WatchSnapshotBuilder.make(context: context, weeklyTarget: 3, restSeconds: 90, userName: "Ashton", now: now, sortOrder: .name)
 
         let data = try FlexJSON.encoder.encode(snapshot)
         #expect(try FlexJSON.decoder.decode(WatchSnapshot.self, from: data) == snapshot)

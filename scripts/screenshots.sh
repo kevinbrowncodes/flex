@@ -93,6 +93,11 @@ fi
 
 if [[ "$MODE" != "--capture-only" ]]; then
   [[ -x "$SHOTKIT" ]] || (cd "$KIT" && swift build -c release)
+  # shotkit adds files and never removes them; a renumbered shot list would leave stale files
+  # beside the new ones and push the set past the store's ten (STORY_013).
+  for device in $(python3 -c 'import json, sys; print(" ".join(json.load(open(sys.argv[1]))["devices"]))' "$SHOTS/shots.json"); do
+    rm -rf "$SHOTS/out/$device"
+  done
   "$SHOTKIT" render "$SHOTS/shots.json"
   "$SHOTKIT" contact "$SHOTS/out"
   "$SHOTKIT" verify "$SHOTS/out"

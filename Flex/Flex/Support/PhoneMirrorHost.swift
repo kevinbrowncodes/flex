@@ -25,9 +25,29 @@ final class PhoneMirrorHost: NSObject {
         }
     }
 
+    #if DEBUG
+    /// A pretend watch for demo launches and App Store screenshots (STORY_013): the phone reports
+    /// the watch as linked, at this heart rate, with no Health session behind it.
+    struct DemoLink: Sendable {
+        var heartRate: Double?
+    }
+    var demoLink: DemoLink?
+    #endif
+
     /// True while the watch is showing the same workout.
-    var isLinked: Bool { peer.isLinked }
-    var watchHeartRate: Double? { peer.remoteHeartRate }
+    var isLinked: Bool {
+        #if DEBUG
+        if demoLink != nil { return true }
+        #endif
+        return peer.isLinked
+    }
+
+    var watchHeartRate: Double? {
+        #if DEBUG
+        if let demoLink { return demoLink.heartRate }
+        #endif
+        return peer.remoteHeartRate
+    }
 
     /// Asks watchOS to open Flex on the watch for a workout the phone just started; the watch then
     /// mirrors its Health session here and the two sides exchange state.

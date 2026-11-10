@@ -26,17 +26,18 @@ uploaded this way on 2026-09-05.
 ## Screenshots
 
 Upload from `appstore/screenshots/out/` in numeric order. Shots 1–2 are the ones
-that appear in App Store search results.
+that appear in App Store search results. The demo lifter in every capture is Ashton (STORY_013).
 
 | # | Screen | Caption | Subcaption |
 |---|---|---|---|
-| 1 | Active workout with the custom keypad open, previous-lift column visible | Log every set **in seconds** | Custom keypad, last lift right beside it |
+| 1 | Active workout 41 minutes in with the watch linked: ♥ 128, On watch, rest counting (STORY_013) | Start on your **Apple Watch** | Log sets from your wrist, phone in the locker |
 | 2 | Plate calculator (callout card over the workout) | Know what to **load on the bar** | Plate calculator for every barbell lift |
-| 3 | Workout tab with folder expanded | Routines ready **in one tap** | Templates and folders for every split |
-| 4 | History | Every workout, **every PR** | Volume, duration and records at a glance |
-| 5 | Profile dashboard | Hit your **weekly goal** | Dashboard charts your consistency |
-| 6 | Workout summary | Finish strong, **share it** | A summary you can send to your crew |
-| 7 | Exercise library | Hundreds of exercises, **plus your own** | Search by body part or create custom moves |
+| 3 | Active workout with the custom keypad open, previous-lift column visible | Log every set **in seconds** | Custom keypad, last lift right beside it |
+| 4 | Workout tab with folder expanded | Routines ready **in one tap** | Templates and folders for every split |
+| 5 | History | Every workout, **every PR** | Volume, duration and records at a glance |
+| 6 | Profile dashboard (reads "Ashton") | Hit your **weekly goal** | Dashboard charts your consistency |
+| 7 | Workout summary | Finish strong, **share it** | A summary you can send to your crew |
+| 8 | Exercise library | Hundreds of exercises, **plus your own** | Search by body part or create custom moves |
 
 iPad overrides: hero subcaption reads "A custom keypad built for the gym floor" (the keypad covers the
 previous-lift column in the iPad form sheet); all iPad captions sit on one line except shot 7.

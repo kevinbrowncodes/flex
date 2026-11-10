@@ -56,6 +56,8 @@ struct FlexKeyApp: App {
             sync = CloudKitSyncMonitor(simulatedStatus: .synced)
             live = LiveWorkoutSession(store: .default(), resume: demo.resumesLiveWorkout)
             mirror = PhoneMirrorHost(session: live, healthStore: nil)
+            // FLEX_DEMO_WATCH: the screenshots' pretend watch (STORY_013).
+            mirror.demoLink = demo.watchLink.map { PhoneMirrorHost.DemoLink(heartRate: $0.heartRate) }
             demoActive = true
         } else {
             container = Self.makeModelContainer()

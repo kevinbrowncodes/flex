@@ -35,19 +35,16 @@
   },
   "shots": [
     {
-      "id": "active-workout",
+      "id": "watch-hero",
       "layout": "caption-top",
-      "caption": "Log every set\n**in seconds**",
-      "subcaption": "Custom keypad, last lift right beside it",
+      "caption": "Start on your\n**Apple Watch**",
+      "subcaption": "Log sets from your wrist, phone in the locker",
       "captionOverrides": {
-        "ipad-13": "Log every set **in seconds**"
+        "ipad-13": "Start on your **Apple Watch**"
       },
       "source": {
-        "iphone-6.9": "raw/iphone/02-active-workout.png",
-        "ipad-13": "raw/ipad/02-active-workout.png"
-      },
-      "subcaptionOverrides": {
-        "ipad-13": "A custom keypad built for the gym floor"
+        "iphone-6.9": "raw/iphone/00-watch-hero.png",
+        "ipad-13": "raw/ipad/00-watch-hero.png"
       }
     },
     {
@@ -75,6 +72,22 @@
           "w": 0.56,
           "h": 0.253
         }
+      }
+    },
+    {
+      "id": "active-workout",
+      "layout": "caption-top",
+      "caption": "Log every set\n**in seconds**",
+      "subcaption": "Custom keypad, last lift right beside it",
+      "captionOverrides": {
+        "ipad-13": "Log every set **in seconds**"
+      },
+      "source": {
+        "iphone-6.9": "raw/iphone/02-active-workout.png",
+        "ipad-13": "raw/ipad/02-active-workout.png"
+      },
+      "subcaptionOverrides": {
+        "ipad-13": "A custom keypad built for the gym floor"
       }
     },
     {

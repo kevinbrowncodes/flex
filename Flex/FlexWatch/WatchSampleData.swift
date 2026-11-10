@@ -53,7 +53,7 @@ extension WatchSnapshot {
             workoutsThisWeek: 2,
             weeklyTarget: 3,
             restSeconds: 90,
-            userName: "Alex"
+            userName: "Ashton"
         )
     }()
 }

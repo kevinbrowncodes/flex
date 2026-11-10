@@ -3,7 +3,7 @@ import XCTest
 final class WorkoutFlowUITests: FlexUITestCase {
     func testTabsLoadWithSampleData() {
         launch(tab: "profile")
-        waitFor(app.staticTexts["Alex"])
+        waitFor(app.staticTexts["Ashton"])
         waitFor(app.staticTexts["Dashboard"])
 
         selectTab("History")
