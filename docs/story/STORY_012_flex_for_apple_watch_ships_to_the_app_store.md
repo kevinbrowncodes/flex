@@ -1,6 +1,11 @@
 # STORY_012 — Flex for Apple Watch ships to the App Store
 
 **Status:** Approved by the owner 2026-10-30 (with the epic, "proceed to completion"); built by Fable the same day up to the upload: 1.1.0 build 10 is prepared, the watch screenshots captured and gated, the metadata written. The upload (the one open box) waits on CHORE_002 and CHORE_003. [EPIC_001](../epic/EPIC_001_flex_on_apple_watch.md) row 12.
+Done 2026-11-10 17:30: `launch release flex` created version 1.1.0 (App Store Connect version
+3b911f22-1551-40e3-81ce-57eb9c55205d), set the subtitle, age rating, metadata and review details,
+uploaded 8 iPhone, 8 iPad and 4 watch screenshots, attached build 10 (VALID) and submitted it for
+review (submission fcc4407f-1ce4-4059-9e15-4d0395dad42c). CHORE_003 follows publication by the
+owner's decision.
 
 As Kevin, I want Flex 1.1.0 with the watch app uploaded to App Store Connect with watch
 screenshots and release notes, so that the epic ends on the store and not on a branch.
@@ -37,10 +42,12 @@ same pipeline as the phone's:
       rest timer, Siri and Apple Health; the App Store description gains a line on the watch.
 - [x] `README.md`'s release section says the watch screenshots are part of a release, and that
       the HealthKit entitlement means App Review may ask for a demo of the Health flow.
-- [ ] The build is uploaded with Launch, formerly ascpilot (`../launch/bin/launch release
+- [x] The build is uploaded with Launch, formerly ascpilot (`../launch/bin/launch release
       flex`) only after CHORE_002 (the privacy answers and page) and
       CHORE_003 (a real gym session) are Done, and the upload's result (version, build number,
       processing state) is written into this story's Status line.
+      Corrected 2026-11-10: the owner moved CHORE_003 to after publication, so the release waited
+      on CHORE_002 alone; the result is in the Status line.
 - [x] No SwiftData model changes in this epic, so no CloudKit schema deploy before release; the
       story says so where the release steps would otherwise ask for one.
 

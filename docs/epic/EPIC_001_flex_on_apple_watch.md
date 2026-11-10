@@ -134,7 +134,7 @@ pre-push hook from STORY_001.
 |---|---|---|---|---|
 | 13 | STORY_013 — The store screenshots tell the watch story | A watch-first hero shot (the active workout with the watch linked, "♥ 128 · On watch", rest counting) as shot 1, the old hero at shot 3, eight shots per slot; Ashton is the demo lifter in every capture; all three sets re-captured on the 1.1.0 build | None new. The captures assert their screens; Launch's preflight checks the sets | Done 2026-11-10 |
 | 14 | STORY_014 — An iPhone app preview shows a set logged from the wrist | A twenty-second 886 × 1920 preview of the phone's screen with text overlays (the App Store takes no watch previews and no people or devices on camera), recorded from the simulator by a scripted UI test, uploaded by Launch from a `previews` map | `app-preview.sh`: the file exists, 886 × 1920, H.264, 30 fps or less, 15 to 30 s | Done 2026-11-10 |
-| 12 | STORY_012 — Flex for Apple Watch ships to the App Store | Watch screenshots captured by `ScreenshotTests` on a watch simulator and rendered by `scripts/screenshots.sh`; version 1.1.0 with a new build number; `whats_new` in `appstore/asc_meta.json`; released with Launch (formerly ascpilot). Waits on CHORE_002 and CHORE_003 | `watch-screenshots.sh`: `appstore/screenshots/out/watch/` holds PNGs at an App Store Connect watch size | Built 2026-10-30 up to the upload: 1.1.0 build 10 prepared, watch screenshots captured and gated, metadata written; the upload waits on CHORE_002 and CHORE_003 |
+| 12 | STORY_012 — Flex for Apple Watch ships to the App Store | Watch screenshots captured by `ScreenshotTests` on a watch simulator and rendered by `scripts/screenshots.sh`; version 1.1.0 with a new build number; `whats_new` in `appstore/asc_meta.json`; released with Launch (formerly ascpilot). Waits on CHORE_002 and CHORE_003 | `watch-screenshots.sh`: `appstore/screenshots/out/watch/` holds PNGs at an App Store Connect watch size | Done 2026-11-10: 1.1.0 build 10 submitted for review at 17:30 (built 2026-10-30; the upload waited on CHORE_002, and on the owner's decision CHORE_003 follows publication) |
 
 ### Owner chores (work stops on these; each is cited by the story that waits)
 
@@ -159,7 +159,10 @@ pre-push hook from STORY_001.
 
 ## Done when
 
-- [ ] Stories 1–12 are Done (Testing Plan tests written, gates green in the pre-push hook).
-      2026-10-30: 1–11 Done; 12 built up to the upload.
+- [x] Stories 1–12 are Done (Testing Plan tests written, gates green in the pre-push hook).
+      2026-10-30: 1–11 Done; 12 built up to the upload. 2026-11-10: 12 Done (submitted), and
+      STORY_013 and STORY_014 Done with it.
 - [ ] CHORE_002 and CHORE_003 are Done.
+      2026-11-10: CHORE_002 Done; CHORE_003 after publication, by the owner's decision.
 - [ ] Flex 1.1.0 with the watch app is live on the App Store.
+      2026-11-10 17:30: submitted for review (submission fcc4407f-1ce4-4059-9e15-4d0395dad42c).
