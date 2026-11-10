@@ -2,6 +2,8 @@
 
 **Status:** Open (2026-10-30). Waits on STORY_011; STORY_012 waits on it. 2026-11-10: the
 TestFlight build (1.1.0, build 10) is uploaded; the gym session is the owner's next step.
+2026-11-10, later: the owner decided the gym session happens after Apple publishes 1.1.0, so
+STORY_012's upload no longer waits on this chore; the epic's "Done when" still does.
 
 ## Summary
 

@@ -57,3 +57,8 @@ same pipeline as the phone's:
 lifter) and STORY_014 (the iPhone app preview), so Launch uploads the new sets and the video with
 the build. The subtitle (33 → 25 characters) and promotional text (204 → 140) were shortened the
 same day to fit App Store Connect's limits of 30 and 170, which Launch's preflight enforces.
+
+2026-11-10, 17:30: the owner moved CHORE_003 (the gym session) to after publication and asked
+Claude to do the rest: the Launch exemption, CHORE_002 (the privacy page confirmed by fetching
+it; the App Privacy answers in App Store Connect through the owner's browser session) and the
+release. The upload box above now waits on CHORE_002 only.

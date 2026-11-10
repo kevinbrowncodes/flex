@@ -19,9 +19,13 @@ that costs a review cycle. Anything only the owner can do is a chore the moment 
 
 ## Changes
 
-- [ ] The owner pushes `kevinbrowncodes/flex-support` (or approves Claude pushing it) so
+- [x] The owner pushes `kevinbrowncodes/flex-support` (or approves Claude pushing it) so
       https://kevinbrowncodes.github.io/flex-support/privacy shows the Health section, and
       opens the page once to confirm.
+      2026-11-10 17:30: at the owner's request Claude fetched the live page instead: HTTP 200, a
+      "Health" heading, "Effective 2026-10-30 (Apple Watch and Health added…)", and "Flex does
+      not copy Health data to its own storage, does not sync it through CloudKit, and has no
+      servers to send it to."
 - [ ] The owner opens App Store Connect ▸ Flex ▸ App Privacy and sets the answers for Health &
       Fitness: Flex reads heart rate and active energy and writes workouts; the data stays on the
       device and in the user's Health store, is not linked to identity by Flex, and is not used for
