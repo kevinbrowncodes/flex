@@ -125,7 +125,7 @@ pre-push hook from STORY_001.
 
 | # | Ticket | What it delivers | Gate | Status |
 |---|---|---|---|---|
-| 12 | STORY_012 — Flex for Apple Watch ships to the App Store | Watch screenshots captured by `ScreenshotTests` on a watch simulator and rendered by `scripts/screenshots.sh`; version 1.1.0 with a new build number; `whats_new` in `appstore/asc_meta.json`; released with ascpilot. Waits on CHORE_002 and CHORE_003 | `watch-screenshots.sh`: `appstore/screenshots/out/watch/` holds PNGs at an App Store Connect watch size | Built 2026-10-30 up to the upload: 1.1.0 build 10 prepared, watch screenshots captured and gated, metadata written; the upload waits on CHORE_002 and CHORE_003 |
+| 12 | STORY_012 — Flex for Apple Watch ships to the App Store | Watch screenshots captured by `ScreenshotTests` on a watch simulator and rendered by `scripts/screenshots.sh`; version 1.1.0 with a new build number; `whats_new` in `appstore/asc_meta.json`; released with Launch (formerly ascpilot). Waits on CHORE_002 and CHORE_003 | `watch-screenshots.sh`: `appstore/screenshots/out/watch/` holds PNGs at an App Store Connect watch size | Built 2026-10-30 up to the upload: 1.1.0 build 10 prepared, watch screenshots captured and gated, metadata written; the upload waits on CHORE_002 and CHORE_003 |
 
 ### Owner chores (work stops on these; each is cited by the story that waits)
 
