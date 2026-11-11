@@ -90,7 +90,8 @@ on trial, rules are gates.
   `health-usage-strings.sh` (a target whose entitlements grant HealthKit sets both Health usage
   strings, STORY_008), `watch-screenshots.sh` (the watch's App Store screenshots exist at an
   App Store size, STORY_012), `app-preview.sh` (the iPhone app preview video exists at Apple's size,
-  codec, frame rate and length, STORY_014). Each watch story in EPIC_001 adds its own.
+  codec, frame rate and length, STORY_014), `store-names.sh` (the App Store name and subtitle
+  name no Apple product, which App Review rejected under 5.2.5, BUG_002). Each watch story in EPIC_001 adds its own.
 - Run a gate by hand with `sh scripts/gates/<name>.sh`. `git push --no-verify` is for
   emergencies only, with the justification in the commit message.
 

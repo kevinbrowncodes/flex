@@ -99,6 +99,7 @@ Run one by hand with `sh scripts/gates/<name>.sh`. How we work (tickets, gates, 
 | `health-usage-strings.sh` | Every configuration signed with entitlements that grant HealthKit sets both `NSHealthShareUsageDescription` and `NSHealthUpdateUsageDescription` |
 | `watch-screenshots.sh` | `appstore/screenshots/out-watch/` holds one to ten PNGs at an Apple Watch App Store size (416×496 or 410×502) |
 | `app-preview.sh` | `appstore/preview/iphone-6.9.mp4` exists and is 886×1920 H.264 at 30 fps or less, 15 to 30 s, Apple's spec for the iPhone 6.9" preview (needs `brew install ffmpeg`) |
+| `store-names.sh` | the App Store name and subtitle in `appstore/asc_meta.json` name no Apple product or service (App Review rejected "Workout log & Apple Watch" under guideline 5.2.5, BUG_002) |
 
 ## Releasing
 
