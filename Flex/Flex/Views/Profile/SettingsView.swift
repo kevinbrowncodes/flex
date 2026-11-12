@@ -1,3 +1,5 @@
+import HealthKit
+import SwiftData
 import SwiftUI
 
 struct SettingsView: View {
@@ -6,7 +8,11 @@ struct SettingsView: View {
     @Environment(AuthenticationManager.self) private var authManager
     @Environment(CloudKitSyncMonitor.self) private var syncMonitor
     @Environment(PreferencesManager.self) private var preferences
+    @Environment(LiveWorkoutSession.self) private var liveSession
+    @Environment(\.modelContext) private var modelContext
     @State private var showLogOutAlert = false
+    @State private var showDeleteAlert = false
+    @State private var deleteError: String?
 
     var body: some View {
         NavigationStack {
@@ -59,6 +65,33 @@ struct SettingsView: View {
                         .font(.caption)
                 }
 
+                Section {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Label {
+                            Text("Apple Health")
+                                .font(.headline)
+                        } icon: {
+                            Image(systemName: "heart.fill")
+                                .foregroundStyle(.red)
+                        }
+                        Text(Self.healthExplanation)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.vertical, 4)
+                    .accessibilityElement(children: .combine)
+                    .accessibilityIdentifier("apple-health-info")
+
+                    if HKHealthStore.isHealthDataAvailable(), let health = URL(string: "x-apple-health://") {
+                        Link(destination: health) {
+                            Label("Open Health", systemImage: "arrow.up.forward.app")
+                        }
+                        .accessibilityIdentifier("open-health")
+                    }
+                } header: {
+                    Text("Apple Health")
+                }
+
                 Section("Appearance") {
                     NavigationLink(destination: ThemeSelectionView()) {
                         HStack {
@@ -105,11 +138,22 @@ struct SettingsView: View {
                         showLogOutAlert = true
                     }
                     .foregroundStyle(.red)
-                    .frame(maxWidth: .infinity, alignment: .center)
+                    .accessibilityIdentifier("log-out")
+                    Button("Delete Account") {
+                        showDeleteAlert = true
+                    }
+                    .foregroundStyle(.red)
+                    .accessibilityIdentifier("delete-account")
+                } header: {
+                    Text("Account")
                 } footer: {
-                    Text("Flex \(AppLinks.versionDescription)")
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(.top, 8)
+                    VStack(spacing: 8) {
+                        Text("Deleting erases your data from this device and iCloud.")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Text("Flex \(AppLinks.versionDescription)")
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .padding(.top, 8)
+                    }
                 }
             }
             .navigationTitle("Settings")
@@ -132,6 +176,38 @@ struct SettingsView: View {
             } message: {
                 Text("Are you sure you want to log out? Your workouts stay in iCloud.")
             }
+            .alert("Delete Account?", isPresented: $showDeleteAlert) {
+                Button("Cancel", role: .cancel) {}
+                Button("Delete Account", role: .destructive) {
+                    deleteAccount()
+                }
+            } message: {
+                Text(Self.deleteWarning)
+            }
+            .alert("Couldn't Delete Account", isPresented: Binding(
+                get: { deleteError != nil },
+                set: { if !$0 { deleteError = nil } }
+            )) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(deleteError ?? "")
+            }
+        }
+    }
+
+    /// What Flex does with Apple Health, in the words App Review looks for (STORY_016, BUG_004).
+    static let healthExplanation = "Flex works with Apple Health. A workout you do with Flex on Apple Watch is saved to Apple Health with your heart rate and active calories, if you allow it. Flex reads heart rate only during a watch workout and never copies Health data into its own storage."
+
+    static let deleteWarning = "Every workout, template and custom exercise is erased from this device and iCloud, your preferences are reset, and you're signed out. This can't be undone. Workouts already in Apple Health stay there."
+
+    /// Delete Account (STORY_015, BUG_003). A failed erase signs nobody out.
+    private func deleteAccount() {
+        do {
+            try AccountEraser.eraseAccount(context: modelContext, session: liveSession,
+                                           preferences: preferences, auth: authManager)
+            dismiss()
+        } catch {
+            deleteError = error.localizedDescription
         }
     }
 
@@ -223,4 +299,6 @@ struct ThemeSelectionView: View {
         .environment(AuthenticationManager())
         .environment(CloudKitSyncMonitor(simulatedStatus: .synced))
         .environment(PreferencesManager())
+        .environment(LiveWorkoutSession(store: nil))
+        .modelContainer(PreviewData.shared.modelContainer)
 }

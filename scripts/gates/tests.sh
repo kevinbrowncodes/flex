@@ -2,7 +2,7 @@
 # Gate (STORY_001, STORY_004, CHORE_004, CHORE_005): Flex builds and its tests pass before anything
 # is pushed, on simulators of Flex's own so no other repo installs onto them:
 #   Flex Gate           the newest iOS runtime, iPhone 17 Pro or the newest type it supports:
-#                       FlexTests and the end-to-end workout flows (FlexUITests/WorkoutFlowUITests)
+#                       FlexTests and the end-to-end workout flows (FlexUITests/WorkoutFlowUITests) and Settings' account and Health (AccountUITests, STORY_015)
 #   Flex Watch Gate     the newest watchOS runtime: FlexWatchTests and FlexWatchUITests
 #   Flex Gate 18        the oldest installed runtime of the iOS floor (IPHONEOS_DEPLOYMENT_TARGET):
 #                       FlexTests and one smoke UI test
@@ -166,7 +166,7 @@ run_tests() { # label, scheme, destination, only-testing flags...
     echo
     echo "Ten UI tests timing out together while another xcodebuild test runs on this Mac is a starved"
     echo "simulator, not the code: wait for it ('pgrep -fl \"xcodebuild test\"') and run again (CHORE_004)."
-    echo "Rule: every push builds Flex and passes FlexTests, WorkoutFlowUITests, FlexWatchTests and"
+    echo "Rule: every push builds Flex and passes FlexTests, WorkoutFlowUITests, AccountUITests, FlexWatchTests and"
     echo "FlexWatchUITests on the newest runtimes, and the unit tests plus a smoke UI test on the"
     echo "oldest supported ones (CLAUDE.md, How features are built, item 6; CHORE_005)."
     echo "Fix: run 'sh scripts/gates/tests.sh' and fix the failures above. A run that fails before"
@@ -191,7 +191,7 @@ watch_floor=$DEVICE_ID; watch_floor_os=$DEVICE_OS
 if [ "$1" = "--devices" ]; then exit 0; fi # the resolution alone, for CHORE_004 and CHORE_005's checks
 
 run_tests "iPhone, newest" Flex "platform=iOS Simulator,id=$iphone" \
-  -only-testing:FlexTests -only-testing:FlexUITests/WorkoutFlowUITests || exit 1
+  -only-testing:FlexTests -only-testing:FlexUITests/WorkoutFlowUITests -only-testing:FlexUITests/AccountUITests || exit 1
 run_tests "Apple Watch, newest" FlexWatch "platform=watchOS Simulator,id=$watch" \
   -only-testing:FlexWatchTests -only-testing:FlexWatchUITests || exit 1
 # A floor run on the same runtime as the newest run would only repeat it.

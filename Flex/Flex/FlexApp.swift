@@ -45,6 +45,11 @@ struct FlexKeyApp: App {
         var demoActive = false
 
         #if DEBUG
+        // FLEX_SIGNED_OUT=1: the App Review recording starts on the welcome screen (STORY_015).
+        if ProcessInfo.processInfo.environment["FLEX_SIGNED_OUT"] == "1" {
+            auth.signOut()
+            preferences.setHasSeenWelcome(false)
+        }
         if let demo = DemoMode.current {
             do {
                 container = try demo.makeModelContainer(schema: Self.schema)

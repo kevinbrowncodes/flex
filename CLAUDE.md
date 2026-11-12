@@ -81,7 +81,7 @@ on trial, rules are gates.
   same story and the story names it.
 - Gates today: `tickets-shape.sh` (ticket shapes, the owner-chore rule), `commit-subjects.sh`
   (the commit-msg hook against sample subjects), `tests.sh` (`FlexTests` and
-  `WorkoutFlowUITests` on "Flex Gate", `FlexWatchTests` and `FlexWatchUITests` on "Flex Watch
+  `WorkoutFlowUITests` and `AccountUITests` on "Flex Gate", `FlexWatchTests` and `FlexWatchUITests` on "Flex Watch
   Gate", simulators of Flex's own on the newest runtimes, plus the unit tests and a smoke UI test
   on "Flex Gate 18" and "Flex Watch Gate 11", the oldest supported runtimes, or the oldest
   installed when Apple no longer offers the floor's, CHORE_004 and CHORE_005), `shared-is-portable.sh` (`Flex/FlexShared` imports only

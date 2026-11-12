@@ -192,6 +192,22 @@ class PreferencesManager {
         changed()
     }
 
+    /// Delete Account (STORY_015): every preference back to a fresh install's (the defaults
+    /// `loadFromStorage` falls back to), in iCloud and on this device, and the welcome shown again.
+    func reset() {
+        for key in [Keys.userName, Keys.workoutTarget, Keys.dailyTarget, Keys.restSeconds] {
+            store.removeObject(forKey: key)
+            userDefaults.removeObject(forKey: key)
+        }
+        store.synchronize()
+        userName = nil
+        workoutTarget = 3
+        dailyTarget = 1
+        restSeconds = RestTimer.defaultSeconds
+        setHasSeenWelcome(false)
+        changed()
+    }
+
     // Method to update hasSeenWelcome and persist to UserDefaults
     func setHasSeenWelcome(_ value: Bool) {
         print("📱 Setting hasSeenWelcome to: \(value)")

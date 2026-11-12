@@ -234,10 +234,12 @@ struct ActiveWorkoutView: View {
                 if mirrorHost.isLinked {
                     Spacer(minLength: 12)
                     if let heartRate = mirrorHost.watchHeartRate {
-                        Label("\(Int(heartRate.rounded()))", systemImage: "heart.fill")
+                        // Names its source, as guideline 2.5.1 asks (STORY_016, BUG_004).
+                        Label("\(Int(heartRate.rounded())) · Apple Health", systemImage: "heart.fill")
                             .foregroundStyle(.red)
                             .monospacedDigit()
-                            .accessibilityLabel("Heart rate \(Int(heartRate.rounded()))")
+                            .lineLimit(1)
+                            .accessibilityLabel("Heart rate \(Int(heartRate.rounded())), from Apple Health")
                             .accessibilityIdentifier("live-heart-rate")
                     }
                     Label("On watch", systemImage: "applewatch")

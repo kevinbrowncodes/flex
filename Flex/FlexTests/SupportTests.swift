@@ -21,6 +21,29 @@ struct SupportTests {
         #expect(AuthenticationManager.displayName(from: nil) == nil)
     }
 
+    @Test("Resetting preferences puts every one back to a fresh install's and shows the welcome again")
+    func preferencesReset() {
+        let preferences = PreferencesManager()
+        preferences.setUserName("Kevin")
+        preferences.setWorkoutTarget(5)
+        preferences.setDailyTarget(2)
+        preferences.setRestSeconds(45)
+        preferences.setHasSeenWelcome(true)
+
+        preferences.reset()
+
+        #expect(preferences.userName == nil)
+        #expect(preferences.workoutTarget == 3)
+        #expect(preferences.dailyTarget == 1)
+        #expect(preferences.restSeconds == RestTimer.defaultSeconds)
+        #expect(!preferences.hasSeenWelcome)
+        // A fresh manager reads the same back from storage (STORY_015).
+        let reloaded = PreferencesManager()
+        #expect(reloaded.userName == nil)
+        #expect(reloaded.workoutTarget == 3)
+        #expect(!reloaded.hasSeenWelcome)
+    }
+
     @Test("Theme manager maps names to color schemes without persisting when asked not to")
     func themeManager() {
         let manager = ThemeManager(initialTheme: "Dark", persists: false)

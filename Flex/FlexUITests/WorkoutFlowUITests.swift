@@ -20,6 +20,17 @@ final class WorkoutFlowUITests: FlexUITestCase {
         waitFor(app.buttons["template-card-Full Body Workout"])
     }
 
+    /// STORY_016, BUG_004: the live heart rate names Apple Health as its source.
+    func testLinkedWatchHeartRateNamesAppleHealth() {
+        launch(extra: ["FLEX_DEMO_WATCH": "128"])
+        startPushDayWorkout()
+        // SwiftUI's Label gives the identifier to more than one element; one carries the label.
+        let heartRate = app.descendants(matching: .any).matching(
+            NSPredicate(format: "identifier == %@ AND label == %@", "live-heart-rate", "Heart rate 128, from Apple Health")
+        ).firstMatch
+        waitFor(heartRate)
+    }
+
     func testTemplateWorkoutPrefillsSetsAndShowsPreviousPerformance() {
         launch()
         startPushDayWorkout()
