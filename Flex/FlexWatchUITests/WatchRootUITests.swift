@@ -25,7 +25,13 @@ final class WatchRootUITests: XCTestCase {
         let heavyPush = app.staticTexts["Heavy Push"]
         XCTAssertTrue(heavyPush.waitForExistence(timeout: 15))
         XCTAssertTrue(app.staticTexts["5 exercises"].exists)
-        XCTAssertEqual(app.staticTexts["watch-week"].label, "2 of 3 workouts this week")
+        // watchOS 27 no longer exposes a toolbar Text as a static text, so match any element
+        // (CHORE_007).
+        let week = app.descendants(matching: .any).matching(
+            NSPredicate(format: "identifier == %@ OR label == %@", "watch-week", "2 of 3 workouts this week")
+        ).firstMatch
+        XCTAssertTrue(week.waitForExistence(timeout: 5), "the week count is on the home screen")
+        XCTAssertEqual(week.label, "2 of 3 workouts this week")
 
         heavyPush.tap()
         XCTAssertTrue(app.staticTexts["Bench Press (Barbell)"].waitForExistence(timeout: 10))
